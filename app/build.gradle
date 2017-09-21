@@ -1,0 +1,115 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'idea'
+
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
+    defaultConfig {
+        applicationId "ru.endlesscode.bbtest"
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // Add Kotlin to Java's source dirs
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+        }
+
+        unitTests.all {
+            // Display tests results
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen { false }
+                showStandardStreams = true
+            }
+        }
+    }
+}
+
+kotlin {
+    experimental.coroutines = 'enable'
+}
+
+// Download sources
+idea.module {
+    downloadSources = true
+}
+
+// Libs versions
+ext {
+    targetVersion = '26.1.+'
+    moxyVersion = '1.5.+'
+    retrofitVersion = '2.3.+'
+    gsonVersion = '2.8.+'
+    coroutinesVersion = '0.18'
+    glideVersion = '4.1.+'
+
+    // Testing
+    spekVersion = '1.1.4'
+    mockitoKotlinVersion = '1.5.+'
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+    compile "com.android.support:appcompat-v7:$targetVersion"
+    compile "com.android.support:recyclerview-v7:$targetVersion"
+    compile "com.android.support:design:$targetVersion"
+    compile "com.android.support.constraint:constraint-layout:1.1.0-beta1"
+
+    // HTTP (and related to) libs
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:3.9.0"
+    compile "com.google.code.gson:gson:$gsonVersion"
+    compile "com.github.bumptech.glide:glide:$glideVersion"
+    compile "com.github.bumptech.glide:okhttp3-integration:$glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+
+    // Coroutines support
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    compile "ru.gildor.coroutines:kotlin-coroutines-retrofit:0.7.1"
+
+    // MVP library
+    compile "com.arello-mobile:moxy:$moxyVersion"
+    compile "com.arello-mobile:moxy-app-compat:$moxyVersion"
+    kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
+
+    // Testing
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    testCompile "org.jetbrains.spek:spek-api:$spekVersion"
+    testCompile "org.jetbrains.spek:spek-junit-platform-engine:$spekVersion"
+    testCompile "org.junit.platform:junit-platform-runner:1.0.0-RC2"
+    testCompile "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+}
+
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.google.com' }
+}
