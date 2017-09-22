@@ -70,10 +70,9 @@ ext {
     retrofitCoroutinesVersion = '0.7.+'
     glideVersion = '4.1.+'
     daggerVersion = '2.11'
-    rxJavaVersion = '2.1.+'
 
     // Testing
-    spekVersion = '1.1.4'
+    spekVersion = '1.1.5'
     mockitoKotlinVersion = '1.5.+'
 }
 
@@ -87,20 +86,15 @@ dependencies {
     // HTTP (and related to) libs
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     compile "com.squareup.okhttp3:logging-interceptor:3.9.0"
     compile "com.google.code.gson:gson:$gsonVersion"
     compile "com.github.bumptech.glide:glide:$glideVersion"
     compile "com.github.bumptech.glide:okhttp3-integration:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
 
-    // RxJava
-    compile "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
-
     // Coroutines support
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutinesVersion"
     compile "ru.gildor.coroutines:kotlin-coroutines-retrofit:$retrofitCoroutinesVersion"
 
     // MVP library

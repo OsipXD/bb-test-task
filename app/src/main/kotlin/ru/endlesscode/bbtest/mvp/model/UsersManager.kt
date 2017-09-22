@@ -23,24 +23,33 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.mvp.presenter
+package ru.endlesscode.bbtest.mvp.model
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
-import ru.endlesscode.bbtest.mvp.model.UsersManager
-import ru.endlesscode.bbtest.mvp.view.UsersView
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.run
+import okhttp3.ResponseBody
+import ru.endlesscode.bbtest.api.UserData
+import ru.endlesscode.bbtest.api.UsersApi
+import ru.gildor.coroutines.retrofit.awaitResponse
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@InjectViewState
-class UsersPresenter : MvpPresenter<UsersView>() {
+@Singleton
+class UsersManager @Inject constructor(private val api: UsersApi) {
 
-    @Inject
-    lateinit var usersManager: UsersManager
+    fun loadUsersList(
+            onSuccess: (Int, List<UserData>) -> Unit,
+            onError: (Int, ResponseBody?) -> Unit) = launch(CommonPool) {
+        val response = api.usersList().awaitResponse()
 
-    override fun onFirstViewAttach() {
-        this.loadUsers()
-    }
-
-    private fun loadUsers() {
+        run(UI) {
+            if (response.isSuccessful) {
+                onSuccess(response.code(), response.body() ?: emptyList())
+            } else {
+                onError(response.code(), response.errorBody())
+            }
+        }
     }
 }

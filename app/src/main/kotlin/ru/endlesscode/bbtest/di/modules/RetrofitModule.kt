@@ -30,10 +30,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
-import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
@@ -47,19 +45,9 @@ class RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitBuilder(
-            callAdapterFactory: CallAdapter.Factory,
-            converterFactory: Converter.Factory): Retrofit.Builder {
-        return Retrofit.Builder().apply {
-            baseUrl("https://bb-test-server.herokuapp.com/")
-            addCallAdapterFactory(callAdapterFactory)
-            addConverterFactory(converterFactory)
-        }
+    fun provideRetrofitBuilder(converterFactory: Converter.Factory): Retrofit.Builder {
+        return Retrofit.Builder().addConverterFactory(converterFactory)
     }
-
-    @Provides
-    @Singleton
-    fun provideCallAdapterFactory(): CallAdapter.Factory = RxJava2CallAdapterFactory.create()
 
     @Provides
     @Singleton

@@ -25,22 +25,22 @@
 
 package ru.endlesscode.bbtest.api
 
-import io.reactivex.Observable
+import retrofit2.Call
 import retrofit2.http.*
 
 interface UsersApi {
 
     @GET("/users.json")
-    fun usersList(): Observable<List<UserData>>
+    fun usersList(): Call<List<UserData>>
 
     @Headers("Content-type: application/json")
     @POST("/users.json")
-    fun createUser(@Body body: UserUpdateBody): Observable<Unit>
+    fun createUser(@Body body: UserUpdateBody): Call<Unit>
 
     @Headers("Content-type: application/json")
     @PATCH("/users/{id}.json")
     fun updateUser(
             @Path("id") id: Int,
             @Body body: UserUpdateBody
-    ): Observable<Unit>
+    ): Call<Unit>
 }
