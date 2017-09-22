@@ -25,11 +25,14 @@
 
 package ru.endlesscode.bbtest.mvp.model
 
+import android.support.annotation.VisibleForTesting
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.run
+import retrofit2.Call
 import ru.endlesscode.bbtest.api.UserData
+import ru.endlesscode.bbtest.api.UserUpdateBody
 import ru.endlesscode.bbtest.api.UsersApi
 import ru.gildor.coroutines.retrofit.Result
 import ru.gildor.coroutines.retrofit.awaitResult
@@ -40,13 +43,23 @@ import kotlin.coroutines.experimental.CoroutineContext
 @Singleton
 class UsersManager @Inject constructor(private val api: UsersApi) {
 
-    fun loadUsersList(
-            onSuccess: (List<UserData>) -> Unit,
-            onError: (Throwable) -> Unit,
-            runContext: CoroutineContext = CommonPool,
-            resultContext: CoroutineContext = UI) = launch(runContext) {
-        val result = api.usersList().awaitResult()
+    fun loadUsersList(onSuccess: (List<UserData>) -> Unit, onError: (Throwable) -> Unit)
+            = doRequest(api.usersList(), onSuccess, onError)
 
+    fun createUser(user: User, onSuccess: (Unit) -> Unit, onError: (Throwable) -> Unit)
+            = doRequest(api.createUser(UserUpdateBody(user)), onSuccess, onError)
+
+    fun updateUser(user: User, onSuccess: (Unit) -> Unit, onError: (Throwable) -> Unit)
+            = doRequest(api.createUser(UserUpdateBody(user)), onSuccess, onError)
+
+    @VisibleForTesting
+    fun <T : Any> doRequest(call: Call<T>,
+                            onSuccess: (T) -> Unit,
+                            onError: (Throwable) -> Unit,
+                            runContext: CoroutineContext = CommonPool,
+                            resultContext: CoroutineContext = UI) = launch(runContext) {
+
+        val result = call.awaitResult()
         run(resultContext) {
             when (result) {
                 is Result.Ok -> onSuccess(result.value)

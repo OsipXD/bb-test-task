@@ -37,6 +37,7 @@ import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
+import retrofit2.Call
 import retrofit2.HttpException
 import ru.endlesscode.bbtest.api.UserData
 import ru.endlesscode.bbtest.api.UsersApi
@@ -53,7 +54,7 @@ class UsersManagerSpec : Spek({
         val api: UsersApi = mock()
         val usersManager = spy(UsersManager(api))
 
-        context("load users list") {
+        context("making request") {
             val call: MockedCall<List<UserData>> = MockedCall()
 
             beforeGroup {
@@ -66,35 +67,37 @@ class UsersManagerSpec : Spek({
                 call.refresh()
             }
 
-            it("should receive users data") {
+            it("should receive right data") {
                 val users = listOf(
                         UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""),
                         UserData(id = 2, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200")
                 )
                 call.ok = users
-                usersManager.testLoadUsersList(onSuccess = { assertEquals(users, it) })
+                usersManager.testLoadUsersList(call, onSuccess = { assertEquals(users, it) })
             }
 
             it("should call #onError when there are server error") {
                 val exception = HttpException(errorResponse<String>())
                 call.error = exception
-                usersManager.testLoadUsersList { assertTrue(it is HttpException) }
+                usersManager.testLoadUsersList(call) { assertTrue(it is HttpException) }
             }
 
             it("should call #onError when there are exception") {
                 val exception = IOException()
                 call.exception = exception
-                usersManager.testLoadUsersList { assertTrue(it is IOException) }
+                usersManager.testLoadUsersList(call) { assertTrue(it is IOException) }
             }
         }
     }
 })
 
-private fun UsersManager.testLoadUsersList(
-        onSuccess: (List<UserData>) -> Unit = { fail("It should be failure") },
+private fun <T : Any> UsersManager.testLoadUsersList(
+        call: Call<T>,
+        onSuccess: (T) -> Unit = { fail("It should be failure") },
         onError: (Throwable) -> Unit = { fail("It should be successful") }
 ) = runBlocking {
-    this@testLoadUsersList.loadUsersList(
+    this@testLoadUsersList.doRequest(
+            call = call,
             onSuccess = { onSuccess(it) },
             onError = { onError(it) },
             runContext = Unconfined, resultContext = Unconfined).join()
