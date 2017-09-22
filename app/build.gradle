@@ -72,7 +72,7 @@ ext {
     daggerVersion = '2.11'
 
     // Testing
-    spekVersion = '1.1.5'
+    spekVersion = '1.1.4'
     mockitoKotlinVersion = '1.5.+'
 }
 

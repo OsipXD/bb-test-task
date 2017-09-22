@@ -29,26 +29,29 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.run
-import okhttp3.ResponseBody
 import ru.endlesscode.bbtest.api.UserData
 import ru.endlesscode.bbtest.api.UsersApi
-import ru.gildor.coroutines.retrofit.awaitResponse
+import ru.gildor.coroutines.retrofit.Result
+import ru.gildor.coroutines.retrofit.awaitResult
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.experimental.CoroutineContext
 
 @Singleton
 class UsersManager @Inject constructor(private val api: UsersApi) {
 
     fun loadUsersList(
-            onSuccess: (Int, List<UserData>) -> Unit,
-            onError: (Int, ResponseBody?) -> Unit) = launch(CommonPool) {
-        val response = api.usersList().awaitResponse()
+            onSuccess: (List<UserData>) -> Unit,
+            onError: (Throwable) -> Unit,
+            runContext: CoroutineContext = CommonPool,
+            resultContext: CoroutineContext = UI) = launch(runContext) {
+        val result = api.usersList().awaitResult()
 
-        run(UI) {
-            if (response.isSuccessful) {
-                onSuccess(response.code(), response.body() ?: emptyList())
-            } else {
-                onError(response.code(), response.errorBody())
+        run(resultContext) {
+            when (result) {
+                is Result.Ok -> onSuccess(result.value)
+                is Result.Error -> onError(result.exception)
+                is Result.Exception -> onError(result.exception)
             }
         }
     }

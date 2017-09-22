@@ -49,7 +49,7 @@ class UserSerializationSpec : Spek({
             val listType = object : TypeToken<ArrayList<UserData>>() {}.type
             val users: List<UserData> = gson.fromJson(jsonText, listType)
 
-            it("should be with right size") {
+            it("should have right size") {
                 assertEquals(2, users.size)
             }
 
@@ -66,14 +66,11 @@ class UserSerializationSpec : Spek({
     given("a user data") {
         val user = UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = "")
 
-        on("serialize user update body") {
-            val jsonText = gson.toJson(UserUpdateBody(user))
+        it("should be serialized right to update body") {
+            val expected = FileHelper.readJson("UpdateUser")
+            val actual = gson.toJson(UserUpdateBody(user))
 
-            it("should be serialized right") {
-                val expected = FileHelper.readJson("UpdateUser")
-
-                assertEquals(expected, jsonText)
-            }
+            assertEquals(expected, actual)
         }
     }
 })
