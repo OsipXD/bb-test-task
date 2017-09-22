@@ -23,21 +23,18 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest
+package ru.endlesscode.bbtest.model
 
-import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.rx2.awaitSingle
+import ru.endlesscode.bbtest.api.UsersApi
+import javax.inject.Inject
 
-/**
- * A placeholder fragment containing a simple view.
- */
-class MainActivityFragment : Fragment() {
+class UsersManager @Inject constructor(private val api: UsersApi) {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+    fun getUsers() = launch(CommonPool) {
+        val users = api.usersList().awaitSingle()
+        users.forEach(::println)
     }
 }

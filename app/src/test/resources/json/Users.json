@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "first_name": "Foo",
+    "last_name": "Bar",
+    "email": "foo@bar.com",
+    "avatar_url": "",
+    "created_at": "2016-09-20T14:44:33.573Z",
+    "updated_at": "2016-09-20T14:44:33.573Z"
+  },
+  {
+    "id": 2,
+    "first_name": "Baz",
+    "last_name": "Qux",
+    "email": "baz@qux.com",
+    "avatar_url": "http://www.fillmurray.com/200/200",
+    "created_at": "2016-09-20T15:33:25.536Z",
+    "updated_at": "2016-09-20T15:33:25.536Z"
+  }
+]

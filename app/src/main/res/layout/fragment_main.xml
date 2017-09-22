@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:showIn="@layout/activity_main"
-        tools:context="ru.endlesscode.bbtest.MainActivityFragment">
+        tools:context="ru.endlesscode.bbtest.ui.fragment.MainActivityFragment">
 
     <TextView
             android:layout_width="wrap_content"

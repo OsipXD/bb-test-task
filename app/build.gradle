@@ -56,6 +56,10 @@ idea.module {
     downloadSources = true
 }
 
+kapt {
+    generateStubs = true
+}
+
 // Libs versions
 ext {
     targetVersion = '26.1.+'
@@ -63,7 +67,10 @@ ext {
     retrofitVersion = '2.3.+'
     gsonVersion = '2.8.+'
     coroutinesVersion = '0.18'
+    retrofitCoroutinesVersion = '0.7.+'
     glideVersion = '4.1.+'
+    daggerVersion = '2.11'
+    rxJavaVersion = '2.1.+'
 
     // Testing
     spekVersion = '1.1.4'
@@ -80,21 +87,31 @@ dependencies {
     // HTTP (and related to) libs
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     compile "com.squareup.okhttp3:logging-interceptor:3.9.0"
     compile "com.google.code.gson:gson:$gsonVersion"
     compile "com.github.bumptech.glide:glide:$glideVersion"
     compile "com.github.bumptech.glide:okhttp3-integration:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
 
+    // RxJava
+    compile "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+
     // Coroutines support
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-    compile "ru.gildor.coroutines:kotlin-coroutines-retrofit:0.7.1"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutinesVersion"
+    compile "ru.gildor.coroutines:kotlin-coroutines-retrofit:$retrofitCoroutinesVersion"
 
     // MVP library
     compile "com.arello-mobile:moxy:$moxyVersion"
     compile "com.arello-mobile:moxy-app-compat:$moxyVersion"
     kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
+
+    // DI
+    compile "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
     // Testing
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
@@ -104,10 +121,10 @@ dependencies {
     testCompile "org.junit.platform:junit-platform-runner:1.0.0-RC2"
     testCompile "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
+        exclude group: 'com.google.code.findbugs'
         exclude group: 'com.android.support', module: 'support-annotations'
     }
 }
-
 
 repositories {
     mavenCentral()
