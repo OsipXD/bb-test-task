@@ -35,12 +35,12 @@ interface UsersApi {
 
     @Headers("Content-type: application/json")
     @POST("/users.json")
-    fun createUser(@Body body: UserUpdateBody): Observable<UserUpdateBody>
+    fun createUser(@Body body: UserUpdateBody): Observable<Unit>
 
     @Headers("Content-type: application/json")
     @PATCH("/users/{id}.json")
     fun updateUser(
             @Path("id") id: Int,
             @Body body: UserUpdateBody
-    ): Observable<UserUpdateBody>
+    ): Observable<Unit>
 }
