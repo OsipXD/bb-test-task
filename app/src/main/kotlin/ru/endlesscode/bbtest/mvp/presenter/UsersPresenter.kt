@@ -87,11 +87,12 @@ class UsersPresenter : MvpPresenter<UsersView>() {
     }
 
     private fun updateUsers(users: List<User>) = launch(CommonPool) {
-        val usersDiff = UsersDiffCallback(this@UsersPresenter.users, users)
+        val sortedUsers = users.sortedBy { it.fullName }
+        val usersDiff = UsersDiffCallback(this@UsersPresenter.users, sortedUsers)
         val diffResult = DiffUtil.calculateDiff(usersDiff)
 
         this@UsersPresenter.users.clear()
-        this@UsersPresenter.users.addAll(users)
+        this@UsersPresenter.users.addAll(sortedUsers)
         run(UI) {
             viewState.updateUsers(diffResult)
             onFinishLoading()

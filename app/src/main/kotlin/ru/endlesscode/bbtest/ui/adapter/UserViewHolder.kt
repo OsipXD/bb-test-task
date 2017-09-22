@@ -42,7 +42,7 @@ class UserViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(parent.inflate
     private val avatar: ImageView = itemView.avatar
 
     override fun setData(user: User) {
-        fullName.text = "${user.firstName} ${user.lastName}"
+        fullName.text = user.fullName
         email.text = user.email
     }
 }
