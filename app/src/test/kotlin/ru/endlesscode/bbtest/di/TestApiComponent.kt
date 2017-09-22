@@ -27,12 +27,15 @@ package ru.endlesscode.bbtest.di
 
 import com.google.gson.Gson
 import dagger.Component
+import ru.endlesscode.bbtest.api.UsersApi
 import ru.endlesscode.bbtest.di.modules.NetworkModule
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = arrayOf(NetworkModule::class))
 interface TestApiComponent : ApiComponent {
+
+    fun usersApi(): UsersApi
 
     fun gson(): Gson
 }

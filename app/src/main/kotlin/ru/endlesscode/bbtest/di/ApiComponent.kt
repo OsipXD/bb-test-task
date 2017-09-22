@@ -26,13 +26,9 @@
 package ru.endlesscode.bbtest.di
 
 import dagger.Component
-import ru.endlesscode.bbtest.api.UsersApi
 import ru.endlesscode.bbtest.di.modules.NetworkModule
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = arrayOf(NetworkModule::class))
-interface ApiComponent {
-
-    fun usersApi(): UsersApi
-}
+interface ApiComponent
