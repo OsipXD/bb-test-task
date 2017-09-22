@@ -23,18 +23,12 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.api
+package ru.endlesscode.bbtest.ui
 
-import com.google.gson.annotations.Expose
-import ru.endlesscode.bbtest.mvp.model.User
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 
-class UserUpdateBody(@Expose val user: UserData)
-
-data class UserData(
-        @Expose(serialize = false)
-        override val id: Int,
-        @Expose override val firstName: String,
-        @Expose override val lastName: String,
-        @Expose override val email: String,
-        @Expose override val avatarUrl: String
-) : User
+@Suppress("UNCHECKED_CAST")
+fun <T : View> ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false)
+        = LayoutInflater.from(this.context).inflate(layoutId, this, attachToRoot) as T

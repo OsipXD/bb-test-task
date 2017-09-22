@@ -23,22 +23,24 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.ui.fragment
+package ru.endlesscode.bbtest.mvp.view
 
-import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import ru.endlesscode.bbtest.R
+import com.arellomobile.mvp.MvpView
+import ru.endlesscode.bbtest.mvp.model.User
 
-/**
- * A placeholder fragment containing a simple view.
- */
-class MainActivityFragment : Fragment() {
+interface UsersView : MvpView {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
-    }
+    fun showError(message: String)
+
+    fun onStartLoading()
+
+    fun onFinishLoading()
+
+    fun showRefreshing()
+
+    fun hideRefreshing()
+
+    fun openAddUserView()
+
+    fun setUsers(users: List<User>)
 }

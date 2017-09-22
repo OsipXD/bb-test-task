@@ -23,41 +23,70 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.ui.activity
+package ru.endlesscode.bbtest.ui.fragment
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
-import kotlinx.android.synthetic.main.activity_main.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.arellomobile.mvp.MvpAppCompatFragment
+import com.arellomobile.mvp.presenter.InjectPresenter
+import kotlinx.android.synthetic.main.fragment_users.*
 import ru.endlesscode.bbtest.R
+import ru.endlesscode.bbtest.mvp.model.User
+import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
+import ru.endlesscode.bbtest.mvp.view.UsersView
+import ru.endlesscode.bbtest.ui.inflate
 
-class MainActivity : AppCompatActivity() {
+/**
+ * A placeholder fragment containing a simple view.
+ */
+class UsersFragment : MvpAppCompatFragment(), UsersView {
+
+    @InjectPresenter
+    lateinit var usersPresenter: UsersPresenter
+
+    private val usersList by lazy { users_list }
+    private val buttonAdd by lazy { fab }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+            = container?.inflate(R.layout.fragment_users)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
+        buttonAdd.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
+    override fun showError(message: String) {
+        TODO("not implemented")
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
+    override fun onStartLoading() {
+        TODO("not implemented")
+    }
 
-        return if (id == R.id.action_settings) true else super.onOptionsItemSelected(item)
+    override fun onFinishLoading() {
+        TODO("not implemented")
+    }
+
+    override fun showRefreshing() {
+        TODO("not implemented")
+    }
+
+    override fun hideRefreshing() {
+        TODO("not implemented")
+    }
+
+    override fun openAddUserView() {
+        TODO("not implemented")
+    }
+
+    override fun setUsers(users: List<User>) {
+        TODO("not implemented")
     }
 }

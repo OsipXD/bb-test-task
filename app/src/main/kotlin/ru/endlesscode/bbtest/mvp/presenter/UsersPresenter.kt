@@ -23,18 +23,20 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.api
+package ru.endlesscode.bbtest.mvp.presenter
 
-import com.google.gson.annotations.Expose
-import ru.endlesscode.bbtest.mvp.model.User
+import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
+import ru.endlesscode.bbtest.mvp.view.UsersView
 
-class UserUpdateBody(@Expose val user: UserData)
+@InjectViewState
+class UsersPresenter : MvpPresenter<UsersView>() {
 
-data class UserData(
-        @Expose(serialize = false)
-        override val id: Int,
-        @Expose override val firstName: String,
-        @Expose override val lastName: String,
-        @Expose override val email: String,
-        @Expose override val avatarUrl: String
-) : User
+    override fun onFirstViewAttach() {
+        this.loadUsers()
+    }
+
+    private fun loadUsers() {
+        TODO("not implemented")
+    }
+}

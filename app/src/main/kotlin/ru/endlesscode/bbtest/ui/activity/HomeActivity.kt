@@ -23,18 +23,42 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.api
+package ru.endlesscode.bbtest.ui.activity
 
-import com.google.gson.annotations.Expose
-import ru.endlesscode.bbtest.mvp.model.User
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.presenter.InjectPresenter
+import kotlinx.android.synthetic.main.activity_main.*
+import ru.endlesscode.bbtest.R
+import ru.endlesscode.bbtest.mvp.presenter.HomePresenter
+import ru.endlesscode.bbtest.mvp.view.HomeView
 
-class UserUpdateBody(@Expose val user: UserData)
+class HomeActivity : MvpAppCompatActivity(), HomeView {
 
-data class UserData(
-        @Expose(serialize = false)
-        override val id: Int,
-        @Expose override val firstName: String,
-        @Expose override val lastName: String,
-        @Expose override val email: String,
-        @Expose override val avatarUrl: String
-) : User
+    @InjectPresenter
+    lateinit var homePresenter: HomePresenter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        return if (id == R.id.action_settings) true else super.onOptionsItemSelected(item)
+    }
+
+    override fun openAddUserView() {
+        TODO("not implemented")
+    }
+}

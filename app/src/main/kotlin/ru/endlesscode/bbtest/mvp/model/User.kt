@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.model
+package ru.endlesscode.bbtest.mvp.model
 
 interface User {
     val id: Int

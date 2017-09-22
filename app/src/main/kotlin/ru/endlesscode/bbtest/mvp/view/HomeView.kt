@@ -23,18 +23,11 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.api
+package ru.endlesscode.bbtest.mvp.view
 
-import com.google.gson.annotations.Expose
-import ru.endlesscode.bbtest.mvp.model.User
+import com.arellomobile.mvp.MvpView
 
-class UserUpdateBody(@Expose val user: UserData)
+interface HomeView : MvpView {
 
-data class UserData(
-        @Expose(serialize = false)
-        override val id: Int,
-        @Expose override val firstName: String,
-        @Expose override val lastName: String,
-        @Expose override val email: String,
-        @Expose override val avatarUrl: String
-) : User
+    fun openAddUserView()
+}
