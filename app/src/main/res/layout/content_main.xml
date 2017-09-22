@@ -26,7 +26,7 @@
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           xmlns:app="http://schemas.android.com/apk/res-auto"
-          android:id="@+id/fragment"
+          android:id="@+id/users_fragment"
           android:name="ru.endlesscode.bbtest.ui.fragment.UsersFragment"
           android:layout_width="match_parent"
           android:layout_height="match_parent"

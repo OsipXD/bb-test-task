@@ -37,7 +37,6 @@ import ru.endlesscode.bbtest.R
 import ru.endlesscode.bbtest.mvp.model.User
 import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
 import ru.endlesscode.bbtest.mvp.view.UsersView
-import ru.endlesscode.bbtest.ui.inflate
 
 /**
  * A placeholder fragment containing a simple view.
@@ -50,14 +49,14 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     private val usersList by lazy { users_list }
     private val buttonAdd by lazy { fab }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-            = container?.inflate(R.layout.fragment_users)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_users, container)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        buttonAdd.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+        buttonAdd.setOnClickListener { clickView ->
+            Snackbar.make(clickView, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
     }

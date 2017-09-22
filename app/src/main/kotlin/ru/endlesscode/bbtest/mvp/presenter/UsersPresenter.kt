@@ -37,6 +37,6 @@ class UsersPresenter : MvpPresenter<UsersView>() {
     }
 
     private fun loadUsers() {
-        TODO("not implemented")
+
     }
 }
