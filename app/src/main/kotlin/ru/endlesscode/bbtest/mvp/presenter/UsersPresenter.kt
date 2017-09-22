@@ -28,8 +28,9 @@ package ru.endlesscode.bbtest.mvp.presenter
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.endlesscode.bbtest.TestApp
-import ru.endlesscode.bbtest.api.UserData
+import ru.endlesscode.bbtest.mvp.model.User
 import ru.endlesscode.bbtest.mvp.model.UsersManager
+import ru.endlesscode.bbtest.mvp.view.UserItemView
 import ru.endlesscode.bbtest.mvp.view.UsersView
 import java.net.UnknownHostException
 import javax.inject.Inject
@@ -41,6 +42,10 @@ class UsersPresenter : MvpPresenter<UsersView>() {
     lateinit var usersManager: UsersManager
 
     private var isInLoading = false
+    private val users: MutableList<User> = mutableListOf()
+
+    val count: Int
+        get() = users.size
 
     init {
         TestApp.apiComponent.inject(this)
@@ -75,9 +80,15 @@ class UsersPresenter : MvpPresenter<UsersView>() {
         viewState.showRefreshing()
     }
 
-    private fun onLoadingSuccess(users: List<UserData>) {
-        viewState.setUsers(users)
+    private fun onLoadingSuccess(users: List<User>) {
+        setUsers(users)
         onFinishLoading()
+    }
+
+    private fun setUsers(users: List<User>) {
+        this.users.clear()
+        this.users.addAll(users)
+        viewState.setUsers(users)
     }
 
     private fun onLoadingFailed(error: Throwable) {
@@ -93,5 +104,9 @@ class UsersPresenter : MvpPresenter<UsersView>() {
     private fun onFinishLoading() {
         isInLoading = false
         viewState.hideRefreshing()
+    }
+
+    fun onBindUserAtPosition(position: Int, holder: UserItemView) {
+        holder.setData(users[position])
     }
 }

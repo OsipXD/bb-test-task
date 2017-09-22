@@ -23,18 +23,26 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.ui
+package ru.endlesscode.bbtest.ui.adapter
 
-import android.view.LayoutInflater
-import android.view.View
+import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import com.arellomobile.mvp.MvpFacade
-import com.arellomobile.mvp.MvpPresenter
-import com.arellomobile.mvp.MvpView
+import android.widget.ImageView
+import android.widget.TextView
+import kotlinx.android.synthetic.main.item_user.view.*
+import ru.endlesscode.bbtest.R
+import ru.endlesscode.bbtest.mvp.model.User
+import ru.endlesscode.bbtest.mvp.view.UserItemView
+import ru.endlesscode.bbtest.ui.inflate
 
-@Suppress("UNCHECKED_CAST")
-fun <T : MvpPresenter<out MvpView>> MvpFacade.getPresenter(tag: String) = this.presenterStore[tag] as T
+class UserViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(parent.inflate(R.layout.item_user)), UserItemView {
 
-@Suppress("UNCHECKED_CAST")
-fun <T : View> ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false)
-        = LayoutInflater.from(this.context).inflate(layoutId, this, attachToRoot) as T
+    private val fullName: TextView = itemView.full_name
+    private val email: TextView = itemView.email
+    private val avatar: ImageView = itemView.avatar
+
+    override fun setData(user: User) {
+        fullName.text = "${user.firstName} ${user.lastName}"
+        email.text = user.email
+    }
+}

@@ -23,18 +23,11 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.ui
+package ru.endlesscode.bbtest.mvp.view
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.arellomobile.mvp.MvpFacade
-import com.arellomobile.mvp.MvpPresenter
-import com.arellomobile.mvp.MvpView
+import ru.endlesscode.bbtest.mvp.model.User
 
-@Suppress("UNCHECKED_CAST")
-fun <T : MvpPresenter<out MvpView>> MvpFacade.getPresenter(tag: String) = this.presenterStore[tag] as T
+interface UserItemView {
 
-@Suppress("UNCHECKED_CAST")
-fun <T : View> ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false)
-        = LayoutInflater.from(this.context).inflate(layoutId, this, attachToRoot) as T
+    fun setData(user: User)
+}

@@ -27,6 +27,8 @@ package ru.endlesscode.bbtest.ui.fragment
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +41,7 @@ import ru.endlesscode.bbtest.mvp.model.User
 import ru.endlesscode.bbtest.mvp.presenter.HomePresenter
 import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
 import ru.endlesscode.bbtest.mvp.view.UsersView
+import ru.endlesscode.bbtest.ui.adapter.UsersAdaper
 import ru.endlesscode.bbtest.ui.getPresenter
 
 /**
@@ -49,13 +52,18 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     @InjectPresenter
     lateinit var usersPresenter: UsersPresenter
 
+    private lateinit var usersList: RecyclerView
     private val homePresenter by lazy { MvpFacade.getInstance().getPresenter<HomePresenter>(HomePresenter.TAG) }
     private val usersRefresh by lazy { users_refresh }
-    private val usersList by lazy { users_list }
     private val buttonAdd by lazy { fab }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_users, container)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view: View = inflater.inflate(R.layout.fragment_users, container) ?: return null
+        usersList = view.findViewById(R.id.users_list)
+        usersList.init()
+
+        return view
+    }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -90,6 +98,15 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     }
 
     override fun setUsers(users: List<User>) {
-        TODO("not implemented")
+        usersList.adapter.notifyDataSetChanged()
+    }
+
+    private fun RecyclerView.init() {
+        setHasFixedSize(true)
+        layoutManager = LinearLayoutManager(this@UsersFragment.context)
+
+        if (adapter == null) {
+            adapter = UsersAdaper(usersPresenter)
+        }
     }
 }
