@@ -30,7 +30,7 @@
                                              android:layout_width="match_parent"
                                              android:layout_height="@dimen/menu_item_height"
                                              android:padding="@dimen/default_padding"
-                                             tools:showIn="@layout/fragment_main">
+                                             tools:showIn="@layout/fragment_users">
 
     <ImageView
             tools:background="#ddd"
