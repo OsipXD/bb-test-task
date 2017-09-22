@@ -27,6 +27,7 @@ package ru.endlesscode.bbtest.ui.fragment
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -37,7 +38,6 @@ import com.arellomobile.mvp.MvpFacade
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_users.*
 import ru.endlesscode.bbtest.R
-import ru.endlesscode.bbtest.mvp.model.User
 import ru.endlesscode.bbtest.mvp.presenter.HomePresenter
 import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
 import ru.endlesscode.bbtest.mvp.view.UsersView
@@ -97,8 +97,8 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
         TODO("not implemented")
     }
 
-    override fun setUsers(users: List<User>) {
-        usersList.adapter.notifyDataSetChanged()
+    override fun updateUsers(diffResult: DiffUtil.DiffResult) {
+        diffResult.dispatchUpdatesTo(usersList.adapter)
     }
 
     private fun RecyclerView.init() {

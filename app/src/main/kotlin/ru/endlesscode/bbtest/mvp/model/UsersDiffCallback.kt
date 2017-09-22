@@ -23,24 +23,19 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.mvp.view
+package ru.endlesscode.bbtest.mvp.model
 
 import android.support.v7.util.DiffUtil
-import com.arellomobile.mvp.MvpView
 
-interface UsersView : MvpView {
+class UsersDiffCallback(private val oldList: List<User>, private val newList: List<User>) : DiffUtil.Callback() {
 
-    fun showError(message: String)
+    override fun getOldListSize(): Int = oldList.size
 
-    fun onStartLoading()
+    override fun getNewListSize(): Int = newList.size
 
-    fun onFinishLoading()
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean
+            = oldList[oldItemPosition].id == newList[newItemPosition].id
 
-    fun showRefreshing()
-
-    fun hideRefreshing()
-
-    fun openAddUserView()
-
-    fun updateUsers(diffResult: DiffUtil.DiffResult)
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean
+            = oldList[oldItemPosition] == newList[newItemPosition]
 }

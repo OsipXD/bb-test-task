@@ -25,10 +25,16 @@
 
 package ru.endlesscode.bbtest.mvp.presenter
 
+import android.support.v7.util.DiffUtil
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.run
 import ru.endlesscode.bbtest.TestApp
 import ru.endlesscode.bbtest.mvp.model.User
+import ru.endlesscode.bbtest.mvp.model.UsersDiffCallback
 import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.mvp.view.UserItemView
 import ru.endlesscode.bbtest.mvp.view.UsersView
@@ -70,7 +76,7 @@ class UsersPresenter : MvpPresenter<UsersView>() {
 
         onLoadingStart()
         usersManager.loadUsersList(
-                onSuccess = { onLoadingSuccess(it) },
+                onSuccess = { updateUsers(it) },
                 onError = { onLoadingFailed(it) }
         )
     }
@@ -80,15 +86,16 @@ class UsersPresenter : MvpPresenter<UsersView>() {
         viewState.showRefreshing()
     }
 
-    private fun onLoadingSuccess(users: List<User>) {
-        setUsers(users)
-        onFinishLoading()
-    }
+    private fun updateUsers(users: List<User>) = launch(CommonPool) {
+        val usersDiff = UsersDiffCallback(this@UsersPresenter.users, users)
+        val diffResult = DiffUtil.calculateDiff(usersDiff)
 
-    private fun setUsers(users: List<User>) {
-        this.users.clear()
-        this.users.addAll(users)
-        viewState.setUsers(users)
+        this@UsersPresenter.users.clear()
+        this@UsersPresenter.users.addAll(users)
+        run(UI) {
+            viewState.updateUsers(diffResult)
+            onFinishLoading()
+        }
     }
 
     private fun onLoadingFailed(error: Throwable) {
