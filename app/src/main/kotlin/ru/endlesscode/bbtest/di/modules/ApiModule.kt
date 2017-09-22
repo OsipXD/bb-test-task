@@ -23,13 +23,18 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.di
+package ru.endlesscode.bbtest.di.modules
 
-import dagger.Component
-import ru.endlesscode.bbtest.di.modules.ApiModule
-import ru.endlesscode.bbtest.di.modules.RetrofitModule
+import dagger.Module
+import dagger.Provides
+import retrofit2.Retrofit
+import ru.endlesscode.bbtest.api.UsersApi
 import javax.inject.Singleton
 
-@Singleton
-@Component(modules = arrayOf(RetrofitModule::class, ApiModule::class))
-interface ApiComponent
+@Module
+class ApiModule {
+
+    @Provides
+    @Singleton
+    fun provideUsersApi(retrofit: Retrofit): UsersApi = retrofit.create(UsersApi::class.java)
+}

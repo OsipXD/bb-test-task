@@ -28,11 +28,12 @@ package ru.endlesscode.bbtest.di
 import com.google.gson.Gson
 import dagger.Component
 import ru.endlesscode.bbtest.api.UsersApi
-import ru.endlesscode.bbtest.di.modules.NetworkModule
+import ru.endlesscode.bbtest.di.modules.ApiModule
+import ru.endlesscode.bbtest.di.modules.RetrofitModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(NetworkModule::class))
+@Component(modules = arrayOf(RetrofitModule::class, ApiModule::class))
 interface TestApiComponent : ApiComponent {
 
     fun usersApi(): UsersApi
