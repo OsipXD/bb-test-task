@@ -23,17 +23,11 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.di
+package ru.endlesscode.bbtest.ui
 
-import dagger.Component
-import ru.endlesscode.bbtest.di.modules.ApiModule
-import ru.endlesscode.bbtest.di.modules.RetrofitModule
-import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
-import javax.inject.Singleton
+import com.arellomobile.mvp.MvpFacade
+import com.arellomobile.mvp.MvpPresenter
+import com.arellomobile.mvp.MvpView
 
-@Singleton
-@Component(modules = arrayOf(RetrofitModule::class, ApiModule::class))
-interface ApiComponent {
-
-    fun inject(usersPresenter: UsersPresenter)
-}
+@Suppress("UNCHECKED_CAST")
+fun <T : MvpPresenter<out MvpView>> MvpFacade.getPresenter(tag: String) = this.presenterStore[tag] as T

@@ -23,17 +23,15 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.di
+package ru.endlesscode.bbtest
 
-import dagger.Component
-import ru.endlesscode.bbtest.di.modules.ApiModule
-import ru.endlesscode.bbtest.di.modules.RetrofitModule
-import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
-import javax.inject.Singleton
+import android.app.Application
+import ru.endlesscode.bbtest.di.ApiComponent
+import ru.endlesscode.bbtest.di.DaggerApiComponent
 
-@Singleton
-@Component(modules = arrayOf(RetrofitModule::class, ApiModule::class))
-interface ApiComponent {
+class TestApp : Application() {
 
-    fun inject(usersPresenter: UsersPresenter)
+    companion object {
+        val apiComponent: ApiComponent by lazy { DaggerApiComponent.create() }
+    }
 }

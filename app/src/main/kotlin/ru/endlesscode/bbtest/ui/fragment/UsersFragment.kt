@@ -31,12 +31,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
+import com.arellomobile.mvp.MvpFacade
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_users.*
 import ru.endlesscode.bbtest.R
 import ru.endlesscode.bbtest.mvp.model.User
+import ru.endlesscode.bbtest.mvp.presenter.HomePresenter
 import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
 import ru.endlesscode.bbtest.mvp.view.UsersView
+import ru.endlesscode.bbtest.ui.getPresenter
 
 /**
  * A placeholder fragment containing a simple view.
@@ -46,6 +49,8 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     @InjectPresenter
     lateinit var usersPresenter: UsersPresenter
 
+    private val homePresenter by lazy { MvpFacade.getInstance().getPresenter<HomePresenter>(HomePresenter.TAG) }
+    private val usersRefresh by lazy { users_refresh }
     private val usersList by lazy { users_list }
     private val buttonAdd by lazy { fab }
 
@@ -55,14 +60,13 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        buttonAdd.setOnClickListener { clickView ->
-            Snackbar.make(clickView, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+        buttonAdd.setOnClickListener { homePresenter.onAddButtonPressed() }
+        usersRefresh.setOnRefreshListener { usersPresenter.refreshUsers() }
     }
 
     override fun showError(message: String) {
-        TODO("not implemented")
+        Snackbar.make(usersList, message, Snackbar.LENGTH_LONG)
+                .setAction("Retry", { usersPresenter.reloadUsers() }).show()
     }
 
     override fun onStartLoading() {
@@ -74,11 +78,11 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     }
 
     override fun showRefreshing() {
-        TODO("not implemented")
+        usersRefresh.isRefreshing = true
     }
 
     override fun hideRefreshing() {
-        TODO("not implemented")
+        usersRefresh.isRefreshing = false
     }
 
     override fun openAddUserView() {

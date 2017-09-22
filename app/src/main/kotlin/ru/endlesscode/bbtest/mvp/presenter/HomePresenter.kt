@@ -32,6 +32,10 @@ import ru.endlesscode.bbtest.mvp.view.HomeView
 @InjectViewState
 class HomePresenter : MvpPresenter<HomeView>() {
 
+    companion object {
+        const val TAG = "HP"
+    }
+
     fun onAddButtonPressed() {
         viewState.openAddUserView()
     }

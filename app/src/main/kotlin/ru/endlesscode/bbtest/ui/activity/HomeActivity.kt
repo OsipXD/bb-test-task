@@ -30,6 +30,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.PresenterType
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.endlesscode.bbtest.R
 import ru.endlesscode.bbtest.mvp.presenter.HomePresenter
@@ -37,7 +38,7 @@ import ru.endlesscode.bbtest.mvp.view.HomeView
 
 class HomeActivity : MvpAppCompatActivity(), HomeView {
 
-    @InjectPresenter
+    @InjectPresenter(type = PresenterType.GLOBAL, tag = HomePresenter.TAG)
     lateinit var homePresenter: HomePresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
