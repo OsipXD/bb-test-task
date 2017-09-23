@@ -1,0 +1,34 @@
+<!--
+  ~ This file is part of bb-test-task, licensed under the MIT License (MIT).
+  ~
+  ~ Copyright (c) Osip Fatkullin <osip.fatkullin@gmail.com>
+  ~ Copyright (c) contributors
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:height="@dimen/avatar_size"
+        android:width="@dimen/avatar_size"
+        android:viewportHeight="40.0"
+        android:viewportWidth="40.0">
+    <path
+            android:fillColor="@color/colorPrimaryDark"
+            android:pathData="M 20,-2.8061768e-5 C 8.9599998,-2.8061768e-5 0,8.9599719 0,19.999971 c 0,11.04 8.9599998,20 20,20 11.04,0 20,-8.96 20,-20 C 40,8.9599719 31.04,-2.8061768e-5 20,-2.8061768e-5 Z M 20,5.9999719 c 3.32,0 6,2.68 6,5.9999991 0,3.32 -2.68,6 -6,6 -3.320001,0 -6,-2.68 -6,-6 0,-3.3199991 2.679999,-5.9999991 6,-5.9999991 z m 0,28.3999991 c -5,0 -9.42,-2.56 -12.0000002,-6.44 0.06,-3.98 8.0000002,-6.16 12.0000002,-6.16 3.98,0 11.94,2.18 12,6.16 -2.58,3.88 -7,6.44 -12,6.44 z"/>
+</vector>

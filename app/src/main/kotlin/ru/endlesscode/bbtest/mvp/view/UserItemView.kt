@@ -25,9 +25,9 @@
 
 package ru.endlesscode.bbtest.mvp.view
 
-import ru.endlesscode.bbtest.mvp.model.User
+import ru.endlesscode.bbtest.mvp.model.UserItem
 
 interface UserItemView {
 
-    fun setData(user: User)
+    fun setData(user: UserItem)
 }

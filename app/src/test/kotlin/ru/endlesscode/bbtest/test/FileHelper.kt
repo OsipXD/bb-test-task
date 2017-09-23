@@ -23,11 +23,11 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.api
+package ru.endlesscode.bbtest.test
 
 object FileHelper {
 
-    fun readJson(name: String) = this.read("json/$name.json")
+    fun readJson(name: String) = read("json/$name.json")
 
     private fun read(path: String): String {
         val classLoader = javaClass.classLoader

@@ -35,6 +35,9 @@ data class UserItem(
         override val avatarUrl: String
 ) : User {
 
+    val fullName
+        get() = "$firstName $lastName"
+
     @Suppress("USELESS_ELVIS")
     constructor(data: UserData) : this(data.id, data.firstName, data.lastName, data.email, data.avatarUrl ?: "")
 }

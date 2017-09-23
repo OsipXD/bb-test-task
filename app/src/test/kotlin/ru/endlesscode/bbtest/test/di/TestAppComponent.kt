@@ -23,18 +23,23 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.di
+package ru.endlesscode.bbtest.test.di
 
 import com.google.gson.Gson
+import com.nhaarman.mockito_kotlin.mock
 import dagger.Component
+import ru.endlesscode.bbtest.di.AppComponent
 import ru.endlesscode.bbtest.di.modules.ApiModule
 import ru.endlesscode.bbtest.di.modules.ContextModule
 import ru.endlesscode.bbtest.di.modules.RetrofitModule
+import ru.endlesscode.bbtest.mvp.model.UsersManager
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = arrayOf(ContextModule::class, RetrofitModule::class, ApiModule::class))
 interface TestAppComponent : AppComponent {
+
+    fun usersManager(): UsersManager = mock()
 
     fun gson(): Gson
 }

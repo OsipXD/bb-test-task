@@ -33,7 +33,6 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.run
 import ru.endlesscode.bbtest.TestApp
-import ru.endlesscode.bbtest.mvp.model.User
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersDiffCallback
 import ru.endlesscode.bbtest.mvp.model.UsersManager
@@ -49,7 +48,7 @@ class UsersPresenter : MvpPresenter<UsersView>() {
     lateinit var usersManager: UsersManager
 
     private var isInLoading = false
-    private val users: MutableList<User> = mutableListOf()
+    private val users: MutableList<UserItem> = mutableListOf()
 
     val count: Int
         get() = users.size
@@ -89,7 +88,7 @@ class UsersPresenter : MvpPresenter<UsersView>() {
         viewState.showRefreshing()
     }
 
-    private fun updateUsers(users: List<User>) = launch(CommonPool) {
+    private fun updateUsers(users: List<UserItem>) = launch(CommonPool) {
         val sortedUsers = users.sortedBy { it.fullName.toLowerCase() }
         val usersDiff = UsersDiffCallback(this@UsersPresenter.users, sortedUsers)
         val diffResult = DiffUtil.calculateDiff(usersDiff)
@@ -121,7 +120,7 @@ class UsersPresenter : MvpPresenter<UsersView>() {
         holder.setData(users[position])
     }
 
-    fun getUsersAt(position: Int, count: Int): MutableList<User> {
+    fun getUsersAt(position: Int, count: Int): MutableList<UserItem> {
         val fromIndex = position.coerceIn(0..users.lastIndex)
         val toIndex = (fromIndex + count).coerceAtMost(users.lastIndex)
         return users.subList(fromIndex, toIndex)

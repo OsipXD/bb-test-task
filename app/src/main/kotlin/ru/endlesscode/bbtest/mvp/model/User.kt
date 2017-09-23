@@ -31,7 +31,4 @@ interface User {
     val lastName: String
     val email: String
     val avatarUrl: String
-
-    val fullName
-        get() = "$firstName $lastName"
 }

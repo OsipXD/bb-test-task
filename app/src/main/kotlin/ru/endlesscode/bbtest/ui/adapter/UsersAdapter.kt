@@ -25,7 +25,6 @@
 
 package ru.endlesscode.bbtest.ui.adapter
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -36,7 +35,7 @@ import kotlinx.android.synthetic.main.item_user.view.*
 import ru.endlesscode.bbtest.R
 import ru.endlesscode.bbtest.TestApp
 import ru.endlesscode.bbtest.misc.GlideProvider
-import ru.endlesscode.bbtest.mvp.model.User
+import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
 import ru.endlesscode.bbtest.mvp.view.UserItemView
 import ru.endlesscode.bbtest.ui.inflate
@@ -44,12 +43,10 @@ import javax.inject.Inject
 
 class UsersAdapter(private val usersPresenter: UsersPresenter) :
         RecyclerView.Adapter<UsersAdapter.UserViewHolder>(),
-        ListPreloader.PreloadModelProvider<User> {
+        ListPreloader.PreloadModelProvider<UserItem> {
 
     @Inject
     lateinit var glideProvider: GlideProvider
-    @Inject
-    lateinit var context: Context
 
     init {
         TestApp.appComponent.inject(this)
@@ -63,9 +60,9 @@ class UsersAdapter(private val usersPresenter: UsersPresenter) :
 
     override fun getItemCount() = usersPresenter.count
 
-    override fun getPreloadRequestBuilder(user: User): RequestBuilder<*> = glideProvider.request.load(user.avatarUrl)
+    override fun getPreloadRequestBuilder(user: UserItem): RequestBuilder<*> = glideProvider.request.load(user.avatarUrl)
 
-    override fun getPreloadItems(position: Int): MutableList<User>
+    override fun getPreloadItems(position: Int): MutableList<UserItem>
             = usersPresenter.getUsersAt(position, 2)
 
     inner class UserViewHolder(parent: ViewGroup) :
@@ -76,7 +73,7 @@ class UsersAdapter(private val usersPresenter: UsersPresenter) :
         private val email: TextView = itemView.email
         private val avatar: ImageView = itemView.avatar
 
-        override fun setData(user: User) {
+        override fun setData(user: UserItem) {
             fullName.text = user.fullName
             email.text = user.email
 
