@@ -23,24 +23,18 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest
+package ru.endlesscode.bbtest.di
 
-import android.app.Application
-import ru.endlesscode.bbtest.di.AppComponent
-import ru.endlesscode.bbtest.di.DaggerAppComponent
+import com.google.gson.Gson
+import dagger.Component
+import ru.endlesscode.bbtest.di.modules.ApiModule
 import ru.endlesscode.bbtest.di.modules.ContextModule
+import ru.endlesscode.bbtest.di.modules.RetrofitModule
+import javax.inject.Singleton
 
-class TestApp : Application() {
+@Singleton
+@Component(modules = arrayOf(ContextModule::class, RetrofitModule::class, ApiModule::class))
+interface TestAppComponent : AppComponent {
 
-    companion object {
-        lateinit var appComponent: AppComponent
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-
-        appComponent = DaggerAppComponent.builder()
-                .contextModule(ContextModule(this))
-                .build()
-    }
+    fun gson(): Gson
 }

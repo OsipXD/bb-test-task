@@ -23,24 +23,18 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest
+package ru.endlesscode.bbtest.mvp.model
 
-import android.app.Application
-import ru.endlesscode.bbtest.di.AppComponent
-import ru.endlesscode.bbtest.di.DaggerAppComponent
-import ru.endlesscode.bbtest.di.modules.ContextModule
+import ru.endlesscode.bbtest.api.UserData
 
-class TestApp : Application() {
+data class UserItem(
+        override val id: Int,
+        override val firstName: String,
+        override val lastName: String,
+        override val email: String,
+        override val avatarUrl: String
+) : User {
 
-    companion object {
-        lateinit var appComponent: AppComponent
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-
-        appComponent = DaggerAppComponent.builder()
-                .contextModule(ContextModule(this))
-                .build()
-    }
+    @Suppress("USELESS_ELVIS")
+    constructor(data: UserData) : this(data.id, data.firstName, data.lastName, data.email, data.avatarUrl ?: "")
 }

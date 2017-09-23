@@ -34,6 +34,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.run
 import ru.endlesscode.bbtest.TestApp
 import ru.endlesscode.bbtest.mvp.model.User
+import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersDiffCallback
 import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.mvp.view.UserItemView
@@ -54,7 +55,7 @@ class UsersPresenter : MvpPresenter<UsersView>() {
         get() = users.size
 
     init {
-        TestApp.apiComponent.inject(this)
+        TestApp.appComponent.inject(this)
     }
 
     override fun onFirstViewAttach() {
@@ -76,7 +77,9 @@ class UsersPresenter : MvpPresenter<UsersView>() {
 
         onLoadingStart()
         usersManager.loadUsersList(
-                onSuccess = { updateUsers(it) },
+                onSuccess = { usersData ->
+                    updateUsers(usersData.map { UserItem(it) })
+                },
                 onError = { onLoadingFailed(it) }
         )
     }
@@ -116,5 +119,11 @@ class UsersPresenter : MvpPresenter<UsersView>() {
 
     fun onBindUserAtPosition(position: Int, holder: UserItemView) {
         holder.setData(users[position])
+    }
+
+    fun getUsersAt(position: Int, count: Int): MutableList<User> {
+        val fromIndex = position.coerceIn(0..users.lastIndex)
+        val toIndex = (fromIndex + count).coerceAtMost(users.lastIndex)
+        return users.subList(fromIndex, toIndex)
     }
 }

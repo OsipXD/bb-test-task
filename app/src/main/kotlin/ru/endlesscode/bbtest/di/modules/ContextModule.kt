@@ -23,26 +23,17 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.ui.adapter
+package ru.endlesscode.bbtest.di.modules
 
-import android.support.v7.widget.RecyclerView
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import kotlinx.android.synthetic.main.item_user.view.*
-import ru.endlesscode.bbtest.R
-import ru.endlesscode.bbtest.mvp.model.User
-import ru.endlesscode.bbtest.mvp.view.UserItemView
-import ru.endlesscode.bbtest.ui.inflate
+import android.content.Context
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
-class UserViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(parent.inflate(R.layout.item_user)), UserItemView {
+@Module
+class ContextModule(val context: Context) {
 
-    private val fullName: TextView = itemView.full_name
-    private val email: TextView = itemView.email
-    private val avatar: ImageView = itemView.avatar
-
-    override fun setData(user: User) {
-        fullName.text = user.fullName
-        email.text = user.email
-    }
+    @Singleton
+    @Provides
+    fun provideContext(): Context = this.context
 }

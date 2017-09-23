@@ -23,19 +23,20 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.ui.adapter
+package ru.endlesscode.bbtest.misc
 
-import android.support.v7.widget.RecyclerView
-import android.view.ViewGroup
-import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
+import android.content.Context
+import android.graphics.drawable.Drawable
+import ru.endlesscode.bbtest.R
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UsersAdaper(private val usersPresenter: UsersPresenter) : RecyclerView.Adapter<UserViewHolder>() {
+@Singleton
+class GlideProvider @Inject constructor(context: Context) {
 
-    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        usersPresenter.onBindUserAtPosition(position, holder)
-    }
-
-    override fun onCreateViewHolder(group: ViewGroup, viewType: Int): UserViewHolder = UserViewHolder(group)
-
-    override fun getItemCount() = usersPresenter.count
+    val request: GlideRequest<Drawable> = GlideApp.with(context)
+            .asDrawable()
+            .centerCrop()
+            .placeholder(R.color.colorAccent)
+            .error(R.color.colorPrimaryDark)
 }

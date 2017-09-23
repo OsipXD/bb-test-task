@@ -23,20 +23,11 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.di
+package ru.endlesscode.bbtest.misc
 
-import com.google.gson.Gson
-import dagger.Component
-import ru.endlesscode.bbtest.api.UsersApi
-import ru.endlesscode.bbtest.di.modules.ApiModule
-import ru.endlesscode.bbtest.di.modules.RetrofitModule
-import javax.inject.Singleton
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.module.AppGlideModule
 
-@Singleton
-@Component(modules = arrayOf(RetrofitModule::class, ApiModule::class))
-interface TestApiComponent : ApiComponent {
+@GlideModule
+class GlideAppModule : AppGlideModule()
 
-    fun usersApi(): UsersApi
-
-    fun gson(): Gson
-}

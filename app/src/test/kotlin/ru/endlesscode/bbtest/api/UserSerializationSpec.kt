@@ -27,19 +27,19 @@ package ru.endlesscode.bbtest.api
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.nhaarman.mockito_kotlin.mock
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
-import ru.endlesscode.bbtest.di.DaggerTestApiComponent
-import ru.endlesscode.bbtest.di.TestApiComponent
+import ru.endlesscode.bbtest.di.TestAppComponent
 import kotlin.test.assertEquals
 
 @RunWith(JUnitPlatform::class)
 class UserSerializationSpec : Spek({
-    val apiComponent: TestApiComponent = DaggerTestApiComponent.builder().build()
+    val apiComponent: TestAppComponent = DaggerTestAppComponent.builder().contextModule(mock()).build()
     val gson: Gson = apiComponent.gson()
 
     given("a json with users list") {

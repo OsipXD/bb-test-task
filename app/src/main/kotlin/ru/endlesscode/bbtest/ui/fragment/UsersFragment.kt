@@ -36,12 +36,16 @@ import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.MvpFacade
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
+import com.bumptech.glide.util.FixedPreloadSizeProvider
 import kotlinx.android.synthetic.main.fragment_users.*
 import ru.endlesscode.bbtest.R
+import ru.endlesscode.bbtest.mvp.model.User
 import ru.endlesscode.bbtest.mvp.presenter.HomePresenter
 import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
 import ru.endlesscode.bbtest.mvp.view.UsersView
-import ru.endlesscode.bbtest.ui.adapter.UsersAdaper
+import ru.endlesscode.bbtest.ui.adapter.UsersAdapter
 import ru.endlesscode.bbtest.ui.getPresenter
 
 /**
@@ -106,7 +110,13 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
         layoutManager = LinearLayoutManager(this@UsersFragment.context)
 
         if (adapter == null) {
-            adapter = UsersAdaper(usersPresenter)
+            adapter = UsersAdapter(usersPresenter)
         }
+
+        val avatarSize = context.resources.getDimensionPixelSize(R.dimen.avatar_size)
+        val sizeProvider = FixedPreloadSizeProvider<User>(avatarSize, avatarSize)
+        val preloader = RecyclerViewPreloader<User>(
+                Glide.with(this.context), adapter as UsersAdapter, sizeProvider, 10)
+        addOnScrollListener(preloader)
     }
 }

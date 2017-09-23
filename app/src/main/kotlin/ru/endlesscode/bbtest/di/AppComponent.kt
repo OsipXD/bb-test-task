@@ -27,13 +27,17 @@ package ru.endlesscode.bbtest.di
 
 import dagger.Component
 import ru.endlesscode.bbtest.di.modules.ApiModule
+import ru.endlesscode.bbtest.di.modules.ContextModule
 import ru.endlesscode.bbtest.di.modules.RetrofitModule
 import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
+import ru.endlesscode.bbtest.ui.adapter.UsersAdapter
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(RetrofitModule::class, ApiModule::class))
-interface ApiComponent {
+@Component(modules = arrayOf(ContextModule::class, RetrofitModule::class, ApiModule::class))
+interface AppComponent {
 
     fun inject(usersPresenter: UsersPresenter)
+
+    fun inject(usersAdapter: UsersAdapter)
 }
