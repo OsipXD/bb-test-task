@@ -25,9 +25,23 @@
 
 package ru.endlesscode.bbtest.misc
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
+import ru.endlesscode.bbtest.R
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @GlideModule
 class GlideAppModule : AppGlideModule()
 
+@Singleton
+class GlideProvider @Inject constructor(context: Context) {
+
+    val request: GlideRequest<Drawable> = GlideApp.with(context)
+            .asDrawable()
+            .centerCrop()
+            .placeholder(R.color.colorAccent)
+            .error(R.color.colorPrimaryDark)
+}

@@ -63,6 +63,8 @@ kapt {
 // Libs versions
 ext {
     targetVersion = '26.1.+'
+
+    circleImageViewVersion = '2.1.+'
     moxyVersion = '1.5.+'
     retrofitVersion = '2.3.+'
     gsonVersion = '2.8.+'
@@ -82,6 +84,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$targetVersion"
     compile "com.android.support:design:$targetVersion"
     compile "com.android.support.constraint:constraint-layout:1.1.0-beta1"
+    compile "de.hdodenhof:circleimageview:$circleImageViewVersion"
 
     // HTTP (and related to) libs
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"

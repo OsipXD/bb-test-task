@@ -53,9 +53,6 @@ class UsersAdapter(private val usersPresenter: UsersPresenter) :
 
     init {
         TestApp.appComponent.inject(this)
-
-        val avatarSize = context.resources.getDimensionPixelSize(R.dimen.avatar_size)
-        glideProvider.request.override(avatarSize)
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
