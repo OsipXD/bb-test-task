@@ -23,40 +23,25 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest
+package ru.endlesscode.bbtest.di
 
-import android.app.Application
-import ru.endlesscode.bbtest.di.AppComponent
-import ru.endlesscode.bbtest.di.DaggerAppComponent
-import ru.endlesscode.bbtest.di.UsersComponent
-import ru.endlesscode.bbtest.di.modules.ContextModule
+import dagger.Subcomponent
+import ru.endlesscode.bbtest.di.modules.ApiModule
+import ru.endlesscode.bbtest.di.modules.RetrofitModule
+import ru.endlesscode.bbtest.di.modules.UsersModule
+import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
 
-class TestApp : Application() {
+@UsersScope
+@Subcomponent(modules = arrayOf(UsersModule::class, RetrofitModule::class, ApiModule::class))
+interface UsersComponent {
 
-    companion object {
-        lateinit var instance: TestApp
-        lateinit var appComponent: AppComponent
-
-        private var usersComponent: UsersComponent? = null
-
-        fun usersComponent(): UsersComponent {
-            val usersComponent = usersComponent ?: appComponent.usersComponentBuilder().build()
-            this.usersComponent = usersComponent
-
-            return usersComponent
-        }
-
-        fun clearUsersComponent() {
-            usersComponent = null
-        }
+    @Subcomponent.Builder
+    interface Builder {
+        fun usersModule(usersModule: UsersModule): UsersComponent.Builder
+        fun retrofitModule(retrofitModule: RetrofitModule): UsersComponent.Builder
+        fun apiModule(apiModule: ApiModule): UsersComponent.Builder
+        fun build(): UsersComponent
     }
 
-    override fun onCreate() {
-        super.onCreate()
-
-        instance = this
-        appComponent = DaggerAppComponent.builder()
-                .contextModule(ContextModule(this))
-                .build()
-    }
+    fun inject(usersPresenter: UsersPresenter)
 }

@@ -36,12 +36,9 @@ import ru.endlesscode.bbtest.api.UserUpdateBody
 import ru.endlesscode.bbtest.api.UsersApi
 import ru.gildor.coroutines.retrofit.Result
 import ru.gildor.coroutines.retrofit.awaitResult
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.coroutines.experimental.CoroutineContext
 
-@Singleton
-class UsersManager @Inject constructor(private val api: UsersApi) {
+class UsersManager(private val api: UsersApi) {
 
     fun loadUsersList(onSuccess: (List<UserData>) -> Unit, onError: (Throwable) -> Unit)
             = doRequest(api.usersList(), onSuccess, onError)

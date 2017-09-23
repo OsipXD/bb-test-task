@@ -54,7 +54,7 @@ class UsersPresenter : MvpPresenter<UsersView>() {
         get() = users.size
 
     init {
-        TestApp.appComponent.inject(this)
+        TestApp.usersComponent().inject(this)
     }
 
     override fun onFirstViewAttach() {
@@ -77,7 +77,11 @@ class UsersPresenter : MvpPresenter<UsersView>() {
         onLoadingStart()
         usersManager.loadUsersList(
                 onSuccess = { usersData ->
-                    updateUsers(usersData.map { UserItem(it) })
+                    val usersItems = usersData.map { UserItem(it) }.sortedBy { it.fullName.toLowerCase() }
+                    when {
+                        users.isNotEmpty() -> updateUsers(usersItems)
+                        else -> initUsers(usersItems)
+                    }
                 },
                 onError = { onLoadingFailed(it) }
         )
@@ -88,13 +92,18 @@ class UsersPresenter : MvpPresenter<UsersView>() {
         viewState.showRefreshing()
     }
 
-    private fun updateUsers(users: List<UserItem>) = launch(CommonPool) {
-        val sortedUsers = users.sortedBy { it.fullName.toLowerCase() }
-        val usersDiff = UsersDiffCallback(this@UsersPresenter.users, sortedUsers)
+    private fun initUsers(usersItems: List<UserItem>) {
+        users.addAll(usersItems)
+        viewState.initUsers()
+        onFinishLoading()
+    }
+
+    private fun updateUsers(usersItems: List<UserItem>) = launch(CommonPool) {
+        val usersDiff = UsersDiffCallback(users, usersItems)
         val diffResult = DiffUtil.calculateDiff(usersDiff)
 
-        this@UsersPresenter.users.clear()
-        this@UsersPresenter.users.addAll(sortedUsers)
+        users.clear()
+        users.addAll(usersItems)
         run(UI) {
             viewState.updateUsers(diffResult)
             onFinishLoading()

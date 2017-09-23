@@ -23,40 +23,24 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest
+package ru.endlesscode.bbtest.test.di
 
-import android.app.Application
-import ru.endlesscode.bbtest.di.AppComponent
-import ru.endlesscode.bbtest.di.DaggerAppComponent
+import com.google.gson.Gson
+import dagger.Subcomponent
 import ru.endlesscode.bbtest.di.UsersComponent
-import ru.endlesscode.bbtest.di.modules.ContextModule
+import ru.endlesscode.bbtest.di.UsersScope
+import ru.endlesscode.bbtest.di.modules.ApiModule
+import ru.endlesscode.bbtest.di.modules.RetrofitModule
+import ru.endlesscode.bbtest.di.modules.UsersModule
 
-class TestApp : Application() {
+@UsersScope
+@Subcomponent(modules = arrayOf(UsersModule::class, RetrofitModule::class, ApiModule::class))
+interface TestUsersComponent : UsersComponent {
 
-    companion object {
-        lateinit var instance: TestApp
-        lateinit var appComponent: AppComponent
-
-        private var usersComponent: UsersComponent? = null
-
-        fun usersComponent(): UsersComponent {
-            val usersComponent = usersComponent ?: appComponent.usersComponentBuilder().build()
-            this.usersComponent = usersComponent
-
-            return usersComponent
-        }
-
-        fun clearUsersComponent() {
-            usersComponent = null
-        }
+    @Subcomponent.Builder
+    interface Builder : UsersComponent.Builder {
+        override fun build(): TestUsersComponent
     }
 
-    override fun onCreate() {
-        super.onCreate()
-
-        instance = this
-        appComponent = DaggerAppComponent.builder()
-                .contextModule(ContextModule(this))
-                .build()
-    }
+    fun gson(): Gson
 }

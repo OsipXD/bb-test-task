@@ -42,5 +42,7 @@ interface UsersView : MvpView {
 
     fun openAddUserView()
 
+    fun initUsers()
+
     fun updateUsers(diffResult: DiffUtil.DiffResult)
 }

@@ -42,7 +42,7 @@ import kotlin.test.assertEquals
 @RunWith(JUnitPlatform::class)
 class UserSerializationSpec : Spek({
     val apiComponent: TestAppComponent = DaggerTestAppComponent.builder().contextModule(mock()).build()
-    val gson: Gson = apiComponent.gson()
+    val gson: Gson = apiComponent.usersComponentBuilder().build().gson()
 
     given("a json with users list") {
         val jsonText = FileHelper.readJson("GetUsers")

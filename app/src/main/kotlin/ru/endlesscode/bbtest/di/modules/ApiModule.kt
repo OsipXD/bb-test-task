@@ -29,12 +29,12 @@ import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import ru.endlesscode.bbtest.api.UsersApi
-import javax.inject.Singleton
+import ru.endlesscode.bbtest.di.UsersScope
 
 @Module
 class ApiModule {
 
     @Provides
-    @Singleton
+    @UsersScope
     fun provideUsersApi(retrofit: Retrofit): UsersApi = retrofit.create(UsersApi::class.java)
 }

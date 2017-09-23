@@ -33,28 +33,28 @@ import dagger.Provides
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
+import ru.endlesscode.bbtest.di.UsersScope
 
 @Module
 class RetrofitModule {
 
     @Provides
-    @Singleton
+    @UsersScope
     fun provideRetrofit(builder: Retrofit.Builder): Retrofit
             = builder.baseUrl("https://bb-test-server.herokuapp.com/").build()
 
     @Provides
-    @Singleton
+    @UsersScope
     fun provideRetrofitBuilder(converterFactory: Converter.Factory): Retrofit.Builder {
         return Retrofit.Builder().addConverterFactory(converterFactory)
     }
 
     @Provides
-    @Singleton
+    @UsersScope
     fun provideConverterFactory(gson: Gson): Converter.Factory = GsonConverterFactory.create(gson)
 
     @Provides
-    @Singleton
+    @UsersScope
     fun provideGson(): Gson {
         return GsonBuilder().apply {
             setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)

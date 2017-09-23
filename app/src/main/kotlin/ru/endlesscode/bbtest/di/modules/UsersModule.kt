@@ -23,40 +23,18 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest
+package ru.endlesscode.bbtest.di.modules
 
-import android.app.Application
-import ru.endlesscode.bbtest.di.AppComponent
-import ru.endlesscode.bbtest.di.DaggerAppComponent
-import ru.endlesscode.bbtest.di.UsersComponent
-import ru.endlesscode.bbtest.di.modules.ContextModule
+import dagger.Module
+import dagger.Provides
+import ru.endlesscode.bbtest.api.UsersApi
+import ru.endlesscode.bbtest.di.UsersScope
+import ru.endlesscode.bbtest.mvp.model.UsersManager
 
-class TestApp : Application() {
+@Module
+class UsersModule {
 
-    companion object {
-        lateinit var instance: TestApp
-        lateinit var appComponent: AppComponent
-
-        private var usersComponent: UsersComponent? = null
-
-        fun usersComponent(): UsersComponent {
-            val usersComponent = usersComponent ?: appComponent.usersComponentBuilder().build()
-            this.usersComponent = usersComponent
-
-            return usersComponent
-        }
-
-        fun clearUsersComponent() {
-            usersComponent = null
-        }
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-
-        instance = this
-        appComponent = DaggerAppComponent.builder()
-                .contextModule(ContextModule(this))
-                .build()
-    }
+    @Provides
+    @UsersScope
+    fun provideUsersManager(api: UsersApi): UsersManager = UsersManager(api)
 }

@@ -101,6 +101,10 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
         TODO("not implemented")
     }
 
+    override fun initUsers() {
+        usersList.adapter.notifyDataSetChanged()
+    }
+
     override fun updateUsers(diffResult: DiffUtil.DiffResult) {
         diffResult.dispatchUpdatesTo(usersList.adapter)
     }
