@@ -29,16 +29,17 @@ import com.google.gson.Gson
 import dagger.Subcomponent
 import ru.endlesscode.bbtest.di.UsersComponent
 import ru.endlesscode.bbtest.di.UsersScope
-import ru.endlesscode.bbtest.di.modules.ApiModule
-import ru.endlesscode.bbtest.di.modules.RetrofitModule
+import ru.endlesscode.bbtest.di.modules.AvatarModule
 import ru.endlesscode.bbtest.di.modules.UsersModule
 
 @UsersScope
-@Subcomponent(modules = arrayOf(UsersModule::class, RetrofitModule::class, ApiModule::class))
+@Subcomponent(modules = arrayOf(UsersModule::class, AvatarModule::class))
 interface TestUsersComponent : UsersComponent {
 
     @Subcomponent.Builder
     interface Builder : UsersComponent.Builder {
+        override fun usersModule(usersModule: UsersModule): TestUsersComponent.Builder
+        override fun avatarModule(avatarModule: AvatarModule): TestUsersComponent.Builder
         override fun build(): TestUsersComponent
     }
 

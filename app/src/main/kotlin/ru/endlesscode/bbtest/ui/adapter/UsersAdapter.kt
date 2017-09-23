@@ -34,6 +34,7 @@ import com.bumptech.glide.RequestBuilder
 import kotlinx.android.synthetic.main.item_user.view.*
 import ru.endlesscode.bbtest.R
 import ru.endlesscode.bbtest.TestApp
+import ru.endlesscode.bbtest.di.UsersScope
 import ru.endlesscode.bbtest.misc.GlideProvider
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
@@ -41,7 +42,8 @@ import ru.endlesscode.bbtest.mvp.view.UserItemView
 import ru.endlesscode.bbtest.ui.inflate
 import javax.inject.Inject
 
-class UsersAdapter(private val usersPresenter: UsersPresenter) :
+@UsersScope
+class UsersAdapter @Inject constructor(private val usersPresenter: UsersPresenter) :
         RecyclerView.Adapter<UsersAdapter.UserViewHolder>(),
         ListPreloader.PreloadModelProvider<UserItem> {
 

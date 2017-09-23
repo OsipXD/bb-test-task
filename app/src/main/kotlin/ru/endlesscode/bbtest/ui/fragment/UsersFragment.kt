@@ -36,30 +36,47 @@ import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.MvpFacade
 import com.arellomobile.mvp.presenter.InjectPresenter
-import com.bumptech.glide.Glide
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
-import com.bumptech.glide.util.FixedPreloadSizeProvider
+import dagger.Lazy
 import kotlinx.android.synthetic.main.fragment_users.*
 import ru.endlesscode.bbtest.R
+import ru.endlesscode.bbtest.TestApp
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.presenter.HomePresenter
 import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
 import ru.endlesscode.bbtest.mvp.view.UsersView
 import ru.endlesscode.bbtest.ui.adapter.UsersAdapter
 import ru.endlesscode.bbtest.ui.getPresenter
+import javax.inject.Inject
 
 /**
  * A placeholder fragment containing a simple view.
  */
 class UsersFragment : MvpAppCompatFragment(), UsersView {
 
+    @Inject
     @InjectPresenter
-    lateinit var usersPresenter: UsersPresenter
+    lateinit var presenter: UsersPresenter
+
+    @Inject
+    lateinit var adapter: Lazy<UsersAdapter>
+    @Inject
+    lateinit var avatarsPreloader: Lazy<RecyclerViewPreloader<UserItem>>
 
     private lateinit var usersList: RecyclerView
     private val homePresenter by lazy { MvpFacade.getInstance().getPresenter<HomePresenter>(HomePresenter.TAG) }
     private val usersRefresh by lazy { users_refresh }
     private val buttonAdd by lazy { fab }
+
+    @ProvidePresenter
+    fun provideUsersPresenter(): UsersPresenter = presenter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        TestApp.usersComponent().inject(this)
+
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_users, container) ?: return null
@@ -73,12 +90,12 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
         super.onViewCreated(view, savedInstanceState)
 
         buttonAdd.setOnClickListener { homePresenter.onAddButtonPressed() }
-        usersRefresh.setOnRefreshListener { usersPresenter.refreshUsers() }
+        usersRefresh.setOnRefreshListener { presenter.refreshUsers() }
     }
 
     override fun showError(message: String) {
         Snackbar.make(usersList, message, Snackbar.LENGTH_LONG)
-                .setAction("Retry", { usersPresenter.reloadUsers() }).show()
+                .setAction("Retry", { presenter.reloadUsers() }).show()
     }
 
     override fun onStartLoading() {
@@ -114,13 +131,9 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
         layoutManager = LinearLayoutManager(this@UsersFragment.context)
 
         if (adapter == null) {
-            adapter = UsersAdapter(usersPresenter)
+            this.adapter = this@UsersFragment.adapter.get()
         }
 
-        val avatarSize = context.resources.getDimensionPixelSize(R.dimen.avatar_size)
-        val sizeProvider = FixedPreloadSizeProvider<UserItem>(avatarSize, avatarSize)
-        val preloader = RecyclerViewPreloader<UserItem>(
-                Glide.with(this.context), adapter as UsersAdapter, sizeProvider, 10)
-        addOnScrollListener(preloader)
+        addOnScrollListener(avatarsPreloader.get())
     }
 }

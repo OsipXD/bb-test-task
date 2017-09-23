@@ -26,22 +26,22 @@
 package ru.endlesscode.bbtest.di
 
 import dagger.Subcomponent
-import ru.endlesscode.bbtest.di.modules.ApiModule
-import ru.endlesscode.bbtest.di.modules.RetrofitModule
+import ru.endlesscode.bbtest.di.modules.AvatarModule
 import ru.endlesscode.bbtest.di.modules.UsersModule
-import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
+import ru.endlesscode.bbtest.mvp.model.UsersManager
+import ru.endlesscode.bbtest.ui.fragment.UsersFragment
 
 @UsersScope
-@Subcomponent(modules = arrayOf(UsersModule::class, RetrofitModule::class, ApiModule::class))
+@Subcomponent(modules = arrayOf(UsersModule::class, AvatarModule::class))
 interface UsersComponent {
 
     @Subcomponent.Builder
     interface Builder {
         fun usersModule(usersModule: UsersModule): UsersComponent.Builder
-        fun retrofitModule(retrofitModule: RetrofitModule): UsersComponent.Builder
-        fun apiModule(apiModule: ApiModule): UsersComponent.Builder
+        fun avatarModule(avatarModule: AvatarModule): UsersComponent.Builder
         fun build(): UsersComponent
     }
 
-    fun inject(usersPresenter: UsersPresenter)
+    fun usersManager(): UsersManager
+    fun inject(fragment: UsersFragment)
 }

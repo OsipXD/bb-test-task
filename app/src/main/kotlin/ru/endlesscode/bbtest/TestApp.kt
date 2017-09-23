@@ -39,14 +39,20 @@ class TestApp : Application() {
 
         private var usersComponent: UsersComponent? = null
 
-        fun usersComponent(): UsersComponent {
-            val usersComponent = usersComponent ?: appComponent.usersComponentBuilder().build()
+        fun initUsersComponent(): UsersComponent {
+            if (this.usersComponent != null) throw RuntimeException("Component already initialized")
+
+            val usersComponent = appComponent.usersComponentBuilder().build()
             this.usersComponent = usersComponent
 
             return usersComponent
         }
 
-        fun clearUsersComponent() {
+        fun usersComponent(): UsersComponent {
+            return this.usersComponent ?: throw RuntimeException("Component not initialized yet")
+        }
+
+        fun destroyUsersComponent() {
             usersComponent = null
         }
     }
@@ -58,5 +64,11 @@ class TestApp : Application() {
         appComponent = DaggerAppComponent.builder()
                 .contextModule(ContextModule(this))
                 .build()
+        initUsersComponent()
+    }
+
+    override fun onTerminate() {
+        destroyUsersComponent()
+        super.onTerminate()
     }
 }

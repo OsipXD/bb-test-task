@@ -27,14 +27,14 @@ package ru.endlesscode.bbtest.di.modules
 
 import dagger.Module
 import dagger.Provides
-import ru.endlesscode.bbtest.api.UsersApi
 import ru.endlesscode.bbtest.di.UsersScope
 import ru.endlesscode.bbtest.mvp.model.UsersManager
+import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
 
 @Module
 class UsersModule {
 
     @Provides
     @UsersScope
-    fun provideUsersManager(api: UsersApi): UsersManager = UsersManager(api)
+    fun providePresenter(usersManager: UsersManager): UsersPresenter = UsersPresenter(usersManager)
 }

@@ -25,21 +25,46 @@
 
 package ru.endlesscode.bbtest.di.modules
 
+import android.content.Context
+import com.bumptech.glide.Glide
+import com.bumptech.glide.ListPreloader
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
+import com.bumptech.glide.util.FixedPreloadSizeProvider
 import dagger.Module
 import dagger.Provides
-import retrofit2.Retrofit
-import ru.endlesscode.bbtest.api.UsersApi
-import ru.endlesscode.bbtest.mvp.model.UsersManager
-import javax.inject.Singleton
+import ru.endlesscode.bbtest.R
+import ru.endlesscode.bbtest.di.UsersScope
+import ru.endlesscode.bbtest.mvp.model.UserItem
+import ru.endlesscode.bbtest.ui.adapter.UsersAdapter
+import javax.inject.Named
 
 @Module
-class ApiModule {
+class AvatarModule {
 
     @Provides
-    @Singleton
-    fun provideUsersManager(api: UsersApi): UsersManager = UsersManager(api)
+    @UsersScope
+    fun provideRecyclerViewPreloader(
+            requestManager: RequestManager,
+            adapter: UsersAdapter,
+            sizeProvider: ListPreloader.PreloadSizeProvider<UserItem>
+    ): RecyclerViewPreloader<UserItem> {
+
+        return RecyclerViewPreloader<UserItem>(requestManager, adapter, sizeProvider, 10)
+    }
 
     @Provides
-    @Singleton
-    fun provideUsersApi(retrofit: Retrofit): UsersApi = retrofit.create(UsersApi::class.java)
+    @UsersScope
+    fun provideRequestManager(context: Context): RequestManager = Glide.with(context)
+
+    @Provides
+    @UsersScope
+    fun provideSizeProvider(@Named("avatarSize") avatarSize: Int): ListPreloader.PreloadSizeProvider<UserItem>
+            = FixedPreloadSizeProvider<UserItem>(avatarSize, avatarSize)
+
+    @Provides
+    @UsersScope
+    @Named("avatarSize")
+    fun provideAvatarSize(context: Context): Int = context.resources.getDimensionPixelSize(R.dimen.avatar_size)
 }
+

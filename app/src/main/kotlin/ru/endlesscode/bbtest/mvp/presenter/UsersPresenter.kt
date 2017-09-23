@@ -32,30 +32,21 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.run
-import ru.endlesscode.bbtest.TestApp
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersDiffCallback
 import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.mvp.view.UserItemView
 import ru.endlesscode.bbtest.mvp.view.UsersView
 import java.net.UnknownHostException
-import javax.inject.Inject
 
 @InjectViewState
-class UsersPresenter : MvpPresenter<UsersView>() {
-
-    @Inject
-    lateinit var usersManager: UsersManager
+class UsersPresenter(private val usersManager: UsersManager) : MvpPresenter<UsersView>() {
 
     private var isInLoading = false
     private val users: MutableList<UserItem> = mutableListOf()
 
     val count: Int
         get() = users.size
-
-    init {
-        TestApp.usersComponent().inject(this)
-    }
 
     override fun onFirstViewAttach() {
         this.loadUsers()

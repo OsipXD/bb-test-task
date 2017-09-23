@@ -27,11 +27,13 @@ package ru.endlesscode.bbtest.test.di
 
 import dagger.Component
 import ru.endlesscode.bbtest.di.AppComponent
+import ru.endlesscode.bbtest.di.modules.ApiModule
 import ru.endlesscode.bbtest.di.modules.ContextModule
+import ru.endlesscode.bbtest.di.modules.RetrofitModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(ContextModule::class))
+@Component(modules = arrayOf(ContextModule::class, RetrofitModule::class, ApiModule::class))
 interface TestAppComponent : AppComponent {
 
     override fun usersComponentBuilder(): TestUsersComponent.Builder

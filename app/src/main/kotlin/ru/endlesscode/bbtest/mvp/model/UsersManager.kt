@@ -40,14 +40,17 @@ import kotlin.coroutines.experimental.CoroutineContext
 
 class UsersManager(private val api: UsersApi) {
 
-    fun loadUsersList(onSuccess: (List<UserData>) -> Unit, onError: (Throwable) -> Unit)
-            = doRequest(api.usersList(), onSuccess, onError)
+    fun loadUsersList(onSuccess: (List<UserData>) -> Unit, onError: (Throwable) -> Unit) {
+        doRequest(api.usersList(), onSuccess, onError)
+    }
 
-    fun createUser(user: User, onSuccess: (Unit) -> Unit, onError: (Throwable) -> Unit)
-            = doRequest(api.createUser(UserUpdateBody(user)), onSuccess, onError)
+    fun createUser(user: User, onSuccess: (Unit) -> Unit, onError: (Throwable) -> Unit) {
+        doRequest(api.createUser(UserUpdateBody(user)), onSuccess, onError)
+    }
 
-    fun updateUser(user: User, onSuccess: (Unit) -> Unit, onError: (Throwable) -> Unit)
-            = doRequest(api.createUser(UserUpdateBody(user)), onSuccess, onError)
+    fun updateUser(user: User, onSuccess: (Unit) -> Unit, onError: (Throwable) -> Unit) {
+        doRequest(api.createUser(UserUpdateBody(user)), onSuccess, onError)
+    }
 
     @VisibleForTesting
     fun <T : Any> doRequest(call: Call<T>,
