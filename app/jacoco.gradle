@@ -1,0 +1,36 @@
+apply plugin: 'jacoco'
+
+task jacocoUnitTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+    group = 'verification'
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/Glide*.*', // Glide auto-generated code.
+            '**/Generated*.*', // Glide auto-generated code.
+            '**/*$$*.*', // Moxy auto-generated code.
+            '**/MoxyReflector.*', // Moxy auto-generated code.
+            '**/*Module.*', // Modules for Dagger.
+            '**/*Dagger*.*', // Dagger auto-generated code.
+            '**/*_MembersInjector*.*', // Dagger auto-generated code.
+            '**/*_*Factory*.*', //Dagger auto-generated code
+            'android/**/*.*'
+    ]
+
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/kotlin"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: "$buildDir", includes: [
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/code-coverage/connected/*coverage.ec"
+    ])
+}

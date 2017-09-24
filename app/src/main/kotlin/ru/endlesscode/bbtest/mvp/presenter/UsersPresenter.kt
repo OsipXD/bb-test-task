@@ -122,8 +122,7 @@ class UsersPresenter(private val usersManager: UsersManager, private val asyncCo
     }
 
     fun getUsersAt(position: Int, count: Int): MutableList<UserItem> {
-        val fromIndex = position.coerceIn(0..users.lastIndex)
-        val toIndex = (fromIndex + count).coerceAtMost(users.lastIndex)
-        return users.subList(fromIndex, toIndex)
+        val toIndex = (position + count).coerceAtMost(users.lastIndex)
+        return users.subList(position, toIndex)
     }
 }
