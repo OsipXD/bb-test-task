@@ -16,6 +16,21 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // Load security keys
+        def localProps = new Properties()
+        localProps.load(new FileInputStream(rootProject.file("local.properties")))
+        def accessKey = localProps['s3.key.access']
+        def secretKey = localProps['s3.key.secret']
+
+        if (accessKey == null || secretKey == null)
+            throw new RuntimeException('''S3 keys not found. Please specify it. 
+It must be something like this in your local.properties file:
+    s3.key.access=ACCESS_KEY
+    s3.key.secret=SECRET_KEY''')
+
+        buildConfigField "String", "S3_ACCESS_KEY", "\"$accessKey\""
+        buildConfigField "String", "S3_SECRET_KEY", "\"$secretKey\""
     }
 
     buildTypes {

@@ -23,21 +23,34 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.di
+package ru.endlesscode.bbtest.api
 
-import dagger.Component
-import ru.endlesscode.bbtest.di.modules.ApiModule
-import ru.endlesscode.bbtest.di.modules.AwsSignatureModule
-import ru.endlesscode.bbtest.di.modules.ContextModule
-import ru.endlesscode.bbtest.di.modules.RetrofitModule
-import ru.endlesscode.bbtest.ui.adapter.UsersAdapter
-import javax.inject.Singleton
+class AwsHeaders(vararg headers: Pair<String, String>) {
 
-@Singleton
-@Component(modules = arrayOf(ContextModule::class, RetrofitModule::class, ApiModule::class, AwsSignatureModule::class))
-interface AppComponent {
+    companion object {
+        const val HOST = "Host"
+        const val AMZ_CONTENT_HASH = "X-Amz-Content-sha256"
+        const val AMZ_DATE = "X-Amz-Date"
+        const val CONTENT_TYPE = "Content-Type"
+        const val AUTHORIZATION = "Authorization"
+    }
 
-    fun usersComponentBuilder(): UsersComponent.Builder
+    private val headers = mutableMapOf(*headers)
 
-    fun inject(adapter: UsersAdapter)
+    val canonical
+        get() = preparedHeaders.joinToString("\n") { "${it.first}:${it.second}" }
+
+    val signed
+        get() = preparedHeaders.joinToString(";") { it.first }
+
+    private val preparedHeaders
+        get() = headers.map { entry ->
+            entry.key.toLowerCase() to entry.value.trim()
+        }.sortedBy { it.first }
+
+    fun add(vararg addHeaders: Pair<String, String>) {
+        headers.putAll(addHeaders)
+    }
+
+    operator fun get(header: String): String = headers.getValue(header)
 }

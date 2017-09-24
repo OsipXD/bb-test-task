@@ -23,21 +23,42 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.di
+package ru.endlesscode.bbtest.mvp.common
 
-import dagger.Component
-import ru.endlesscode.bbtest.di.modules.ApiModule
-import ru.endlesscode.bbtest.di.modules.AwsSignatureModule
-import ru.endlesscode.bbtest.di.modules.ContextModule
-import ru.endlesscode.bbtest.di.modules.RetrofitModule
-import ru.endlesscode.bbtest.ui.adapter.UsersAdapter
-import javax.inject.Singleton
+import java.security.MessageDigest
 
-@Singleton
-@Component(modules = arrayOf(ContextModule::class, RetrofitModule::class, ApiModule::class, AwsSignatureModule::class))
-interface AppComponent {
+object Hash {
 
-    fun usersComponentBuilder(): UsersComponent.Builder
+    private val SHA_256 = "SHA-256"
+    private val DIGITS = "0123456789abcdef"
 
-    fun inject(adapter: UsersAdapter)
+    fun sha256(text: String): String {
+        return sha256(text.toByteArray())
+    }
+
+    fun sha256(data: ByteArray): String {
+        return encodeHex(sha256Bytes(data))
+    }
+
+    private fun sha256Bytes(data: ByteArray): ByteArray {
+        return getDigest(SHA_256).digest(data)
+    }
+
+    private fun getDigest(algorithm: String): MessageDigest = MessageDigest.getInstance(algorithm)
+
+    fun encodeHex(data: ByteArray, toLowerCase: Boolean = true): String {
+        return encodeHex(data, if (toLowerCase) DIGITS else DIGITS.toUpperCase())
+    }
+
+    private fun encodeHex(data: ByteArray, toDigits: String): String {
+        val length = data.size
+        val out = CharArray(length shl 1)
+        var j = 0
+        for (i in 0 until length) {
+            out[j++] = toDigits[(0xF0 and data[i].toInt()) ushr 0x4]
+            out[j++] = toDigits[0xF and data[i].toInt()]
+        }
+
+        return String(out)
+    }
 }

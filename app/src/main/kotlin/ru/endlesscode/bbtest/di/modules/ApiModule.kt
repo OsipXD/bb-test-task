@@ -28,11 +28,16 @@ package ru.endlesscode.bbtest.di.modules
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import ru.endlesscode.bbtest.api.AwsS3Api
 import ru.endlesscode.bbtest.api.UsersApi
 import javax.inject.Singleton
 
 @Module
 class ApiModule {
+
+    @Provides
+    @Singleton
+    fun provideAwsS3Api(retrofit: Retrofit): AwsS3Api = retrofit.create(AwsS3Api::class.java)
 
     @Provides
     @Singleton

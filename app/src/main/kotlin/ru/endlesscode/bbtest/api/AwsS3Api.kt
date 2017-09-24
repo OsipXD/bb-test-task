@@ -23,21 +23,25 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.di
+package ru.endlesscode.bbtest.api
 
-import dagger.Component
-import ru.endlesscode.bbtest.di.modules.ApiModule
-import ru.endlesscode.bbtest.di.modules.AwsSignatureModule
-import ru.endlesscode.bbtest.di.modules.ContextModule
-import ru.endlesscode.bbtest.di.modules.RetrofitModule
-import ru.endlesscode.bbtest.ui.adapter.UsersAdapter
-import javax.inject.Singleton
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.http.Body
+import retrofit2.http.Header
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
-@Singleton
-@Component(modules = arrayOf(ContextModule::class, RetrofitModule::class, ApiModule::class, AwsSignatureModule::class))
-interface AppComponent {
+interface AwsS3Api {
 
-    fun usersComponentBuilder(): UsersComponent.Builder
-
-    fun inject(adapter: UsersAdapter)
+    @PUT("/{fileName}")
+    fun upload(@Path("fileName") fileName: String,
+               @Header("Content-Length") length: Long,
+               @Header(AwsHeaders.HOST) host: String,
+               @Header("Date") date: String,
+               @Header(AwsHeaders.CONTENT_TYPE) contentType: String,
+               @Header(AwsHeaders.AUTHORIZATION) authorization: String,
+               @Header(AwsHeaders.AMZ_CONTENT_HASH) amzContentHash: String,
+               @Header(AwsHeaders.AMZ_DATE) amzDate: String,
+               @Body body: RequestBody): Call<String>
 }

@@ -23,21 +23,46 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.di
+package ru.endlesscode.bbtest.di.modules
 
-import dagger.Component
-import ru.endlesscode.bbtest.di.modules.ApiModule
-import ru.endlesscode.bbtest.di.modules.AwsSignatureModule
-import ru.endlesscode.bbtest.di.modules.ContextModule
-import ru.endlesscode.bbtest.di.modules.RetrofitModule
-import ru.endlesscode.bbtest.ui.adapter.UsersAdapter
+import dagger.Module
+import dagger.Provides
+import ru.endlesscode.bbtest.BuildConfig
+import ru.endlesscode.bbtest.mvp.common.AwsSignatureV4
+import ru.endlesscode.bbtest.mvp.common.DateTimeProvider
+import javax.inject.Named
 import javax.inject.Singleton
 
-@Singleton
-@Component(modules = arrayOf(ContextModule::class, RetrofitModule::class, ApiModule::class, AwsSignatureModule::class))
-interface AppComponent {
+@Module
+class AwsSignatureModule {
 
-    fun usersComponentBuilder(): UsersComponent.Builder
+    @Provides
+    @Singleton
+    fun provideAwsSignature(
+            @Named("bucketName") bucket: String,
+            @Named("accessKey") accessKey: String,
+            @Named("secretKey") secretKey: String,
+            dateTime: DateTimeProvider): AwsSignatureV4 {
+        return AwsSignatureV4.Builder {
+            this.host = "$bucket.$host"
+            this.accessKey = accessKey
+            this.secretKey = secretKey
+            this.dateTime = dateTime
+        }.build()
+    }
 
-    fun inject(adapter: UsersAdapter)
+    @Provides
+    @Singleton
+    @Named("bucketName")
+    fun provideBucket() = "osipxd-bbtest"
+
+    @Provides
+    @Singleton
+    @Named("accessKey")
+    fun provideAccesskey() = BuildConfig.S3_ACCESS_KEY
+
+    @Provides
+    @Singleton
+    @Named("secretKey")
+    fun provideSecretkey() = BuildConfig.S3_SECRET_KEY
 }

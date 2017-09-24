@@ -35,11 +35,15 @@ import ru.endlesscode.bbtest.api.UsersApi
 import ru.endlesscode.bbtest.mvp.common.AsyncContexts
 import ru.gildor.coroutines.retrofit.Result
 import ru.gildor.coroutines.retrofit.awaitResult
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UsersManager @Inject constructor(private val api: UsersApi, private val asyncContexts: AsyncContexts) {
+class UsersManager @Inject constructor(
+        private val api: UsersApi,
+        private val s3: AwsS3Service,
+        private val asyncContexts: AsyncContexts) {
 
     fun loadUsersList(onSuccess: (List<UserData>) -> Unit, onError: (Throwable) -> Unit) {
         doRequest(api.usersList(), onSuccess, onError)
@@ -50,7 +54,14 @@ class UsersManager @Inject constructor(private val api: UsersApi, private val as
     }
 
     fun updateUser(user: User, onSuccess: (Unit) -> Unit, onError: (Throwable) -> Unit) {
-        doRequest(api.createUser(UserUpdateBody(user)), onSuccess, onError)
+        doRequest(api.updateUser(user.id, UserUpdateBody(user)), onSuccess, onError)
+    }
+
+    fun uploadAvatar(user: UserItem, avatar: File, onSuccess: (String) -> Unit, onError: (Throwable) -> Unit) {
+        doRequest(s3.upload(
+                fileName = "${user.fullName.toLowerCase().replace(' ', '_')}.jpg",
+                file = avatar
+        ), onSuccess, onError)
     }
 
     @VisibleForTesting

@@ -51,7 +51,7 @@ import kotlin.test.fail
 @RunWith(JUnitPlatform::class)
 class UsersManagerSpec : Spek({
     val api: UsersApi = mock()
-    val usersManager = spy(UsersManager(api, AsyncContexts(Unconfined, Unconfined)))
+    val usersManager = spy(UsersManager(api, mock(), AsyncContexts(Unconfined, Unconfined)))
 
     context(": making request") {
         val call: MockedCall<List<UserData>> = MockedCall()

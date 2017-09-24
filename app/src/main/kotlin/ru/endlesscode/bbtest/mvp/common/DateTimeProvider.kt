@@ -23,21 +23,36 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.di
+package ru.endlesscode.bbtest.mvp.common
 
-import dagger.Component
-import ru.endlesscode.bbtest.di.modules.ApiModule
-import ru.endlesscode.bbtest.di.modules.AwsSignatureModule
-import ru.endlesscode.bbtest.di.modules.ContextModule
-import ru.endlesscode.bbtest.di.modules.RetrofitModule
-import ru.endlesscode.bbtest.ui.adapter.UsersAdapter
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(ContextModule::class, RetrofitModule::class, ApiModule::class, AwsSignatureModule::class))
-interface AppComponent {
+class DateTimeProvider @Inject constructor() {
 
-    fun usersComponentBuilder(): UsersComponent.Builder
+    private val formatRfc1123: DateFormat
+        get() = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).apply {
+            timeZone = TimeZone.getTimeZone("GMT")
+        }
 
-    fun inject(adapter: UsersAdapter)
+    private val formatIso8601: DateFormat
+        get() = SimpleDateFormat("YYYYMMDDTHHmmssX", Locale.US)
+
+    private val formatAmz: DateFormat
+        get() = SimpleDateFormat("YYYYMMDD", Locale.US)
+
+    fun rfc1123(): String = formatted(formatRfc1123)
+
+    fun iso8601(): String = formatted(formatIso8601)
+
+    fun amz(): String = formatted(formatAmz)
+
+    private fun formatted(format: DateFormat): String {
+        val cal = Calendar.getInstance(format.timeZone)
+        return format.format(cal.time)
+    }
 }
