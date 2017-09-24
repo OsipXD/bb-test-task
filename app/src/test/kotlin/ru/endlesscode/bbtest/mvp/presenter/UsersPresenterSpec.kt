@@ -41,15 +41,19 @@ import ru.endlesscode.bbtest.mvp.view.`UsersView$$State`
 import ru.gildor.coroutines.retrofit.util.errorResponse
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import kotlin.test.assertEquals
 
 @RunWith(JUnitPlatform::class)
 class UsersPresenterSpec : Spek({
 
     val usersManager: UsersManager = mock()
-    var usersPresenter = UsersPresenter(usersManager, AsyncContexts(Unconfined, Unconfined))
+    var presenter = UsersPresenter(usersManager, AsyncContexts(Unconfined, Unconfined))
     val viewState: `UsersView$$State` = mock()
 
-    val users: List<UserData> = listOf(UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""))
+    val users: List<UserData> = listOf(
+            UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""),
+            UserData(id = 2, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200")
+    )
     var error: Throwable = Exception()
     var isError = false
 
@@ -66,8 +70,8 @@ class UsersPresenterSpec : Spek({
     }
 
     beforeEachTest {
-        usersPresenter = UsersPresenter(usersManager, AsyncContexts(Unconfined, Unconfined))
-        usersPresenter.setViewState(viewState)
+        presenter = UsersPresenter(usersManager, AsyncContexts(Unconfined, Unconfined))
+        presenter.setViewState(viewState)
         clearInvocations(viewState)
 
         isError = false
@@ -75,7 +79,7 @@ class UsersPresenterSpec : Spek({
 
     context(": refreshing users list") {
         on("successful list init") {
-            usersPresenter.initUsers()
+            presenter.initUsers()
 
             it("should hide add button") {
                 verify(viewState, times(1)).hideAdd()
@@ -91,9 +95,9 @@ class UsersPresenterSpec : Spek({
         }
 
         on("successful list refreshing") {
-            usersPresenter.initUsers()
+            presenter.initUsers()
             clearInvocations(viewState)
-            usersPresenter.refreshUsers()
+            presenter.refreshUsers()
 
             it("should update users list") {
                 verify(viewState, times(1)).updateUsers(any())
@@ -102,7 +106,7 @@ class UsersPresenterSpec : Spek({
 
         on("error list init") {
             isError = true
-            usersPresenter.initUsers()
+            presenter.initUsers()
 
             it("should hide add button") {
                 verify(viewState, times(1)).hideAdd()
@@ -114,11 +118,11 @@ class UsersPresenterSpec : Spek({
         }
 
         on("error list refreshing") {
-            usersPresenter.initUsers()
+            presenter.initUsers()
             clearInvocations(viewState)
 
             isError = true
-            usersPresenter.refreshUsers()
+            presenter.refreshUsers()
 
             it("should show error") {
                 verify(viewState, times(1)).showError(any())
@@ -127,11 +131,11 @@ class UsersPresenterSpec : Spek({
 
         on("successful first refresh after error") {
             isError = true
-            usersPresenter.initUsers()
+            presenter.initUsers()
             clearInvocations(viewState)
 
             isError = false
-            usersPresenter.refreshUsers()
+            presenter.refreshUsers()
 
             it("should init users") {
                 verify(viewState, times(1)).initUsers()
@@ -143,13 +147,13 @@ class UsersPresenterSpec : Spek({
         }
 
         on("successful refresh after error") {
-            usersPresenter.initUsers()
+            presenter.initUsers()
             isError = true
-            usersPresenter.refreshUsers()
+            presenter.refreshUsers()
             clearInvocations(viewState)
 
             isError = false
-            usersPresenter.refreshUsers()
+            presenter.refreshUsers()
 
             it("should update users") {
                 verify(viewState, times(1)).updateUsers(any())
@@ -203,8 +207,31 @@ class UsersPresenterSpec : Spek({
         }
 
         afterEachTest {
-            usersPresenter.initUsers()
+            presenter.initUsers()
             verify(viewState, times(1)).showError(message)
+        }
+    }
+
+    context(": getting users at position") {
+
+        beforeEachTest {
+            presenter.initUsers()
+        }
+
+        it("should return one user in list") {
+            val givenUsers = presenter.getUsersAt(0, 1)
+            assertEquals(1, givenUsers.size)
+        }
+
+        it("should return right number of users in list") {
+            val count = 2
+            val givenUsers = presenter.getUsersAt(0, count)
+            assertEquals(count, givenUsers.size)
+        }
+
+        it("should not out of the list bounds") {
+            val givenUsers = presenter.getUsersAt(0, users.lastIndex + 1)
+            assertEquals(users.size, givenUsers.size)
         }
     }
 })
