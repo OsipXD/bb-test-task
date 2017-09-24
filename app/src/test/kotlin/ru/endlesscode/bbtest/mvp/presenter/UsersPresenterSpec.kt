@@ -39,18 +39,18 @@ import ru.endlesscode.bbtest.mvp.common.AsyncContexts
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.mvp.view.UserItemView
-import ru.endlesscode.bbtest.mvp.view.`UsersView$$State`
 import ru.gildor.coroutines.retrofit.util.errorResponse
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.test.assertEquals
+import ru.endlesscode.bbtest.mvp.view.`UsersView$$State` as ViewState
 
 @RunWith(JUnitPlatform::class)
 class UsersPresenterSpec : Spek({
 
     val usersManager: UsersManager = mock()
     var presenter = UsersPresenter(usersManager, AsyncContexts(Unconfined, Unconfined))
-    val viewState: `UsersView$$State` = mock()
+    val viewState: ViewState = mock()
 
     val users: List<UserData> = listOf(
             UserData(id = 1, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200"),
