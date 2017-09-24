@@ -80,7 +80,7 @@ class AwsSignatureV4Spec : Spek({
 
         beforeGroup {
             dateTimeProvider.stub {
-                on { amz() } doReturn "20150830"
+                on { date() } doReturn "20150830"
                 on { iso8601() } doReturn "20150830T123600Z"
             }
         }
@@ -98,7 +98,7 @@ class AwsSignatureV4Spec : Spek({
                             "host:example.amazonaws.com\n" +
                             "x-amz-date:20150830T123600Z\n" +
                             "\n" +
-                            "host;x-amz-date\n" +
+                            "host;x-date-date\n" +
                             "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
                     actual = canonicalRequest
             )

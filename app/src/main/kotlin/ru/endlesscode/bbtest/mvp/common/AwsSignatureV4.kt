@@ -74,7 +74,7 @@ class AwsSignatureV4 private constructor(
 
     @VisibleForTesting
     fun saveTime() {
-        this.date = dateTime.amz()
+        this.date = dateTime.date()
         this.timeStamp = dateTime.iso8601()
     }
 

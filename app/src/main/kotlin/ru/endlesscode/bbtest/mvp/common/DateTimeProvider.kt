@@ -42,14 +42,14 @@ class DateTimeProvider @Inject constructor() {
     private val formatIso8601: DateFormat
         get() = SimpleDateFormat("YYYYMMDDTHHmmssX", Locale.US)
 
-    private val formatAmz: DateFormat
+    private val formatDate: DateFormat
         get() = SimpleDateFormat("YYYYMMDD", Locale.US)
 
     fun rfc1123(): String = formatted(formatRfc1123)
 
     fun iso8601(): String = formatted(formatIso8601)
 
-    fun amz(): String = formatted(formatAmz)
+    fun date(): String = formatted(formatDate)
 
     private fun formatted(format: DateFormat): String {
         val cal = Calendar.getInstance(format.timeZone)
