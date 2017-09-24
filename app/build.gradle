@@ -62,7 +62,7 @@ kapt {
 
 // Libs versions
 ext {
-    targetVersion = '26.1.+'
+    supportVersion = '26.1.+'
 
     circleImageViewVersion = '2.1.+'
     moxyVersion = '1.5.+'
@@ -80,9 +80,9 @@ ext {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
-    compile "com.android.support:appcompat-v7:$targetVersion"
-    compile "com.android.support:recyclerview-v7:$targetVersion"
-    compile "com.android.support:design:$targetVersion"
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
     compile "com.android.support.constraint:constraint-layout:1.1.0-beta1"
     compile "de.hdodenhof:circleimageview:$circleImageViewVersion"
 
