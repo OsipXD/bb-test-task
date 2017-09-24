@@ -25,34 +25,36 @@
 
 package ru.endlesscode.bbtest.mvp.common
 
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
-import javax.inject.Inject
-import javax.inject.Singleton
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.text.MatchesPattern.matchesPattern
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.it
+import org.junit.platform.runner.JUnitPlatform
+import org.junit.runner.RunWith
 
-@Singleton
-class DateTimeProvider @Inject constructor() {
+@RunWith(JUnitPlatform::class)
+class DateTimeProviderSpec : Spek({
 
-    private val formatRfc1123: DateFormat
-        get() = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).apply {
-            timeZone = TimeZone.getTimeZone("GMT")
-        }
+    val dateTimeProvider = DateTimeProvider()
 
-    private val formatIso8601: DateFormat
-        get() = SimpleDateFormat("yyyyMMdd'T'HHmmssX", Locale.US)
+    it("should provide time stamp according to ISO-8601") {
+        val timeStamp = dateTimeProvider.iso8601()
 
-    private val formatDate: DateFormat
-        get() = SimpleDateFormat("yyyyMMdd", Locale.US)
-
-    fun rfc1123(): String = formatted(formatRfc1123)
-
-    fun iso8601(): String = formatted(formatIso8601)
-
-    fun date(): String = formatted(formatDate)
-
-    private fun formatted(format: DateFormat): String {
-        val cal = Calendar.getInstance(format.timeZone)
-        return format.format(cal.time)
+        //language=RegExp
+        assertThat(timeStamp, matchesPattern("\\d{8}T\\d{6}(Z|\\+\\d{2})"))
     }
-}
+
+    it("should provide right date") {
+        val date = dateTimeProvider.date()
+
+        //language=RegExp
+        assertThat(date, matchesPattern("\\d{8}"))
+    }
+
+    it("should provide time stamp according to RFC 1123") {
+        val timeStamp = dateTimeProvider.rfc1123()
+
+        //language=RegExp
+        assertThat(timeStamp, matchesPattern("\\w{3}, \\d{2} \\w{3} \\d{4} \\d{2}:\\d{2}:\\d{2} GMT"))
+    }
+})
