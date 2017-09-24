@@ -245,4 +245,12 @@ class UsersPresenterSpec : Spek({
 
         verify(holder).setData(UserItem(users[0]))
     }
+
+    it("should return right count") {
+        presenter.initUsers()
+
+        val actual = presenter.count
+
+        assertEquals(users.size, actual)
+    }
 })
