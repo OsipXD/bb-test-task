@@ -35,25 +35,15 @@ class TestApp : Application() {
 
     companion object {
         lateinit var instance: TestApp
-        lateinit var appComponent: AppComponent
 
-        private var usersComponent: UsersComponent? = null
-
-        fun initUsersComponent(): UsersComponent {
-            if (this.usersComponent != null) throw RuntimeException("Component already initialized")
-
-            val usersComponent = appComponent.usersComponentBuilder().build()
-            this.usersComponent = usersComponent
-
-            return usersComponent
+        val appComponent: AppComponent by lazy {
+            DaggerAppComponent.builder()
+                    .contextModule(ContextModule(instance))
+                    .build()
         }
 
-        fun usersComponent(): UsersComponent {
-            return this.usersComponent ?: throw RuntimeException("Component not initialized yet")
-        }
-
-        fun destroyUsersComponent() {
-            usersComponent = null
+        val usersComponent: UsersComponent by lazy {
+            appComponent.usersComponentBuilder().build()
         }
     }
 
@@ -61,14 +51,5 @@ class TestApp : Application() {
         super.onCreate()
 
         instance = this
-        appComponent = DaggerAppComponent.builder()
-                .contextModule(ContextModule(this))
-                .build()
-        initUsersComponent()
-    }
-
-    override fun onTerminate() {
-        destroyUsersComponent()
-        super.onTerminate()
     }
 }

@@ -73,7 +73,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     fun provideUsersPresenter(): UsersPresenter = presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        TestApp.usersComponent().inject(this)
+        TestApp.usersComponent.inject(this)
 
         super.onCreate(savedInstanceState)
     }
