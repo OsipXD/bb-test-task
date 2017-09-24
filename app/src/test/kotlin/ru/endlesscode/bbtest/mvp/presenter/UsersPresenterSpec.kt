@@ -30,6 +30,7 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
+import org.jetbrains.spek.api.dsl.xit
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import ru.endlesscode.bbtest.api.UserData
@@ -68,9 +69,13 @@ class UsersPresenterSpec : Spek({
             throwable = null
         }
 
-        on("first user loading successfully") {
+        on("successful list init") {
             users = listOf(UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""))
-            usersPresenter.reloadUsers()
+            usersPresenter.initUsers()
+
+            it("should hide add button") {
+                verify(viewState, times(1)).hideAdd()
+            }
 
             it("should show refreshing") {
                 verify(viewState, times(1)).showRefreshing()
@@ -80,7 +85,35 @@ class UsersPresenterSpec : Spek({
                 verify(viewState, times(1)).initUsers()
             }
 
-            it("should end refreshing") {
+            it("should show add button") {
+                verify(viewState, times(1)).showAdd()
+            }
+
+            it("should hide refreshing") {
+                verify(viewState, times(1)).hideRefreshing()
+            }
+
+            it("shouldn't do anything others") {
+                verifyNoMoreInteractions(viewState)
+            }
+        }
+
+        on("successful list refreshing") {
+            users = listOf(UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""))
+            usersPresenter.initUsers()
+            clearInvocations(viewState)
+
+            usersPresenter.refreshUsers()
+
+            xit("should show refreshing") {
+                verify(viewState, times(1)).showRefreshing()
+            }
+
+            xit("should update users list") {
+                verify(viewState, times(1)).updateUsers(any())
+            }
+
+            xit("should hide refreshing") {
                 verify(viewState, times(1)).hideRefreshing()
             }
 

@@ -95,7 +95,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
 
     override fun showError(message: String) {
         Snackbar.make(usersList, message, Snackbar.LENGTH_LONG)
-                .setAction("Retry", { presenter.reloadUsers() }).show()
+                .setAction("Retry", { presenter.refreshUsers() }).show()
     }
 
     override fun onStartLoading() {
@@ -124,6 +124,14 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
 
     override fun updateUsers(diffResult: DiffUtil.DiffResult) {
         diffResult.dispatchUpdatesTo(usersList.adapter)
+    }
+
+    override fun hideAdd() {
+        buttonAdd.hide()
+    }
+
+    override fun showAdd() {
+        buttonAdd.show()
     }
 
     private fun RecyclerView.init() {

@@ -49,14 +49,15 @@ class UsersPresenter(private val usersManager: UsersManager) : MvpPresenter<User
         get() = users.size
 
     override fun onFirstViewAttach() {
-        this.loadUsers()
+        initUsers()
     }
 
-    fun refreshUsers() {
+    fun initUsers() {
+        viewState.hideAdd()
         loadUsers()
     }
 
-    fun reloadUsers() {
+    fun refreshUsers() {
         loadUsers()
     }
 
@@ -86,6 +87,7 @@ class UsersPresenter(private val usersManager: UsersManager) : MvpPresenter<User
     private fun initUsers(usersItems: List<UserItem>) {
         users.addAll(usersItems)
         viewState.initUsers()
+        viewState.showAdd()
         onFinishLoading()
     }
 
