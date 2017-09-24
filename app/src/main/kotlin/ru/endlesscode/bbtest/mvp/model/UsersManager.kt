@@ -26,19 +26,20 @@
 package ru.endlesscode.bbtest.mvp.model
 
 import android.support.annotation.VisibleForTesting
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.run
 import retrofit2.Call
 import ru.endlesscode.bbtest.api.UserData
 import ru.endlesscode.bbtest.api.UserUpdateBody
 import ru.endlesscode.bbtest.api.UsersApi
+import ru.endlesscode.bbtest.mvp.common.AsyncContexts
 import ru.gildor.coroutines.retrofit.Result
 import ru.gildor.coroutines.retrofit.awaitResult
-import kotlin.coroutines.experimental.CoroutineContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UsersManager(private val api: UsersApi) {
+@Singleton
+class UsersManager @Inject constructor(private val api: UsersApi, private val asyncContexts: AsyncContexts) {
 
     fun loadUsersList(onSuccess: (List<UserData>) -> Unit, onError: (Throwable) -> Unit) {
         doRequest(api.usersList(), onSuccess, onError)
@@ -55,12 +56,10 @@ class UsersManager(private val api: UsersApi) {
     @VisibleForTesting
     fun <T : Any> doRequest(call: Call<T>,
                             onSuccess: (T) -> Unit,
-                            onError: (Throwable) -> Unit,
-                            runContext: CoroutineContext = CommonPool,
-                            resultContext: CoroutineContext = UI) = launch(runContext) {
+                            onError: (Throwable) -> Unit) = launch(asyncContexts.work) {
 
         val result = call.awaitResult()
-        run(resultContext) {
+        run(asyncContexts.ui) {
             when (result) {
                 is Result.Ok -> onSuccess(result.value)
                 is Result.Error -> onError(result.exception)

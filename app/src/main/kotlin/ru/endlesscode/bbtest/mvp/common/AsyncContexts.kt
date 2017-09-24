@@ -23,18 +23,8 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.di.modules
+package ru.endlesscode.bbtest.mvp.common
 
-import dagger.Module
-import dagger.Provides
-import retrofit2.Retrofit
-import ru.endlesscode.bbtest.api.UsersApi
-import javax.inject.Singleton
+import kotlin.coroutines.experimental.CoroutineContext
 
-@Module
-class ApiModule {
-
-    @Provides
-    @Singleton
-    fun provideUsersApi(retrofit: Retrofit): UsersApi = retrofit.create(UsersApi::class.java)
-}
+data class AsyncContexts(val work: CoroutineContext, val ui: CoroutineContext)

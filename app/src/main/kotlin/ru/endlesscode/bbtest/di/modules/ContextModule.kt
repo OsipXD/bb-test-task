@@ -28,10 +28,18 @@ package ru.endlesscode.bbtest.di.modules
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import ru.endlesscode.bbtest.mvp.common.AsyncContexts
+import javax.inject.Singleton
 
 @Module
 class ContextModule(val context: Context) {
 
     @Provides
     fun provideContext(): Context = this.context
+
+    @Provides
+    @Singleton
+    fun provideAsyncContexts(): AsyncContexts = AsyncContexts(CommonPool, UI)
 }

@@ -28,6 +28,7 @@ package ru.endlesscode.bbtest.di.modules
 import dagger.Module
 import dagger.Provides
 import ru.endlesscode.bbtest.di.UsersScope
+import ru.endlesscode.bbtest.mvp.common.AsyncContexts
 import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
 
@@ -36,5 +37,6 @@ class UsersModule {
 
     @Provides
     @UsersScope
-    fun providePresenter(usersManager: UsersManager): UsersPresenter = UsersPresenter(usersManager)
+    fun providePresenter(usersManager: UsersManager, asyncContexts: AsyncContexts): UsersPresenter
+            = UsersPresenter(usersManager, asyncContexts)
 }

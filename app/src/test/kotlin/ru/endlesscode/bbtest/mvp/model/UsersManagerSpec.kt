@@ -41,6 +41,7 @@ import retrofit2.Call
 import retrofit2.HttpException
 import ru.endlesscode.bbtest.api.UserData
 import ru.endlesscode.bbtest.api.UsersApi
+import ru.endlesscode.bbtest.mvp.common.AsyncContexts
 import ru.gildor.coroutines.retrofit.util.MockedCall
 import ru.gildor.coroutines.retrofit.util.errorResponse
 import java.io.IOException
@@ -52,7 +53,7 @@ import kotlin.test.fail
 class UsersManagerSpec : Spek({
     given("a UserManager") {
         val api: UsersApi = mock()
-        val usersManager = spy(UsersManager(api))
+        val usersManager = spy(UsersManager(api, AsyncContexts(Unconfined, Unconfined)))
 
         context("making request") {
             val call: MockedCall<List<UserData>> = MockedCall()
@@ -99,6 +100,5 @@ private fun <T : Any> UsersManager.testLoadUsersList(
     this@testLoadUsersList.doRequest(
             call = call,
             onSuccess = { onSuccess(it) },
-            onError = { onError(it) },
-            runContext = Unconfined, resultContext = Unconfined).join()
+            onError = { onError(it) }).join()
 }

@@ -28,10 +28,9 @@ package ru.endlesscode.bbtest.mvp.presenter
 import android.support.v7.util.DiffUtil
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.run
+import ru.endlesscode.bbtest.mvp.common.AsyncContexts
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersDiffCallback
 import ru.endlesscode.bbtest.mvp.model.UsersManager
@@ -40,7 +39,7 @@ import ru.endlesscode.bbtest.mvp.view.UsersView
 import java.net.UnknownHostException
 
 @InjectViewState
-class UsersPresenter(private val usersManager: UsersManager) : MvpPresenter<UsersView>() {
+class UsersPresenter(private val usersManager: UsersManager, private val asyncContexts: AsyncContexts) : MvpPresenter<UsersView>() {
 
     private var isInLoading = false
     private val users: MutableList<UserItem> = mutableListOf()
@@ -91,13 +90,13 @@ class UsersPresenter(private val usersManager: UsersManager) : MvpPresenter<User
         onFinishLoading()
     }
 
-    private fun updateUsers(usersItems: List<UserItem>) = launch(CommonPool) {
+    private fun updateUsers(usersItems: List<UserItem>) = launch(asyncContexts.work) {
         val usersDiff = UsersDiffCallback(users, usersItems)
         val diffResult = DiffUtil.calculateDiff(usersDiff)
 
         users.clear()
         users.addAll(usersItems)
-        run(UI) {
+        run(asyncContexts.ui) {
             viewState.updateUsers(diffResult)
             onFinishLoading()
         }
