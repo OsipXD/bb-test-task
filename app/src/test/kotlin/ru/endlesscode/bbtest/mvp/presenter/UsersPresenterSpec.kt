@@ -28,7 +28,7 @@ package ru.endlesscode.bbtest.mvp.presenter
 import com.nhaarman.mockito_kotlin.*
 import kotlinx.coroutines.experimental.Unconfined
 import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import org.junit.platform.runner.JUnitPlatform
@@ -41,45 +41,40 @@ import ru.endlesscode.bbtest.mvp.view.`UsersView$$State`
 @RunWith(JUnitPlatform::class)
 class UsersPresenterSpec : Spek({
 
-    given("a UsersPresenter") {
-        val usersManager: UsersManager = mock()
-        val usersPresenter = UsersPresenter(usersManager, AsyncContexts(Unconfined, Unconfined))
-        val viewState: `UsersView$$State` = mock()
+    val usersManager: UsersManager = mock()
+    var usersPresenter = UsersPresenter(usersManager, AsyncContexts(Unconfined, Unconfined))
+    val viewState: `UsersView$$State` = mock()
 
-        var users: List<UserData>? = null
-        var throwable: Throwable? = null
+    val users: List<UserData> = listOf(UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""))
+    var error: Throwable = Exception()
+    var isError = false
 
-        beforeGroup {
-            usersPresenter.setViewState(viewState)
+    beforeGroup {
+        doAnswer { invocation ->
+            val onSuccess: (List<UserData>) -> Unit = invocation.getArgument(0)
+            val onError: (Throwable) -> Unit = invocation.getArgument(1)
 
-            doAnswer { invocation ->
-                val onSuccess: (List<UserData>) -> Unit = invocation.getArgument(0)
-                val onError: (Throwable) -> Unit = invocation.getArgument(1)
+            when {
+                isError -> onError(error)
+                else -> onSuccess(users)
+            }
+        }.`when`(usersManager).loadUsersList(any(), any())
+    }
 
-                val givenUsers = users
-                val thrownError = throwable
-                when {
-                    givenUsers != null -> onSuccess(givenUsers)
-                    thrownError != null -> onError(thrownError)
-                }
-            }.`when`(usersManager).loadUsersList(any(), any())
-        }
+    beforeEachTest {
+        usersPresenter = UsersPresenter(usersManager, AsyncContexts(Unconfined, Unconfined))
+        usersPresenter.setViewState(viewState)
+        clearInvocations(viewState)
 
-        beforeEachTest {
-            users = null
-            throwable = null
-        }
+        isError = false
+    }
 
+    context(": refreshing users list") {
         on("successful list init") {
-            users = listOf(UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""))
             usersPresenter.initUsers()
 
             it("should hide add button") {
                 verify(viewState, times(1)).hideAdd()
-            }
-
-            it("should show refreshing") {
-                verify(viewState, times(1)).showRefreshing()
             }
 
             it("should init users") {
@@ -89,36 +84,78 @@ class UsersPresenterSpec : Spek({
             it("should show add button") {
                 verify(viewState, times(1)).showAdd()
             }
-
-            it("should hide refreshing") {
-                verify(viewState, times(1)).hideRefreshing()
-            }
-
-            it("shouldn't do anything others") {
-                verifyNoMoreInteractions(viewState)
-            }
         }
 
         on("successful list refreshing") {
-            users = listOf(UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""))
+            usersPresenter.initUsers()
             clearInvocations(viewState)
             usersPresenter.refreshUsers()
-
-            it("should show refreshing") {
-                verify(viewState, times(1)).showRefreshing()
-            }
 
             it("should update users list") {
                 verify(viewState, times(1)).updateUsers(any())
             }
+        }
 
-            it("should hide refreshing") {
-                verify(viewState, times(1)).hideRefreshing()
+        on("error list init") {
+            isError = true
+            usersPresenter.initUsers()
+
+            it("should hide add button") {
+                verify(viewState, times(1)).hideAdd()
             }
 
-            it("shouldn't do anything others") {
-                verifyNoMoreInteractions(viewState)
+            it("should show error") {
+                verify(viewState, times(1)).showError(any())
             }
+        }
+
+        on("error list refreshing") {
+            usersPresenter.initUsers()
+            clearInvocations(viewState)
+
+            isError = true
+            usersPresenter.refreshUsers()
+
+            it("should show error") {
+                verify(viewState, times(1)).showError(any())
+            }
+        }
+
+        on("successful first refresh after error") {
+            isError = true
+            usersPresenter.initUsers()
+            clearInvocations(viewState)
+
+            isError = false
+            usersPresenter.refreshUsers()
+
+            it("should init users") {
+                verify(viewState, times(1)).initUsers()
+            }
+
+            it("should show add button") {
+                verify(viewState, times(1)).showAdd()
+            }
+        }
+
+        on("successful refresh after error") {
+            usersPresenter.initUsers()
+            isError = true
+            usersPresenter.refreshUsers()
+            clearInvocations(viewState)
+
+            isError = false
+            usersPresenter.refreshUsers()
+
+            it("should update users") {
+                verify(viewState, times(1)).updateUsers(any())
+            }
+        }
+
+        afterEachTest {
+            verify(viewState, times(1)).showRefreshing()
+            verify(viewState, times(1)).hideRefreshing()
+            verifyNoMoreInteractions(viewState)
         }
     }
 })

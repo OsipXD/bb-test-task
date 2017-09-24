@@ -32,10 +32,6 @@ interface UsersView : MvpView {
 
     fun showError(message: String)
 
-    fun onStartLoading()
-
-    fun onFinishLoading()
-
     fun showRefreshing()
 
     fun hideRefreshing()

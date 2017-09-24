@@ -98,14 +98,6 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
                 .setAction("Retry", { presenter.refreshUsers() }).show()
     }
 
-    override fun onStartLoading() {
-        TODO("not implemented")
-    }
-
-    override fun onFinishLoading() {
-        TODO("not implemented")
-    }
-
     override fun showRefreshing() {
         usersRefresh.isRefreshing = true
     }

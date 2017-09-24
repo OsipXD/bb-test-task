@@ -33,7 +33,6 @@ import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.runBlocking
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
-import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
@@ -51,43 +50,41 @@ import kotlin.test.fail
 
 @RunWith(JUnitPlatform::class)
 class UsersManagerSpec : Spek({
-    given("a UserManager") {
-        val api: UsersApi = mock()
-        val usersManager = spy(UsersManager(api, AsyncContexts(Unconfined, Unconfined)))
+    val api: UsersApi = mock()
+    val usersManager = spy(UsersManager(api, AsyncContexts(Unconfined, Unconfined)))
 
-        context("making request") {
-            val call: MockedCall<List<UserData>> = MockedCall()
+    context(": making request") {
+        val call: MockedCall<List<UserData>> = MockedCall()
 
-            beforeGroup {
-                api.stub {
-                    on { usersList() } doReturn call
-                }
+        beforeGroup {
+            api.stub {
+                on { usersList() } doReturn call
             }
+        }
 
-            beforeEachTest {
-                call.refresh()
-            }
+        beforeEachTest {
+            call.refresh()
+        }
 
-            it("should receive right data") {
-                val users = listOf(
-                        UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""),
-                        UserData(id = 2, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200")
-                )
-                call.ok = users
-                usersManager.testLoadUsersList(call, onSuccess = { assertEquals(users, it) })
-            }
+        it("should receive right data") {
+            val users = listOf(
+                    UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""),
+                    UserData(id = 2, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200")
+            )
+            call.ok = users
+            usersManager.testLoadUsersList(call, onSuccess = { assertEquals(users, it) })
+        }
 
-            it("should call #onError when there are server error") {
-                val exception = HttpException(errorResponse<String>())
-                call.error = exception
-                usersManager.testLoadUsersList(call) { assertTrue(it is HttpException) }
-            }
+        it("should call #onError when there are server error") {
+            val exception = HttpException(errorResponse<String>())
+            call.error = exception
+            usersManager.testLoadUsersList(call) { assertTrue(it is HttpException) }
+        }
 
-            it("should call #onError when there are exception") {
-                val exception = IOException()
-                call.exception = exception
-                usersManager.testLoadUsersList(call) { assertTrue(it is IOException) }
-            }
+        it("should call #onError when there are exception") {
+            val exception = IOException()
+            call.exception = exception
+            usersManager.testLoadUsersList(call) { assertTrue(it is IOException) }
         }
     }
 })
