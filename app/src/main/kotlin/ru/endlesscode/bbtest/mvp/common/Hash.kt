@@ -26,11 +26,26 @@
 package ru.endlesscode.bbtest.mvp.common
 
 import java.security.MessageDigest
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 object Hash {
 
     private val SHA_256 = "SHA-256"
     private val DIGITS = "0123456789abcdef"
+
+    fun hmacSha256(key: String, data: String): ByteArray {
+        return hmacSha256(key.toByteArray(), data)
+    }
+
+    fun hmacSha256(key: ByteArray, data: String): ByteArray {
+        val algorithm = "HmacSHA256"
+        val hmac = Mac.getInstance(algorithm)
+        val secretKey = SecretKeySpec(key, algorithm)
+        hmac.init(secretKey)
+
+        return hmac.doFinal(data.toByteArray())
+    }
 
     fun sha256(text: String): String {
         return sha256(text.toByteArray())

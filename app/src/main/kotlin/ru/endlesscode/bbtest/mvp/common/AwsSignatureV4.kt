@@ -25,9 +25,8 @@
 
 package ru.endlesscode.bbtest.mvp.common
 
+import android.support.annotation.VisibleForTesting
 import ru.endlesscode.bbtest.api.AwsHeaders
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
 
 class AwsSignatureV4 private constructor(
         private val host: String,
@@ -39,9 +38,13 @@ class AwsSignatureV4 private constructor(
         private val dateTime: DateTimeProvider) {
 
     companion object {
-        private const val AWS4_REQUEST = "was4_request"
+        private const val AWS4_REQUEST = "aws4_request"
         private const val ALGORITHM = "AWS4-HMAC-SHA256"
     }
+
+    private lateinit var date: String
+    private lateinit var timeStamp: String
+    private lateinit var headers: AwsHeaders
 
     fun buildRequestHeaders(
             uri: String = "/",
@@ -51,70 +54,76 @@ class AwsSignatureV4 private constructor(
     ): AwsHeaders {
 
         val payloadHash = Hash.sha256(payload)
-        val amzDate = dateTime.amz()
-        val dateStamp = dateTime.iso8601()
 
-        val awsHeaders = AwsHeaders(*headers)
-        awsHeaders.add(
-                AwsHeaders.HOST to host,
-                AwsHeaders.AMZ_CONTENT_HASH to payloadHash,
-                AwsHeaders.AMZ_DATE to amzDate
-        )
+        this.saveTime()
+        this.initHeaders(*headers)
 
-        val canonicalHeaders = awsHeaders.canonical
-        val signedHeaders = awsHeaders.signed
+        if (payload.isNotEmpty()) {
+            this.headers.add(AwsHeaders.AMZ_CONTENT_HASH to payloadHash)
+        }
 
-        val canonicalRequest = buildCanonicalRequest(uri, query, canonicalHeaders, signedHeaders, payloadHash)
-        val credentialScope = buildCredentialScope(dateStamp)
-        val stringToSign = buildStringToSign(credentialScope, amzDate, canonicalRequest)
-        val signingKey = getSigningKey(dateStamp)
-        val signature = Hash.encodeHex(sign(signingKey, stringToSign))
+        val canonicalRequest = buildCanonicalRequest(uri, query, payloadHash)
+        val credentialScope = buildCredentialScope()
+        val stringToSign = buildStringToSign(credentialScope, canonicalRequest)
+        val signature = getSignature(stringToSign)
 
-        awsHeaders.add(AwsHeaders.AUTHORIZATION to buildAuthorizationHeader(credentialScope, signedHeaders, signature))
+        this.headers.add(AwsHeaders.AUTHORIZATION to buildAuthorizationHeader(credentialScope, signature))
 
-        return awsHeaders
+        return this.headers
     }
 
-    private fun buildCanonicalRequest(
+    @VisibleForTesting
+    fun saveTime() {
+        this.date = dateTime.amz()
+        this.timeStamp = dateTime.iso8601()
+    }
+
+    @VisibleForTesting
+    fun initHeaders(vararg headers: Pair<String, String>) {
+        this.headers = AwsHeaders(*headers)
+        this.headers.add(
+                AwsHeaders.HOST to host,
+                AwsHeaders.AMZ_DATE to timeStamp
+        )
+    }
+
+    @VisibleForTesting
+    fun buildCanonicalRequest(
             canonicalUri: String,
             canonicalQuery: String,
-            canonicalHeaders: String,
-            signedHeaders: String,
             payloadHash: String
     ): String {
-        return "$method\n$canonicalUri\n$canonicalQuery\n$canonicalHeaders\n$signedHeaders\n$payloadHash"
+        return "$method\n$canonicalUri\n$canonicalQuery\n${headers.canonical}\n${headers.signed}\n$payloadHash"
     }
 
-    private fun buildCredentialScope(dateStamp: String) = "$dateStamp/$region/$service/$AWS4_REQUEST"
+    @VisibleForTesting
+    fun buildCredentialScope() = "$date/$region/$service/$AWS4_REQUEST"
 
-    private fun buildStringToSign(credentialScope: String, amzDate: String, canonicalRequest: String): String {
-        return "$ALGORITHM\n$amzDate\n$credentialScope\n${Hash.sha256(canonicalRequest)}"
+    @VisibleForTesting
+    fun buildStringToSign(credentialScope: String, canonicalRequest: String): String {
+        return "$ALGORITHM\n$timeStamp\n$credentialScope\n${Hash.sha256(canonicalRequest)}"
     }
 
-    private fun getSigningKey(dateStamp: String): ByteArray {
-        val keyDate = sign("AWS4$secretKey", dateStamp)
-        val keyRegion = sign(keyDate, region)
-        val keyService = sign(keyRegion, service)
-        return sign(keyService, AWS4_REQUEST)
+    @VisibleForTesting
+    fun getSignature(stringToSign: String): String {
+        val keyDate = Hash.hmacSha256("AWS4$secretKey", date)
+        val keyRegion = Hash.hmacSha256(keyDate, region)
+        val keyService = Hash.hmacSha256(keyRegion, service)
+        val keySigning = Hash.hmacSha256(keyService, AWS4_REQUEST)
+
+        return Hash.encodeHex(Hash.hmacSha256(keySigning, stringToSign))
     }
 
-    private fun sign(key: String, data: String): ByteArray {
-        return sign(key.toByteArray(), data)
-    }
+    @VisibleForTesting
+    fun buildAuthorizationHeader(credentialScope: String, signature: String)
+            = "$ALGORITHM Credential=$accessKey/$credentialScope, SignedHeaders=${headers.signed}, Signature=$signature"
 
-    private fun sign(key: ByteArray, data: String): ByteArray {
-        val algorithm = "HmacSHA256"
-        val secretKey = SecretKeySpec(key, algorithm)
-        val hmac = Mac.getInstance(algorithm)
-        hmac.init(secretKey)
+    class Builder() {
 
-        return hmac.doFinal(data.toByteArray())
-    }
+        constructor(init: Builder.() -> Unit) : this() {
+            init()
+        }
 
-    private fun buildAuthorizationHeader(credentialScope: String, signedHeaders: String, signature: String)
-            = "$ALGORITHM Credential=$accessKey/$credentialScope, SignedHeaders=$signedHeaders, Signature=$signature"
-
-    class Builder(init: Builder.() -> Unit) {
         var host: String = "s3.amazonaws.com"
         var method: String = "PUT"
         var service: String = "s3"
@@ -123,17 +132,13 @@ class AwsSignatureV4 private constructor(
         var secretKey: String? = null
         var dateTime: DateTimeProvider? = null
 
-        init {
-            init()
-        }
-
         fun build() = AwsSignatureV4(
                 host = host,
                 method = method,
                 service = service,
                 region = region,
-                accessKey = accessKey ?: throw IllegalArgumentException("Access key not assigned"),
-                secretKey = secretKey ?: throw IllegalArgumentException("Secret key not assigned"),
+                accessKey = accessKey ?: throw IllegalStateException("Access key not assigned"),
+                secretKey = secretKey ?: throw IllegalStateException("Secret key not assigned"),
                 dateTime = dateTime ?: DateTimeProvider()
         )
     }

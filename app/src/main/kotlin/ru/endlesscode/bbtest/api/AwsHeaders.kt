@@ -38,7 +38,7 @@ class AwsHeaders(vararg headers: Pair<String, String>) {
     private val headers = mutableMapOf(*headers)
 
     val canonical
-        get() = preparedHeaders.joinToString("\n") { "${it.first}:${it.second}" }
+        get() = preparedHeaders.joinToString(separator = "\n", postfix = "\n") { "${it.first}:${it.second}" }
 
     val signed
         get() = preparedHeaders.joinToString(";") { it.first }

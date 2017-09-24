@@ -54,4 +54,11 @@ class HashSpec : Spek({
                 actual = Hash.sha256("Hello, SHA-256!")
         )
     }
+
+    it("should encode string to HMAC-SHA256") {
+        assertEquals(
+                expected = "65746f8b39deaf007787ee7c278e6b95821a6796b04fe75dc5b38edace320f34",
+                actual = Hash.encodeHex(Hash.hmacSha256("AWS4wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY", "Now, try to do it with HMAC!"))
+        )
+    }
 })
