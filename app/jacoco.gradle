@@ -21,7 +21,8 @@ task jacocoUnitTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
             '**/*Dagger*.*', // Dagger auto-generated code.
             '**/*_MembersInjector*.*', // Dagger auto-generated code.
             '**/*_*Factory*.*', //Dagger auto-generated code
-            'android/**/*.*'
+            'android/**/*.*',
+            '**/ui/**/*.*' // UI so hard to test with Unit Testing
     ]
 
     def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)

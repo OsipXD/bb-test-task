@@ -38,6 +38,6 @@ data class UserItem(
     val fullName
         get() = "$firstName $lastName"
 
-    @Suppress("USELESS_ELVIS")
-    constructor(data: UserData) : this(data.id, data.firstName, data.lastName, data.email, data.avatarUrl ?: "")
+    @Suppress("UselessCallOnNotNull")
+    constructor(data: UserData) : this(data.id, data.firstName, data.lastName, data.email, data.avatarUrl.orEmpty())
 }
