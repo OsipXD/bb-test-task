@@ -36,7 +36,9 @@ import org.junit.runner.RunWith
 import retrofit2.HttpException
 import ru.endlesscode.bbtest.api.UserData
 import ru.endlesscode.bbtest.mvp.common.AsyncContexts
+import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersManager
+import ru.endlesscode.bbtest.mvp.view.UserItemView
 import ru.endlesscode.bbtest.mvp.view.`UsersView$$State`
 import ru.gildor.coroutines.retrofit.util.errorResponse
 import java.net.SocketTimeoutException
@@ -51,8 +53,8 @@ class UsersPresenterSpec : Spek({
     val viewState: `UsersView$$State` = mock()
 
     val users: List<UserData> = listOf(
-            UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""),
-            UserData(id = 2, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200")
+            UserData(id = 1, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200"),
+            UserData(id = 2, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = "")
     )
     var error: Throwable = Exception()
     var isError = false
@@ -233,5 +235,14 @@ class UsersPresenterSpec : Spek({
             val givenUsers = presenter.getUsersAt(0, users.lastIndex + 1)
             assertEquals(users.size, givenUsers.size)
         }
+    }
+
+    it("should bind data to holder") {
+        presenter.initUsers()
+
+        val holder: UserItemView = mock()
+        presenter.onBindUserAtPosition(0, holder)
+
+        verify(holder).setData(UserItem(users[0]))
     }
 })
