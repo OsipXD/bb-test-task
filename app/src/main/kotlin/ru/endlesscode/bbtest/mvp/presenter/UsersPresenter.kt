@@ -30,12 +30,14 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.run
+import retrofit2.HttpException
 import ru.endlesscode.bbtest.mvp.common.AsyncContexts
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersDiffCallback
 import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.mvp.view.UserItemView
 import ru.endlesscode.bbtest.mvp.view.UsersView
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 @InjectViewState
@@ -104,8 +106,13 @@ class UsersPresenter(private val usersManager: UsersManager, private val asyncCo
 
     private fun onLoadingFailed(error: Throwable) {
         val message = when (error) {
-            is UnknownHostException -> "Can't connect to server"
-            else -> error.message ?: "Error"
+            is UnknownHostException -> "Are you connected to the Internet?"
+            is SocketTimeoutException -> "Can't connect to server"
+            is HttpException -> "Something wrong with server (${error.code()})"
+            else -> {
+                val errorMessage = if (error.message.isNullOrEmpty()) "" else ": ${error.message}"
+                "Error$errorMessage"
+            }
         }
 
         viewState.showError(message)
