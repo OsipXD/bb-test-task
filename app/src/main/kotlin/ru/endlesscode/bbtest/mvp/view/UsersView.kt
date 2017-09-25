@@ -35,6 +35,7 @@ import ru.endlesscode.bbtest.mvp.model.UserItem
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface UsersView : MvpView {
 
+    @StateStrategyType(SkipStrategy::class)
     fun showError(message: String)
 
     fun showRefreshing()

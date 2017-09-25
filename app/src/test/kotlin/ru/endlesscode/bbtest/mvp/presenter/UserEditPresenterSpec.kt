@@ -111,6 +111,7 @@ class UserEditPresenterSpec : Spek({
 
         afterEachTest {
             verifyNoMoreInteractions(viewState)
+            verifyNoMoreInteractions(usersPresenter)
         }
     }
 })

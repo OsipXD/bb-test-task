@@ -27,6 +27,7 @@ package ru.endlesscode.bbtest.mvp.view
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(AddToEndSingleStrategy::class)
@@ -36,5 +37,6 @@ interface UserEditView : MvpView {
 
     fun clearFields()
 
+    @StateStrategyType(SkipStrategy::class)
     fun showMessage(message: String)
 }
