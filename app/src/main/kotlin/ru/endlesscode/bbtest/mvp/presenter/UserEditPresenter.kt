@@ -23,27 +23,11 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.mvp.view
+package ru.endlesscode.bbtest.mvp.presenter
 
-import android.support.v7.util.DiffUtil
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
+import ru.endlesscode.bbtest.mvp.view.UserEditView
 
-@StateStrategyType(AddToEndSingleStrategy::class)
-interface UsersView : MvpView {
-
-    fun showError(message: String)
-
-    fun showRefreshing()
-
-    fun hideRefreshing()
-
-    fun initUsers()
-
-    fun updateUsers(diffResult: DiffUtil.DiffResult)
-
-    fun hideAdd()
-
-    fun showAdd()
-}
+@InjectViewState
+class UserEditPresenter : MvpPresenter<UserEditView>()

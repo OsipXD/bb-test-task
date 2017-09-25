@@ -24,10 +24,111 @@
   ~ SOFTWARE.
   -->
 
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:id="@+id/fragment_edit_user"
-          android:name="ru.endlesscode.bbtest.ui.fragment.EditUserFragment"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          tools:layout="@layout/content_fragment_edit_user"/>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             android:background="@android:color/background_light"
+                                             android:clickable="true"
+                                             tools:context="ru.endlesscode.bbtest.ui.fragment.UserEditFragment">
+
+    <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:background="@color/colorPrimary"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintLeft_creator="1"/>
+
+    <android.support.design.widget.TextInputLayout
+            android:id="@+id/name_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/avatar"
+            app:errorTextAppearance="@style/ErrorAppearance"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintLeft_creator="1">
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name"
+                android:id="@+id/editText"
+                android:inputType="textPersonName"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+            android:id="@+id/surname_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name_input_layout"
+            app:errorTextAppearance="@style/ErrorAppearance"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintLeft_creator="1">
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/surname"
+                android:inputType="textPersonName"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+            android:id="@+id/email_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/surname_input_layout"
+            app:errorTextAppearance="@style/ErrorAppearance"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintLeft_creator="1">
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+            android:id="@+id/button_accept"
+            android:text="@string/btn_accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
+
+
+    <Button
+            android:id="@+id/button_clear"
+            android:text="@string/clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/button_accept"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
+
+</android.support.constraint.ConstraintLayout>

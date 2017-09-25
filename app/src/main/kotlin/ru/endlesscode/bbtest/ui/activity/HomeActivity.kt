@@ -26,6 +26,8 @@
 package ru.endlesscode.bbtest.ui.activity
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentTransaction
 import android.view.Menu
 import android.view.MenuItem
 import com.arellomobile.mvp.MvpAppCompatActivity
@@ -35,6 +37,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import ru.endlesscode.bbtest.R
 import ru.endlesscode.bbtest.mvp.presenter.HomePresenter
 import ru.endlesscode.bbtest.mvp.view.HomeView
+import ru.endlesscode.bbtest.ui.fragment.UserEditFragment
+import ru.endlesscode.bbtest.ui.fragment.UsersFragment
 
 class HomeActivity : MvpAppCompatActivity(), HomeView {
 
@@ -45,6 +49,12 @@ class HomeActivity : MvpAppCompatActivity(), HomeView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        if (savedInstanceState != null) {
+            return
+        }
+
+        setFragment(UsersFragment(), false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -60,6 +70,17 @@ class HomeActivity : MvpAppCompatActivity(), HomeView {
     }
 
     override fun openAddUserView() {
-        TODO("not implemented")
+        val newFragment = UserEditFragment()
+        setFragment(newFragment)
+    }
+
+    private fun setFragment(newFragment: Fragment, addToBackStack: Boolean = true) {
+        supportFragmentManager.beginTransaction().apply {
+            add(R.id.fragment_container, newFragment)
+            if (addToBackStack) {
+                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                addToBackStack(null)
+            }
+        }.commit()
     }
 }

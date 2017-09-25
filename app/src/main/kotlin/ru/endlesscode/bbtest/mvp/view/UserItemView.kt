@@ -25,9 +25,12 @@
 
 package ru.endlesscode.bbtest.mvp.view
 
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import ru.endlesscode.bbtest.mvp.model.UserItem
 
 interface UserItemView {
 
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun setData(user: UserItem)
 }

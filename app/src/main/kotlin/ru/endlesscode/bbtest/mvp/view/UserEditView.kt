@@ -23,8 +23,8 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.ui.fragment
+package ru.endlesscode.bbtest.mvp.view
 
-import android.app.Fragment
+import com.arellomobile.mvp.MvpView
 
-class EditUserFragment : Fragment()
+interface UserEditView : MvpView

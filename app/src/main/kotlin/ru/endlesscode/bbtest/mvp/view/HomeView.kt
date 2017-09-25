@@ -26,8 +26,11 @@
 package ru.endlesscode.bbtest.mvp.view
 
 import com.arellomobile.mvp.MvpView
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 interface HomeView : MvpView {
 
+    @StateStrategyType(SkipStrategy::class)
     fun openAddUserView()
 }

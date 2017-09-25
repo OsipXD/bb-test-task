@@ -39,7 +39,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import dagger.Lazy
-import kotlinx.android.synthetic.main.content_fragment_users.*
+import kotlinx.android.synthetic.main.fragment_users.*
 import ru.endlesscode.bbtest.R
 import ru.endlesscode.bbtest.TestApp
 import ru.endlesscode.bbtest.mvp.model.UserItem
@@ -79,15 +79,15 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View = inflater.inflate(R.layout.content_fragment_users, container) ?: return null
+        val view: View = inflater.inflate(R.layout.fragment_users, container, false) ?: return null
         usersList = view.findViewById(R.id.users_list)
         usersList.init()
 
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
         buttonAdd.setOnClickListener { homePresenter.onAddButtonPressed() }
         usersRefresh.setOnRefreshListener { presenter.refreshUsers() }
@@ -104,10 +104,6 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
 
     override fun hideRefreshing() {
         usersRefresh.isRefreshing = false
-    }
-
-    override fun openAddUserView() {
-        TODO("not implemented")
     }
 
     override fun initUsers() {

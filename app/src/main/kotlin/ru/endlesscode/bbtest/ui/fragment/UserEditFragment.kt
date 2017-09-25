@@ -23,27 +23,24 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.mvp.view
+package ru.endlesscode.bbtest.ui.fragment
 
-import android.support.v7.util.DiffUtil
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.arellomobile.mvp.MvpAppCompatFragment
+import com.arellomobile.mvp.presenter.InjectPresenter
+import ru.endlesscode.bbtest.R
+import ru.endlesscode.bbtest.mvp.presenter.UserEditPresenter
+import ru.endlesscode.bbtest.mvp.view.UserEditView
 
-@StateStrategyType(AddToEndSingleStrategy::class)
-interface UsersView : MvpView {
+class UserEditFragment : MvpAppCompatFragment(), UserEditView {
 
-    fun showError(message: String)
+    @InjectPresenter
+    lateinit var presenter: UserEditPresenter
 
-    fun showRefreshing()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_edit_user, container, false)
 
-    fun hideRefreshing()
-
-    fun initUsers()
-
-    fun updateUsers(diffResult: DiffUtil.DiffResult)
-
-    fun hideAdd()
-
-    fun showAdd()
 }

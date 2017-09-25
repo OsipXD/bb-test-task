@@ -30,7 +30,10 @@
                                              android:layout_width="match_parent"
                                              android:layout_height="@dimen/menu_item_height"
                                              android:padding="@dimen/default_padding"
-                                             tools:showIn="@layout/content_fragment_users">
+                                             android:clickable="true"
+                                             android:focusable="true"
+                                             android:background="?attr/selectableItemBackground"
+                                             tools:showIn="@layout/fragment_users">
 
     <de.hdodenhof.circleimageview.CircleImageView
             tools:background="#ddd"
