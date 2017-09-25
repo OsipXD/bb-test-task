@@ -73,7 +73,7 @@ class UsersAdapter @Inject constructor(protected val usersPresenter: UsersPresen
 
         private val fullName: TextView = itemView.full_name
         private val email: TextView = itemView.email
-        private val avatar: ImageView = itemView.avatar
+        private val avatar: ImageView = itemView.avatar_view
 
         override fun setData(user: UserItem) {
             fullName.text = user.fullName

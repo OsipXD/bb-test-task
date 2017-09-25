@@ -42,6 +42,6 @@ class GlideProvider @Inject constructor(context: Context) {
     val request: GlideRequest<Drawable> = GlideApp.with(context)
             .asDrawable()
             .centerCrop()
-            .placeholder(R.color.colorPlaceholder)
+            .placeholder(R.drawable.avatar_placeholder_40dp)
             .error(R.drawable.avatar_placeholder_40dp)
 }

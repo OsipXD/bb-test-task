@@ -4,6 +4,6 @@
     <string name="name">Name</string>
     <string name="surname">Surname</string>
     <string name="email">E-mail</string>
-    <string name="btn_accept">Accept</string>
+    <string name="btn_apply">Apply</string>
     <string name="clear">Clear</string>
 </resources>

@@ -27,15 +27,19 @@ package ru.endlesscode.bbtest.mvp.presenter
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import ru.endlesscode.bbtest.di.UsersScope
 import ru.endlesscode.bbtest.mvp.model.UserItem
+import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.mvp.view.UserEditView
+import javax.inject.Inject
 
 @InjectViewState
-class UserEditPresenter(private val user: UserItem) : MvpPresenter<UserEditView>() {
+@UsersScope
+class UserEditPresenter @Inject constructor(usersManager: UsersManager) : MvpPresenter<UserEditView>() {
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
+    lateinit var user: UserItem
 
+    fun onViewCreated(user: UserItem) {
         viewState.setData(user)
     }
 }

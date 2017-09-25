@@ -23,29 +23,22 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.di
+package ru.endlesscode.bbtest.ui.common
 
-import dagger.Subcomponent
-import ru.endlesscode.bbtest.di.modules.AvatarModule
-import ru.endlesscode.bbtest.di.modules.UsersModule
-import ru.endlesscode.bbtest.mvp.model.UsersManager
-import ru.endlesscode.bbtest.ui.fragment.UserCreatingFragment
-import ru.endlesscode.bbtest.ui.fragment.UserEditFragment
-import ru.endlesscode.bbtest.ui.fragment.UsersFragment
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.TextView
 
-@UsersScope
-@Subcomponent(modules = arrayOf(UsersModule::class, AvatarModule::class))
-interface UsersComponent {
+abstract class TextValidator(private val textView: TextView) : TextWatcher {
 
-    @Subcomponent.Builder
-    interface Builder {
-        fun usersModule(usersModule: UsersModule): UsersComponent.Builder
-        fun avatarModule(avatarModule: AvatarModule): UsersComponent.Builder
-        fun build(): UsersComponent
+    abstract fun validate(textView: TextView, text: String)
+
+    override fun afterTextChanged(s: Editable) {
+        val text = textView.text.toString()
+        validate(textView, text)
     }
 
-    fun usersManager(): UsersManager
-    fun inject(fragment: UsersFragment)
-    fun inject(fragment: UserEditFragment)
-    fun inject(fragment: UserCreatingFragment)
+    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 }

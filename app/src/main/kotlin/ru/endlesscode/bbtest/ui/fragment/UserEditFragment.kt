@@ -34,35 +34,54 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_edit_user.*
 import ru.endlesscode.bbtest.R
+import ru.endlesscode.bbtest.TestApp
+import ru.endlesscode.bbtest.misc.GlideProvider
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.presenter.UserEditPresenter
 import ru.endlesscode.bbtest.mvp.view.UserEditView
+import javax.inject.Inject
 
 class UserEditFragment : MvpAppCompatFragment(), UserEditView {
 
+    @Inject
     @InjectPresenter
     lateinit var presenter: UserEditPresenter
+
+    @Inject
+    lateinit var glideProvider: GlideProvider
 
     private val nameField by lazy { name_field }
     private val surnameField by lazy { surname_field }
     private val emailField by lazy { email_field }
+    private val avatar by lazy { avatar_view }
 
     @ProvidePresenter
-    fun providePresenter() = UserEditPresenter(this.arguments.getParcelable("user"))
+    fun providePresenter(): UserEditPresenter = presenter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        TestApp.usersComponent.inject(this)
+
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_edit_user, container, false)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val bundle = this.arguments
-        bundle.getParcelable<UserItem>("user")
+        presenter.onViewCreated(this.arguments.getParcelable("user"))
     }
 
     override fun setData(user: UserItem) {
         nameField.setText(user.firstName)
         surnameField.setText(user.lastName)
         emailField.setText(user.email)
+
+        glideProvider.request.clone().apply {
+            load(user.avatarUrl)
+            override(avatar.width, avatar.height)
+            into(avatar)
+        }
     }
 }
