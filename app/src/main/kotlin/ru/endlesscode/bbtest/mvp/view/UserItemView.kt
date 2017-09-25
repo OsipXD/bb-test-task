@@ -32,5 +32,5 @@ import ru.endlesscode.bbtest.mvp.model.UserItem
 interface UserItemView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setData(user: UserItem)
+    fun setData(position: Int, user: UserItem)
 }

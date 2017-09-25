@@ -73,7 +73,10 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.onViewCreated(this.arguments.getParcelable("user"))
+        val user: UserItem = this.arguments.getParcelable("user")
+        val position: Int = this.arguments.getInt("position")
+        presenter.onViewCreated(position, user)
+
         btnClear.setOnClickListener { presenter.onClearClicked() }
         btnApply.setOnClickListener {
             presenter.validateName(nameField)
@@ -87,13 +90,13 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
         emailField.setOnFocusLostListener { presenter.validateEmail(emailField) }
     }
 
-    override fun setData(user: UserItem) {
-        nameField.setText(user.firstName)
-        surnameField.setText(user.lastName)
-        emailField.setText(user.email)
+    override fun setData(name: String, surname: String, email: String, avatarUrl: String) {
+        nameField.setText(name)
+        surnameField.setText(surname)
+        emailField.setText(email)
 
         glideProvider.request.clone().apply {
-            load(user.avatarUrl)
+            load(avatarUrl)
             override(avatar.width, avatar.height)
             into(avatar)
         }
@@ -103,5 +106,17 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
         nameField.setText("")
         surnameField.setText("")
         emailField.setText("")
+    }
+
+    override fun showRefreshing() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideRefreshing() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onUpdated() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

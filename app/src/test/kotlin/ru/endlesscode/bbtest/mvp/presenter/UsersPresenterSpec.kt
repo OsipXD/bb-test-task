@@ -243,7 +243,7 @@ class UsersPresenterSpec : Spek({
         val holder: UserItemView = mock()
         presenter.onBindUserAtPosition(0, holder)
 
-        verify(holder).setData(UserItem(users[0]))
+        verify(holder).setData(0, UserItem(users[0]))
     }
 
     it("should return right count") {

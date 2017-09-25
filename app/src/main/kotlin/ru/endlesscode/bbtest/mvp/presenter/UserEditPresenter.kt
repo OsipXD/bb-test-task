@@ -42,18 +42,24 @@ class UserEditPresenter @Inject constructor(
         private val usersManager: UsersManager,
         private val usersPresenter: UsersPresenter) : MvpPresenter<UserEditView>() {
 
-    lateinit var user: UserItem
+    private var user = UserItem.empty()
+
     lateinit var newName: String
     lateinit var newSurname: String
     lateinit var newEmail: String
+    private var position: Int = -1
 
-    fun onViewCreated(user: UserItem) {
-        viewState.setData(user)
-        this.user = user.copy()
+    fun onViewCreated(position: Int, user: UserItem) {
+        if (this.user != user) {
+            this.user = user
+            this.position = position
 
-        newName = this.user.firstName
-        newSurname = this.user.lastName
-        newEmail = this.user.email
+            newName = this.user.firstName
+            newSurname = this.user.lastName
+            newEmail = this.user.email
+        }
+
+        viewState.setData(newName, newSurname, newEmail, user.avatarUrl)
     }
 
     fun onClearClicked() {
@@ -73,6 +79,7 @@ class UserEditPresenter @Inject constructor(
     }
 
     fun onApplyClicked() {
+        viewState.showRefreshing()
         if (newName.isNotEmpty() && newSurname.isNotEmpty() && newEmail.isNotEmpty()) {
             usersManager.updateUser(user.copy(firstName = newName, lastName = newSurname, email = newEmail),
                     onSuccess = { onSuccess() },
@@ -82,11 +89,16 @@ class UserEditPresenter @Inject constructor(
     }
 
     private fun onSuccess() {
-        // TODO: Make it normally
-        usersPresenter.refreshUsers()
+        usersPresenter.updateUser(position, user.copy(firstName = newName, lastName = newSurname, email = newEmail))
+        this.onEndOperation()
+        viewState.onUpdated()
     }
 
     private fun onError(exception: Throwable) {
-        TODO("not implemented yet")
+        this.onEndOperation()
+    }
+
+    private fun onEndOperation() {
+        viewState.hideRefreshing()
     }
 }

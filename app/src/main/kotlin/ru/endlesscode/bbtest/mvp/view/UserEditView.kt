@@ -26,11 +26,19 @@
 package ru.endlesscode.bbtest.mvp.view
 
 import com.arellomobile.mvp.MvpView
-import ru.endlesscode.bbtest.mvp.model.UserItem
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
+@StateStrategyType(AddToEndSingleStrategy::class)
 interface UserEditView : MvpView {
 
-    fun setData(user: UserItem)
+    fun setData(name: String, surname: String, email: String, avatarUrl: String)
 
     fun clearFields()
+
+    fun showRefreshing()
+
+    fun hideRefreshing()
+
+    fun onUpdated()
 }

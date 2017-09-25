@@ -50,5 +50,5 @@ interface UsersView : MvpView {
     fun showAdd()
 
     @StateStrategyType(SkipStrategy::class)
-    fun showUserEditView(user: UserItem)
+    fun showUserEditView(position: Int, user: UserItem)
 }

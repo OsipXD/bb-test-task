@@ -25,10 +25,7 @@
 
 package ru.endlesscode.bbtest.mvp.presenter
 
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import com.nhaarman.mockito_kotlin.*
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
@@ -47,7 +44,7 @@ class HomePresenterSpec : Spek({
 
     it("should open add user view") {
         presenter.showUserCreatingView()
-        verify(viewState, times(1)).showFragment()
+        verify(viewState, times(1)).showFragment(any(), eq(""), eq(true))
     }
 
     afterEachTest {

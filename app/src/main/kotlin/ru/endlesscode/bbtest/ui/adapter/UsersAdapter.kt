@@ -75,7 +75,7 @@ class UsersAdapter @Inject constructor(protected val usersPresenter: UsersPresen
         private val email: TextView = itemView.email
         private val avatar: ImageView = itemView.avatar_view
 
-        override fun setData(user: UserItem) {
+        override fun setData(position: Int, user: UserItem) {
             fullName.text = user.fullName
             email.text = user.email
 
@@ -83,7 +83,7 @@ class UsersAdapter @Inject constructor(protected val usersPresenter: UsersPresen
                     .load(user.avatarUrl)
                     .into(avatar)
 
-            itemView.setOnClickListener { usersPresenter.onUserItemClicked(user) }
+            itemView.setOnClickListener { usersPresenter.onUserItemClicked(position, user) }
         }
     }
 }

@@ -45,9 +45,10 @@ class HomePresenter : MvpPresenter<HomeView>() {
         this.showFragment(UserCreatingFragment())
     }
 
-    fun showUserEditView(user: UserItem) {
+    fun showUserEditView(position: Int, user: UserItem) {
         val bundle = Bundle()
         bundle.putParcelable("user", user)
+        bundle.putInt("position", position)
         this.showFragment(UserEditFragment().apply { arguments = bundle })
     }
 

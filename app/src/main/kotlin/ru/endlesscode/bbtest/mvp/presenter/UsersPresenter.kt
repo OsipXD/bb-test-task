@@ -125,7 +125,7 @@ class UsersPresenter(private val usersManager: UsersManager, private val asyncCo
     }
 
     fun onBindUserAtPosition(position: Int, holder: UserItemView) {
-        holder.setData(users[position])
+        holder.setData(position, users[position])
     }
 
     fun getUsersAt(position: Int, count: Int): MutableList<UserItem> {
@@ -133,7 +133,11 @@ class UsersPresenter(private val usersManager: UsersManager, private val asyncCo
         return users.subList(position, toIndex)
     }
 
-    fun onUserItemClicked(user: UserItem) {
-        viewState.showUserEditView(user)
+    fun onUserItemClicked(position: Int, user: UserItem) {
+        viewState.showUserEditView(position, user)
+    }
+
+    fun updateUser(position: Int, userItem: UserItem) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

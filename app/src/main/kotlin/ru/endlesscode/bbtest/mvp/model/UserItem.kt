@@ -70,5 +70,7 @@ data class UserItem(
         override fun newArray(size: Int): Array<UserItem?> {
             return arrayOfNulls(size)
         }
+
+        fun empty() = UserItem(-1, "", "", "", "")
     }
 }
