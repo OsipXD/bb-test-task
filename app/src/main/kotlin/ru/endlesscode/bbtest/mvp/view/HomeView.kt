@@ -25,6 +25,7 @@
 
 package ru.endlesscode.bbtest.mvp.view
 
+import android.support.v4.app.Fragment
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
@@ -32,5 +33,5 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface HomeView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
-    fun openAddUserView()
+    fun showFragment(fragment: Fragment, title: String = "", addToBackStack: Boolean = true)
 }

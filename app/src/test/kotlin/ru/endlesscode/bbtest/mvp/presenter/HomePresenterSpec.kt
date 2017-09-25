@@ -47,7 +47,7 @@ class HomePresenterSpec : Spek({
 
     it("should open add user view") {
         presenter.onAddButtonPressed()
-        verify(viewState, times(1)).openAddUserView()
+        verify(viewState, times(1)).showFragment()
     }
 
     afterEachTest {

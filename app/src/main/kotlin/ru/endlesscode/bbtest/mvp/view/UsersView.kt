@@ -28,7 +28,9 @@ package ru.endlesscode.bbtest.mvp.view
 import android.support.v7.util.DiffUtil
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import ru.endlesscode.bbtest.mvp.model.UserItem
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface UsersView : MvpView {
@@ -46,4 +48,7 @@ interface UsersView : MvpView {
     fun hideAdd()
 
     fun showAdd()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showUserEditView(user: UserItem)
 }

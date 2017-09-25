@@ -43,7 +43,7 @@ import ru.endlesscode.bbtest.ui.inflate
 import javax.inject.Inject
 
 @UsersScope
-class UsersAdapter @Inject constructor(private val usersPresenter: UsersPresenter) :
+class UsersAdapter @Inject constructor(protected val usersPresenter: UsersPresenter) :
         RecyclerView.Adapter<UsersAdapter.UserViewHolder>(),
         ListPreloader.PreloadModelProvider<UserItem> {
 
@@ -83,6 +83,7 @@ class UsersAdapter @Inject constructor(private val usersPresenter: UsersPresente
                     .load(user.avatarUrl)
                     .into(avatar)
 
+            itemView.setOnClickListener { usersPresenter.onUserItemClicked(user) }
         }
     }
 }

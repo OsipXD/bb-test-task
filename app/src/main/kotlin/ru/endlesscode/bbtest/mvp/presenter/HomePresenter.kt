@@ -25,9 +25,12 @@
 
 package ru.endlesscode.bbtest.mvp.presenter
 
+import android.support.v4.app.Fragment
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.view.HomeView
+import ru.endlesscode.bbtest.ui.fragment.UserEditFragment
 
 @InjectViewState
 class HomePresenter : MvpPresenter<HomeView>() {
@@ -37,6 +40,14 @@ class HomePresenter : MvpPresenter<HomeView>() {
     }
 
     fun onAddButtonPressed() {
-        viewState.openAddUserView()
+        this.showFragment(UserEditFragment())
+    }
+
+    fun showUserEditView(user: UserItem) {
+        this.showFragment(UserEditFragment())
+    }
+
+    private fun showFragment(fragment: Fragment) {
+        viewState.showFragment(fragment)
     }
 }

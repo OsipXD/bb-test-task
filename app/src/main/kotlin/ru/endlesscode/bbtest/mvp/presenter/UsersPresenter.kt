@@ -132,4 +132,8 @@ class UsersPresenter(private val usersManager: UsersManager, private val asyncCo
         val toIndex = (position + count).coerceAtMost(users.size)
         return users.subList(position, toIndex)
     }
+
+    fun onUserItemClicked(user: UserItem) {
+        viewState.showUserEditView(user)
+    }
 }

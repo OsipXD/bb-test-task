@@ -37,13 +37,14 @@ import kotlinx.android.synthetic.main.activity_main.*
 import ru.endlesscode.bbtest.R
 import ru.endlesscode.bbtest.mvp.presenter.HomePresenter
 import ru.endlesscode.bbtest.mvp.view.HomeView
-import ru.endlesscode.bbtest.ui.fragment.UserEditFragment
 import ru.endlesscode.bbtest.ui.fragment.UsersFragment
 
 class HomeActivity : MvpAppCompatActivity(), HomeView {
 
     @InjectPresenter(type = PresenterType.GLOBAL, tag = HomePresenter.TAG)
     lateinit var homePresenter: HomePresenter
+
+    private val toolbar by lazy { main_toolbar }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +55,7 @@ class HomeActivity : MvpAppCompatActivity(), HomeView {
             return
         }
 
-        setFragment(UsersFragment(), false)
+        this.showFragment(UsersFragment(), addToBackStack = false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -69,18 +70,20 @@ class HomeActivity : MvpAppCompatActivity(), HomeView {
         return if (id == R.id.action_settings) true else super.onOptionsItemSelected(item)
     }
 
-    override fun openAddUserView() {
-        val newFragment = UserEditFragment()
-        setFragment(newFragment)
-    }
+    override fun showFragment(fragment: Fragment, title: String, addToBackStack: Boolean) {
+        val manager = supportFragmentManager
+        val tag = fragment.tag
 
-    private fun setFragment(newFragment: Fragment, addToBackStack: Boolean = true) {
-        supportFragmentManager.beginTransaction().apply {
-            add(R.id.fragment_container, newFragment)
+        manager.beginTransaction().apply {
+            add(R.id.fragment_container, fragment, tag)
             if (addToBackStack) {
-                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                addToBackStack(null)
+                addToBackStack(tag)
             }
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         }.commit()
+
+        if (title.isNotBlank()) {
+            toolbar.title = title
+        }
     }
 }

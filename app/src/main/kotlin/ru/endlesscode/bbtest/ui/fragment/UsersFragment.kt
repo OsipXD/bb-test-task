@@ -132,4 +132,8 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
 
         addOnScrollListener(avatarsPreloader.get())
     }
+
+    override fun showUserEditView(user: UserItem) {
+        homePresenter.showUserEditView(user)
+    }
 }
