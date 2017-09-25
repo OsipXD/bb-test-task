@@ -26,5 +26,9 @@
 package ru.endlesscode.bbtest.mvp.view
 
 import com.arellomobile.mvp.MvpView
+import ru.endlesscode.bbtest.mvp.model.UserItem
 
-interface UserEditView : MvpView
+interface UserEditView : MvpView {
+
+    fun setData(user: UserItem)
+}

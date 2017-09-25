@@ -47,7 +47,7 @@
     <android.support.design.widget.TextInputLayout
             android:id="@+id/name_input_layout"
             android:layout_width="0dp"
-            android:layout_height="49dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginEnd="@dimen/default_margin"
@@ -58,11 +58,12 @@
             tools:layout_constraintRight_creator="1"
             tools:layout_constraintLeft_creator="1">
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
+                android:id="@+id/name_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:hint="@string/name"
-                android:id="@+id/editText"
                 android:inputType="textPersonName"/>
     </android.support.design.widget.TextInputLayout>
 
@@ -80,9 +81,11 @@
             tools:layout_constraintRight_creator="1"
             tools:layout_constraintLeft_creator="1">
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
+                android:id="@+id/surname_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:hint="@string/surname"
                 android:inputType="textPersonName"/>
     </android.support.design.widget.TextInputLayout>
@@ -101,9 +104,11 @@
             tools:layout_constraintRight_creator="1"
             tools:layout_constraintLeft_creator="1">
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
+                android:id="@+id/email_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"/>
     </android.support.design.widget.TextInputLayout>
@@ -128,7 +133,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/button_accept"
+            app:layout_constraintRight_toLeftOf="@+id/button_accept"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
 
 </android.support.constraint.ConstraintLayout>

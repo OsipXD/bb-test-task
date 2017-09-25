@@ -89,7 +89,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        buttonAdd.setOnClickListener { homePresenter.onAddButtonPressed() }
+        buttonAdd.setOnClickListener { homePresenter.showUserCreatingView() }
         usersRefresh.setOnRefreshListener { presenter.refreshUsers() }
     }
 

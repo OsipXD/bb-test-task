@@ -31,7 +31,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
+import kotlinx.android.synthetic.main.fragment_edit_user.*
 import ru.endlesscode.bbtest.R
+import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.presenter.UserEditPresenter
 import ru.endlesscode.bbtest.mvp.view.UserEditView
 
@@ -40,7 +43,26 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
     @InjectPresenter
     lateinit var presenter: UserEditPresenter
 
+    private val nameField by lazy { name_field }
+    private val surnameField by lazy { surname_field }
+    private val emailField by lazy { email_field }
+
+    @ProvidePresenter
+    fun providePresenter() = UserEditPresenter(this.arguments.getParcelable("user"))
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_edit_user, container, false)
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        val bundle = this.arguments
+        bundle.getParcelable<UserItem>("user")
+    }
+
+    override fun setData(user: UserItem) {
+        nameField.setText(user.firstName)
+        surnameField.setText(user.lastName)
+        emailField.setText(user.email)
+    }
 }

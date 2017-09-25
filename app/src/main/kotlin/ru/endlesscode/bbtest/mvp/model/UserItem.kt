@@ -25,6 +25,8 @@
 
 package ru.endlesscode.bbtest.mvp.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import ru.endlesscode.bbtest.api.UserData
 
 data class UserItem(
@@ -33,11 +35,40 @@ data class UserItem(
         override val lastName: String,
         override val email: String,
         override val avatarUrl: String
-) : User {
+) : User, Parcelable {
 
     val fullName
         get() = "$firstName $lastName"
 
+    constructor(parcel: Parcel) : this(
+            parcel.readInt(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString())
+
     @Suppress("UselessCallOnNotNull")
     constructor(data: UserData) : this(data.id, data.firstName, data.lastName, data.email, data.avatarUrl.orEmpty())
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
+        parcel.writeString(firstName)
+        parcel.writeString(lastName)
+        parcel.writeString(email)
+        parcel.writeString(avatarUrl)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<UserItem> {
+        override fun createFromParcel(parcel: Parcel): UserItem {
+            return UserItem(parcel)
+        }
+
+        override fun newArray(size: Int): Array<UserItem?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

@@ -25,33 +25,9 @@
 
 package ru.endlesscode.bbtest.mvp.presenter
 
-import android.os.Bundle
-import android.support.v4.app.Fragment
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import ru.endlesscode.bbtest.mvp.model.UserItem
-import ru.endlesscode.bbtest.mvp.view.HomeView
-import ru.endlesscode.bbtest.ui.fragment.UserCreatingFragment
-import ru.endlesscode.bbtest.ui.fragment.UserEditFragment
+import ru.endlesscode.bbtest.mvp.view.UserCreatingView
 
 @InjectViewState
-class HomePresenter : MvpPresenter<HomeView>() {
-
-    companion object {
-        const val TAG = "HP"
-    }
-
-    fun showUserCreatingView() {
-        this.showFragment(UserCreatingFragment())
-    }
-
-    fun showUserEditView(user: UserItem) {
-        val bundle = Bundle()
-        bundle.putParcelable("user", user)
-        this.showFragment(UserEditFragment().apply { arguments = bundle })
-    }
-
-    private fun showFragment(fragment: Fragment) {
-        viewState.showFragment(fragment)
-    }
-}
+class UserCreatingPresenter : MvpPresenter<UserCreatingView>()

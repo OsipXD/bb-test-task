@@ -23,35 +23,23 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.mvp.presenter
+package ru.endlesscode.bbtest.ui.fragment
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
-import ru.endlesscode.bbtest.mvp.model.UserItem
-import ru.endlesscode.bbtest.mvp.view.HomeView
-import ru.endlesscode.bbtest.ui.fragment.UserCreatingFragment
-import ru.endlesscode.bbtest.ui.fragment.UserEditFragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.arellomobile.mvp.MvpAppCompatFragment
+import com.arellomobile.mvp.presenter.InjectPresenter
+import ru.endlesscode.bbtest.R
+import ru.endlesscode.bbtest.mvp.presenter.UserCreatingPresenter
+import ru.endlesscode.bbtest.mvp.view.UserCreatingView
 
-@InjectViewState
-class HomePresenter : MvpPresenter<HomeView>() {
+class UserCreatingFragment : MvpAppCompatFragment(), UserCreatingView {
 
-    companion object {
-        const val TAG = "HP"
-    }
+    @InjectPresenter
+    lateinit var presenter: UserCreatingPresenter
 
-    fun showUserCreatingView() {
-        this.showFragment(UserCreatingFragment())
-    }
-
-    fun showUserEditView(user: UserItem) {
-        val bundle = Bundle()
-        bundle.putParcelable("user", user)
-        this.showFragment(UserEditFragment().apply { arguments = bundle })
-    }
-
-    private fun showFragment(fragment: Fragment) {
-        viewState.showFragment(fragment)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_edit_user, container, false)
 }
