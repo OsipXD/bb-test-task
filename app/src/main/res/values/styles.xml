@@ -42,4 +42,9 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <style name="ErrorAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorError</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>

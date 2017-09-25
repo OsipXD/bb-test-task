@@ -57,9 +57,9 @@ class UsersManager @Inject constructor(
         doRequest(api.updateUser(user.id, UserUpdateBody(user)), onSuccess, onError)
     }
 
-    fun uploadAvatar(user: UserItem, avatar: File, onSuccess: (String) -> Unit, onError: (Throwable) -> Unit) {
+    fun uploadAvatar(user: User, avatar: File, onSuccess: (String) -> Unit, onError: (Throwable) -> Unit) {
         doRequest(s3.upload(
-                fileName = "${user.fullName.toLowerCase().replace(' ', '_')}.jpg",
+                fileName = "${user.id}.jpg",
                 file = avatar
         ), onSuccess, onError)
     }
