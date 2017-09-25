@@ -20,12 +20,12 @@ android {
         // Load security keys
         def localProps = new Properties()
         localProps.load(new FileInputStream(rootProject.file("local.properties")))
-        def accessKey = localProps['s3.key.access']
-        def secretKey = localProps['s3.key.secret']
+        def accessKey = System.properties['s3.key.access'] ?: localProps['s3.key.access']
+        def secretKey = System.properties['s3.key.secret'] ?: localProps['s3.key.secret']
 
         if (accessKey == null || secretKey == null)
-            throw new RuntimeException('''S3 keys not found. Please specify it. 
-It must be something like this in your local.properties file:
+            throw new RuntimeException('''Environment variables with S3 keys not found. Please specify it. 
+It also can be something like this in your local.properties file:
     s3.key.access=ACCESS_KEY
     s3.key.secret=SECRET_KEY''')
 
