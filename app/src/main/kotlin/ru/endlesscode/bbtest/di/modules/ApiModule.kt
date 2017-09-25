@@ -30,6 +30,7 @@ import dagger.Provides
 import retrofit2.Retrofit
 import ru.endlesscode.bbtest.api.AwsS3Api
 import ru.endlesscode.bbtest.api.UsersApi
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -37,9 +38,9 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideAwsS3Api(retrofit: Retrofit): AwsS3Api = retrofit.create(AwsS3Api::class.java)
+    fun provideAwsS3Api(@Named("s3") retrofit: Retrofit): AwsS3Api = retrofit.create(AwsS3Api::class.java)
 
     @Provides
     @Singleton
-    fun provideUsersApi(retrofit: Retrofit): UsersApi = retrofit.create(UsersApi::class.java)
+    fun provideUsersApi(@Named("bb") retrofit: Retrofit): UsersApi = retrofit.create(UsersApi::class.java)
 }

@@ -23,22 +23,27 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.test.di
+package ru.endlesscode.bbtest.mvp.model
 
-import dagger.Component
-import ru.endlesscode.bbtest.di.AppComponent
-import ru.endlesscode.bbtest.di.modules.ApiModule
-import ru.endlesscode.bbtest.di.modules.AwsSignatureModule
-import ru.endlesscode.bbtest.di.modules.ContextModule
-import ru.endlesscode.bbtest.di.modules.RetrofitModule
-import ru.endlesscode.bbtest.mvp.model.AwsS3Service
-import javax.inject.Singleton
+import com.nhaarman.mockito_kotlin.mock
+import kotlinx.coroutines.experimental.runBlocking
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.it
+import org.junit.platform.runner.JUnitPlatform
+import org.junit.runner.RunWith
+import ru.endlesscode.bbtest.test.FileHelper
+import ru.endlesscode.bbtest.test.di.DaggerTestAppComponent
+import kotlin.test.assertTrue
 
-@Singleton
-@Component(modules = arrayOf(ContextModule::class, RetrofitModule::class, ApiModule::class, AwsSignatureModule::class))
-interface TestAppComponent : AppComponent {
+@RunWith(JUnitPlatform::class)
+class AwsS3ServiceSpec : Spek({
 
-    override fun usersComponentBuilder(): TestUsersComponent.Builder
+    val service = DaggerTestAppComponent.builder().contextModule(mock()).build().awsS3Service()
 
-    fun awsS3Service(): AwsS3Service
-}
+    it("should successfully upload file") {
+        runBlocking {
+            val response = service.upload("test.jpg", FileHelper.loadImage("test.jpg")).execute()
+            assertTrue(response.isSuccessful, response.toString())
+        }
+    }
+})

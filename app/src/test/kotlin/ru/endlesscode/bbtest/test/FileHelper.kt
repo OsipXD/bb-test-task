@@ -25,12 +25,19 @@
 
 package ru.endlesscode.bbtest.test
 
+import java.io.File
+import java.net.URL
+
 object FileHelper {
 
-    fun readJson(name: String) = read("json/$name.json")
+    fun readJson(name: String) = read("json/$name.json").readText()
 
-    private fun read(path: String): String {
+    fun loadImage(imageName: String) = loadFile("image/$imageName")
+
+    private fun loadFile(path: String) = File(read(path).file)
+
+    private fun read(path: String): URL {
         val classLoader = javaClass.classLoader
-        return classLoader.getResource(path).readText()
+        return classLoader.getResource(path)
     }
 }

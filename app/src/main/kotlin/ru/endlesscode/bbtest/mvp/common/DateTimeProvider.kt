@@ -34,16 +34,18 @@ import javax.inject.Singleton
 @Singleton
 class DateTimeProvider @Inject constructor() {
 
+    companion object {
+        private val GTM = TimeZone.getTimeZone("GMT")
+    }
+
     private val formatRfc1123: DateFormat
-        get() = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).apply {
-            timeZone = TimeZone.getTimeZone("GMT")
-        }
+        get() = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).apply { timeZone = GTM }
 
     private val formatIso8601: DateFormat
-        get() = SimpleDateFormat("yyyyMMdd'T'HHmmssX", Locale.US)
+        get() = SimpleDateFormat("yyyyMMdd'T'HHmmssX", Locale.US).apply { timeZone = GTM }
 
     private val formatDate: DateFormat
-        get() = SimpleDateFormat("yyyyMMdd", Locale.US)
+        get() = SimpleDateFormat("yyyyMMdd", Locale.US).apply { timeZone = GTM }
 
     fun rfc1123(): String = formatted(formatRfc1123)
 

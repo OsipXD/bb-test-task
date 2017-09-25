@@ -45,6 +45,7 @@ class AwsSignatureV4 private constructor(
     private lateinit var date: String
     private lateinit var timeStamp: String
     private lateinit var headers: AwsHeaders
+    private lateinit var payloadHash: String
 
     fun buildRequestHeaders(
             uri: String = "/",
@@ -53,16 +54,11 @@ class AwsSignatureV4 private constructor(
             payload: ByteArray = "".toByteArray()
     ): AwsHeaders {
 
-        val payloadHash = Hash.sha256(payload)
-
         this.saveTime()
         this.initHeaders(*headers)
+        this.setPayload(payload)
 
-        if (payload.isNotEmpty()) {
-            this.headers.add(AwsHeaders.AMZ_CONTENT_HASH to payloadHash)
-        }
-
-        val canonicalRequest = buildCanonicalRequest(uri, query, payloadHash)
+        val canonicalRequest = buildCanonicalRequest(uri, query)
         val credentialScope = buildCredentialScope()
         val stringToSign = buildStringToSign(credentialScope, canonicalRequest)
         val signature = getSignature(stringToSign)
@@ -70,6 +66,15 @@ class AwsSignatureV4 private constructor(
         this.headers.add(AwsHeaders.AUTHORIZATION to buildAuthorizationHeader(credentialScope, signature))
 
         return this.headers
+    }
+
+    @VisibleForTesting
+    fun setPayload(payload: ByteArray) {
+        this.payloadHash = Hash.sha256(payload)
+
+        if (payload.isNotEmpty()) {
+            this.headers.add(AwsHeaders.AMZ_CONTENT_HASH to payloadHash)
+        }
     }
 
     @VisibleForTesting
@@ -90,8 +95,7 @@ class AwsSignatureV4 private constructor(
     @VisibleForTesting
     fun buildCanonicalRequest(
             canonicalUri: String,
-            canonicalQuery: String,
-            payloadHash: String
+            canonicalQuery: String
     ): String {
         return "$method\n$canonicalUri\n$canonicalQuery\n${headers.canonical}\n${headers.signed}\n$payloadHash"
     }

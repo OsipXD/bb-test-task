@@ -73,7 +73,6 @@ class AwsSignatureV4Spec : Spek({
             dateTime = dateTimeProvider
         }.build()
 
-        val payloadHash = Hash.sha256("")
         var canonicalRequest = ""
         var credentialScope = ""
         var stringToSign = ""
@@ -88,8 +87,9 @@ class AwsSignatureV4Spec : Spek({
         it("should build right canonical request") {
             awsSignature.saveTime()
             awsSignature.initHeaders()
+            awsSignature.setPayload("".toByteArray())
 
-            canonicalRequest = awsSignature.buildCanonicalRequest("/", "Param1=value1&Param2=value2", payloadHash)
+            canonicalRequest = awsSignature.buildCanonicalRequest("/", "Param1=value1&Param2=value2")
 
             assertEquals(
                     expected = "GET\n" +

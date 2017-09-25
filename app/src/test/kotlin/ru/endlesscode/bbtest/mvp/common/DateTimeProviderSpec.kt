@@ -55,6 +55,6 @@ class DateTimeProviderSpec : Spek({
         val timeStamp = dateTimeProvider.rfc1123()
 
         //language=RegExp
-        assertThat(timeStamp, matchesPattern("\\w{3}, \\d{2} \\w{3} \\d{4} \\d{2}:\\d{2}:\\d{2} GMT"))
+        assertThat(timeStamp, matchesPattern("\\w{3}, \\d{2} \\w{3} \\d{4} \\d{2}:\\d{2}:\\d{2} \\w{3}"))
     }
 })

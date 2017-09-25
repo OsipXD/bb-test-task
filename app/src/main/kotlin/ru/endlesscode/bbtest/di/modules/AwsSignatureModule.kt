@@ -44,7 +44,7 @@ class AwsSignatureModule {
             @Named("secretKey") secretKey: String,
             dateTime: DateTimeProvider): AwsSignatureV4 {
         return AwsSignatureV4.Builder {
-            this.host = "$bucket.$host"
+            this.host = "$bucket.s3.amazonaws.com"
             this.accessKey = accessKey
             this.secretKey = secretKey
             this.dateTime = dateTime

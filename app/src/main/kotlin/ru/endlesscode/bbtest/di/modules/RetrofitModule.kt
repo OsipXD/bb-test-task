@@ -33,20 +33,32 @@ import dagger.Provides
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
+
 
 @Module
 class RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(builder: Retrofit.Builder): Retrofit
-            = builder.baseUrl("https://bb-test-server.herokuapp.com/").build()
+    @Named("s3")
+    fun provideS3Retrofit(builder: Retrofit.Builder, @Named("bucketName") bucket: String): Retrofit
+            = builder.baseUrl("https://$bucket.s3.amazonaws.com/")
+            .addConverterFactory(ScalarsConverterFactory.create()).build()
 
     @Provides
     @Singleton
-    fun provideRetrofitBuilder(converterFactory: Converter.Factory): Retrofit.Builder {
-        return Retrofit.Builder().addConverterFactory(converterFactory)
+    @Named("bb")
+    fun provideBbRetrofit(builder: Retrofit.Builder, converterFactory: Converter.Factory): Retrofit
+            = builder.baseUrl("https://bb-test-server.herokuapp.com/")
+            .addConverterFactory(converterFactory).build()
+
+    @Provides
+    @Singleton
+    fun provideRetrofitBuilder(): Retrofit.Builder {
+        return Retrofit.Builder()
     }
 
     @Provides

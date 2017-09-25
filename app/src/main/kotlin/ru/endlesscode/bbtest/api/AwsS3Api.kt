@@ -43,5 +43,6 @@ interface AwsS3Api {
                @Header(AwsHeaders.AUTHORIZATION) authorization: String,
                @Header(AwsHeaders.AMZ_CONTENT_HASH) amzContentHash: String,
                @Header(AwsHeaders.AMZ_DATE) amzDate: String,
+               @Header("Expect") expect: String = "100-continue",
                @Body body: RequestBody): Call<String>
 }

@@ -47,7 +47,8 @@ class AwsS3Service @Inject constructor(
         val body = RequestBody.create(MediaType.parse(contentType), file)
         val payload = file.readBytes()
 
-        val headers = awsSignature.buildRequestHeaders(headers = "Content-Type" to contentType, payload = payload)
+        val headers = awsSignature.buildRequestHeaders(
+                uri = "/$fileName", headers = "Content-Type" to contentType, payload = payload)
 
         return api.upload(
                 fileName = fileName,
