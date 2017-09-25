@@ -25,15 +25,12 @@
 
 package ru.endlesscode.bbtest.mvp.presenter
 
-import android.widget.TextView
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.endlesscode.bbtest.di.UsersScope
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.mvp.view.UserEditView
-import ru.endlesscode.bbtest.ui.common.validateIsEmail
-import ru.endlesscode.bbtest.ui.common.validateNotBlank
 import javax.inject.Inject
 
 @InjectViewState
@@ -43,6 +40,7 @@ class UserEditPresenter @Inject constructor(
         private val usersPresenter: UsersPresenter) : MvpPresenter<UserEditView>() {
 
     private var user = UserItem.empty()
+    private var newUser = user.copy()
 
     lateinit var newName: String
     lateinit var newSurname: String
@@ -66,22 +64,14 @@ class UserEditPresenter @Inject constructor(
         viewState.clearFields()
     }
 
-    fun validateName(view: TextView) {
-        newName = view.validateNotBlank()
-    }
-
-    fun validateSurname(view: TextView) {
-        newSurname = view.validateNotBlank()
-    }
-
-    fun validateEmail(view: TextView) {
-        newEmail = view.validateIsEmail()
-    }
-
     fun onApplyClicked() {
-        viewState.showRefreshing()
+        newUser = user.copy(firstName = newName, lastName = newSurname, email = newEmail)
+        if (newUser == user) {
+            return
+        }
+
         if (newName.isNotEmpty() && newSurname.isNotEmpty() && newEmail.isNotEmpty()) {
-            usersManager.updateUser(user.copy(firstName = newName, lastName = newSurname, email = newEmail),
+            usersManager.updateUser(newUser,
                     onSuccess = { onSuccess() },
                     onError = { onError(it) }
             )
@@ -89,16 +79,11 @@ class UserEditPresenter @Inject constructor(
     }
 
     private fun onSuccess() {
-        usersPresenter.updateUser(position, user.copy(firstName = newName, lastName = newSurname, email = newEmail))
-        this.onEndOperation()
-        viewState.onUpdated()
+        usersPresenter.updateUser(position, newUser)
+        viewState.showMessage("User successfully updated!")
     }
 
     private fun onError(exception: Throwable) {
-        this.onEndOperation()
-    }
-
-    private fun onEndOperation() {
-        viewState.hideRefreshing()
+        TODO("not implemented yet")
     }
 }

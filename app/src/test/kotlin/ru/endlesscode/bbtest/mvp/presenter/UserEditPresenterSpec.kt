@@ -98,22 +98,14 @@ class UserEditPresenterSpec : Spek({
         on("apply button clicked when all fields are valid") {
             presenter.onApplyClicked()
 
-            it("should show refreshing") {
-                verify(viewState, times(1)).showRefreshing()
-            }
-
             it("should pass updated item to users presenter") {
                 verify(usersPresenter, times(1)).updateUser(eq(1),
                         eq(user.copy(firstName = "newName", lastName = "newSurname", email = "new@Email", avatarUrl = ""))
                 )
             }
 
-            it("should hide refreshing") {
-                verify(viewState, times(1)).hideRefreshing()
-            }
-
             it("should notify about result") {
-                verify(viewState, times(1)).onUpdated()
+                verify(viewState, times(1)).showMessage(any())
             }
         }
 

@@ -26,6 +26,7 @@
 package ru.endlesscode.bbtest.ui.fragment
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,8 @@ import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.presenter.UserEditPresenter
 import ru.endlesscode.bbtest.mvp.view.UserEditView
 import ru.endlesscode.bbtest.ui.common.setOnFocusLostListener
+import ru.endlesscode.bbtest.ui.common.validateIsEmail
+import ru.endlesscode.bbtest.ui.common.validateNotBlank
 import javax.inject.Inject
 
 class UserEditFragment : MvpAppCompatFragment(), UserEditView {
@@ -54,6 +57,9 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
     private val nameField by lazy { name_field }
     private val surnameField by lazy { surname_field }
     private val emailField by lazy { email_field }
+    private val nameInputLayout by lazy { name_input_layout }
+    private val surnameInputLayout by lazy { surname_input_layout }
+    private val emailInputLayout by lazy { email_input_layout }
     private val avatar by lazy { avatar_view }
     private val btnApply by lazy { button_apply }
     private val btnClear by lazy { button_clear }
@@ -79,15 +85,41 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
 
         btnClear.setOnClickListener { presenter.onClearClicked() }
         btnApply.setOnClickListener {
-            presenter.validateName(nameField)
-            presenter.validateSurname(surnameField)
-            presenter.validateEmail(emailField)
-            presenter.onApplyClicked()
+            if (validateFields()) {
+                presenter.onApplyClicked()
+            } else {
+
+            }
         }
 
-        nameField.setOnFocusLostListener { presenter.validateName(nameField) }
-        surnameField.setOnFocusLostListener { presenter.validateSurname(surnameField) }
-        emailField.setOnFocusLostListener { presenter.validateEmail(emailField) }
+        nameField.setOnFocusLostListener { validateNameField() }
+        surnameField.setOnFocusLostListener { validateSurnameField() }
+        emailField.setOnFocusLostListener { validateEmailField() }
+    }
+
+    private fun validateFields(): Boolean {
+        return validateNameField() and validateSurnameField() and validateEmailField()
+    }
+
+    private fun validateNameField(): Boolean {
+        val isValid = nameField.validateNotBlank(nameInputLayout)
+        presenter.newName = nameField.text.toString()
+
+        return isValid
+    }
+
+    private fun validateSurnameField(): Boolean {
+        val isValid = surnameField.validateNotBlank(surnameInputLayout)
+        presenter.newSurname = surnameField.text.toString()
+
+        return isValid
+    }
+
+    private fun validateEmailField(): Boolean {
+        val isValid = emailField.validateIsEmail(emailInputLayout)
+        presenter.newEmail = emailField.text.toString()
+
+        return isValid
     }
 
     override fun setData(name: String, surname: String, email: String, avatarUrl: String) {
@@ -108,15 +140,8 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
         emailField.setText("")
     }
 
-    override fun showRefreshing() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun hideRefreshing() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onUpdated() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun showMessage(message: String) {
+        Snackbar.make(avatar, message, Snackbar.LENGTH_SHORT)
+                .setAction("OK", { }).show()
     }
 }

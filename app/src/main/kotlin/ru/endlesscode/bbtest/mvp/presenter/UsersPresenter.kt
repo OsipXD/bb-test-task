@@ -137,7 +137,8 @@ class UsersPresenter(private val usersManager: UsersManager, private val asyncCo
         viewState.showUserEditView(position, user)
     }
 
-    fun updateUser(position: Int, userItem: UserItem) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun updateUser(position: Int, user: UserItem) {
+        users[position] = user
+        viewState.updateUser(position)
     }
 }

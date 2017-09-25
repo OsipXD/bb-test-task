@@ -36,9 +36,5 @@ interface UserEditView : MvpView {
 
     fun clearFields()
 
-    fun showRefreshing()
-
-    fun hideRefreshing()
-
-    fun onUpdated()
+    fun showMessage(message: String)
 }

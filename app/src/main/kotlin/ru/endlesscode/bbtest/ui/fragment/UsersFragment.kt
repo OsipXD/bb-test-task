@@ -136,4 +136,8 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     override fun showUserEditView(position: Int, user: UserItem) {
         homePresenter.showUserEditView(position, user)
     }
+
+    override fun updateUser(position: Int) {
+        adapter.get().notifyItemChanged(position)
+    }
 }

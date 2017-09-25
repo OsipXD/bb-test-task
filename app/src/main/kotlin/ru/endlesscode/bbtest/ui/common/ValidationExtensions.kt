@@ -25,6 +25,7 @@
 
 package ru.endlesscode.bbtest.ui.common
 
+import android.support.design.widget.TextInputLayout
 import android.view.View
 import android.widget.TextView
 
@@ -34,23 +35,23 @@ fun TextView.setOnFocusLostListener(listener: (View) -> Unit) {
     }
 }
 
-fun TextView.validateNotBlank(): String =
-        validate(this.text.isNotBlank(), "This field can not be blank")
+fun TextView.validateNotBlank(layout: TextInputLayout) =
+        validate(layout, this.text.isNotBlank(), "This field can not be blank")
 
 /**
  * Why you not use strong regex to restrict email format?
  * Because it is useless: <https://hackernoon.com/the-100-correct-way-to-validate-email-addresses-7c4818f24643>
  */
-fun TextView.validateIsEmail() =
-        validate(this.text matches Regex(".+@.+"), "Please, enter correct email ")
+fun TextView.validateIsEmail(layout: TextInputLayout) =
+        validate(layout, this.text matches Regex(".+@.+"), "Please, enter correct email ")
 
-private fun TextView.validate(valid: Boolean, errorMessage: String): String {
+private fun TextView.validate(layout: TextInputLayout, valid: Boolean, errorMessage: String): Boolean {
     text = text.trim()
     return if (!valid) {
-        this.error = errorMessage
-        ""
+        layout.error = errorMessage
+        false
     } else {
-        this.error = null
-        this.text.toString()
+        layout.error = null
+        true
     }
 }
