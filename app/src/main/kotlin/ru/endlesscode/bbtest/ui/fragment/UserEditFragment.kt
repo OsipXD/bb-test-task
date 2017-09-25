@@ -39,6 +39,7 @@ import ru.endlesscode.bbtest.misc.GlideProvider
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.presenter.UserEditPresenter
 import ru.endlesscode.bbtest.mvp.view.UserEditView
+import ru.endlesscode.bbtest.ui.common.setOnFocusLostListener
 import javax.inject.Inject
 
 class UserEditFragment : MvpAppCompatFragment(), UserEditView {
@@ -54,6 +55,8 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
     private val surnameField by lazy { surname_field }
     private val emailField by lazy { email_field }
     private val avatar by lazy { avatar_view }
+    private val btnApply by lazy { button_apply }
+    private val btnClear by lazy { button_clear }
 
     @ProvidePresenter
     fun providePresenter(): UserEditPresenter = presenter
@@ -71,6 +74,17 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
         super.onViewCreated(view, savedInstanceState)
 
         presenter.onViewCreated(this.arguments.getParcelable("user"))
+        btnClear.setOnClickListener { presenter.onClearClicked() }
+        btnApply.setOnClickListener {
+            presenter.validateName(nameField)
+            presenter.validateSurname(surnameField)
+            presenter.validateEmail(emailField)
+            presenter.onApplyClicked()
+        }
+
+        nameField.setOnFocusLostListener { presenter.validateName(nameField) }
+        surnameField.setOnFocusLostListener { presenter.validateSurname(surnameField) }
+        emailField.setOnFocusLostListener { presenter.validateEmail(emailField) }
     }
 
     override fun setData(user: UserItem) {
@@ -83,5 +97,11 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
             override(avatar.width, avatar.height)
             into(avatar)
         }
+    }
+
+    override fun clearFields() {
+        nameField.setText("")
+        surnameField.setText("")
+        emailField.setText("")
     }
 }

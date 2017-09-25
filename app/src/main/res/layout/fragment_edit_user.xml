@@ -103,7 +103,7 @@
             android:layout_marginBottom="24dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/button_accept"
+            app:layout_constraintBottom_toTopOf="@+id/button_apply"
             app:errorTextAppearance="@style/ErrorAppearance"
             tools:layout_constraintRight_creator="1"
             tools:layout_constraintLeft_creator="1">
@@ -118,7 +118,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
-            android:id="@+id/button_accept"
+            android:id="@+id/button_apply"
             android:text="@string/btn_apply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/button_accept"
+            app:layout_constraintRight_toLeftOf="@+id/button_apply"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
 
 </android.support.constraint.ConstraintLayout>

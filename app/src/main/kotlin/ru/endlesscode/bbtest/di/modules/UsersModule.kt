@@ -38,11 +38,11 @@ class UsersModule {
 
     @Provides
     @UsersScope
-    fun provideUsersPresenter(usersManager: UsersManager, asyncContexts: AsyncContexts): UsersPresenter =
-            UsersPresenter(usersManager, asyncContexts)
+    fun provideUsersEditPresenter(usersManager: UsersManager, usersPresenter: UsersPresenter): UserEditPresenter =
+            UserEditPresenter(usersManager, usersPresenter)
 
     @Provides
     @UsersScope
-    fun provideUsersEditPresenter(usersManager: UsersManager): UserEditPresenter =
-            UserEditPresenter(usersManager)
+    fun provideUsersPresenter(usersManager: UsersManager, asyncContexts: AsyncContexts): UsersPresenter =
+            UsersPresenter(usersManager, asyncContexts)
 }

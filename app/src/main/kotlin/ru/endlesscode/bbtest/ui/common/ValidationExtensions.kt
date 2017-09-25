@@ -25,20 +25,32 @@
 
 package ru.endlesscode.bbtest.ui.common
 
-import android.text.Editable
-import android.text.TextWatcher
+import android.view.View
 import android.widget.TextView
 
-abstract class TextValidator(private val textView: TextView) : TextWatcher {
-
-    abstract fun validate(textView: TextView, text: String)
-
-    override fun afterTextChanged(s: Editable) {
-        val text = textView.text.toString()
-        validate(textView, text)
+fun TextView.setOnFocusLostListener(listener: (View) -> Unit) {
+    this.setOnFocusChangeListener { view, inFocus ->
+        if (!inFocus) listener(view)
     }
+}
 
-    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+fun TextView.validateNotBlank(): String =
+        validate(this.text.isNotBlank(), "This field can not be blank")
 
-    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+/**
+ * Why you not use strong regex to restrict email format?
+ * Because it is useless: <https://hackernoon.com/the-100-correct-way-to-validate-email-addresses-7c4818f24643>
+ */
+fun TextView.validateIsEmail() =
+        validate(this.text matches Regex(".+@.+"), "Please, enter correct email ")
+
+private fun TextView.validate(valid: Boolean, errorMessage: String): String {
+    text = text.trim()
+    return if (!valid) {
+        this.error = errorMessage
+        ""
+    } else {
+        this.error = null
+        this.text.toString()
+    }
 }

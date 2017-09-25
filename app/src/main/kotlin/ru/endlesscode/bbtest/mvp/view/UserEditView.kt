@@ -31,4 +31,6 @@ import ru.endlesscode.bbtest.mvp.model.UserItem
 interface UserEditView : MvpView {
 
     fun setData(user: UserItem)
+
+    fun clearFields()
 }

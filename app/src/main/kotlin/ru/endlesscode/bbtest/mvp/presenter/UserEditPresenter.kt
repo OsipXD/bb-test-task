@@ -25,21 +25,68 @@
 
 package ru.endlesscode.bbtest.mvp.presenter
 
+import android.widget.TextView
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.endlesscode.bbtest.di.UsersScope
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.mvp.view.UserEditView
+import ru.endlesscode.bbtest.ui.common.validateIsEmail
+import ru.endlesscode.bbtest.ui.common.validateNotBlank
 import javax.inject.Inject
 
 @InjectViewState
 @UsersScope
-class UserEditPresenter @Inject constructor(usersManager: UsersManager) : MvpPresenter<UserEditView>() {
+class UserEditPresenter @Inject constructor(
+        private val usersManager: UsersManager,
+        private val usersPresenter: UsersPresenter) : MvpPresenter<UserEditView>() {
 
     lateinit var user: UserItem
+    lateinit var newName: String
+    lateinit var newSurname: String
+    lateinit var newEmail: String
 
     fun onViewCreated(user: UserItem) {
         viewState.setData(user)
+        this.user = user.copy()
+
+        newName = this.user.firstName
+        newSurname = this.user.lastName
+        newEmail = this.user.email
+    }
+
+    fun onClearClicked() {
+        viewState.clearFields()
+    }
+
+    fun validateName(view: TextView) {
+        newName = view.validateNotBlank()
+    }
+
+    fun validateSurname(view: TextView) {
+        newSurname = view.validateNotBlank()
+    }
+
+    fun validateEmail(view: TextView) {
+        newEmail = view.validateIsEmail()
+    }
+
+    fun onApplyClicked() {
+        if (newName.isNotEmpty() && newSurname.isNotEmpty() && newEmail.isNotEmpty()) {
+            usersManager.updateUser(user.copy(firstName = newName, lastName = newSurname, email = newEmail),
+                    onSuccess = { onSuccess() },
+                    onError = { onError(it) }
+            )
+        }
+    }
+
+    private fun onSuccess() {
+        // TODO: Make it normally
+        usersPresenter.refreshUsers()
+    }
+
+    private fun onError(exception: Throwable) {
+        TODO("not implemented yet")
     }
 }
