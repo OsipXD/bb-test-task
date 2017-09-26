@@ -27,18 +27,16 @@ package ru.endlesscode.bbtest.di
 
 import dagger.Subcomponent
 import ru.endlesscode.bbtest.di.modules.AvatarModule
-import ru.endlesscode.bbtest.di.modules.UsersModule
 import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.ui.fragment.UserEditFragment
 import ru.endlesscode.bbtest.ui.fragment.UsersFragment
 
 @UsersScope
-@Subcomponent(modules = arrayOf(UsersModule::class, AvatarModule::class))
+@Subcomponent(modules = arrayOf(AvatarModule::class))
 interface UsersComponent {
 
     @Subcomponent.Builder
     interface Builder {
-        fun usersModule(usersModule: UsersModule): UsersComponent.Builder
         fun avatarModule(avatarModule: AvatarModule): UsersComponent.Builder
         fun build(): UsersComponent
     }

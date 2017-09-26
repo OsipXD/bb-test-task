@@ -30,8 +30,10 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
+@StateStrategyType(SkipStrategy::class)
 interface HomeView : MvpView {
 
-    @StateStrategyType(SkipStrategy::class)
     fun showFragment(fragment: Fragment, title: String = "", addToBackStack: Boolean = true)
+
+    fun back()
 }

@@ -42,7 +42,8 @@ class UserEditPresenterSpec : Spek({
 
     val usersManager: UsersManager = mock()
     val usersPresenter: UsersPresenter = mock()
-    var presenter = UserEditPresenter(usersManager, usersPresenter)
+    val homePresenter: HomePresenter = mock()
+    var presenter = UserEditPresenter(usersManager, usersPresenter, homePresenter)
     val viewState: ViewState = mock()
 
     var isError = false
@@ -57,7 +58,7 @@ class UserEditPresenterSpec : Spek({
         val position = 1
 
         beforeGroup {
-            presenter = UserEditPresenter(usersManager, usersPresenter)
+            presenter = UserEditPresenter(usersManager, usersPresenter, homePresenter)
             presenter.setViewState(viewState)
             doAnswer { invocation ->
                 val onSuccess: (Unit) -> Unit = invocation.getArgument(1)
@@ -123,7 +124,7 @@ class UserEditPresenterSpec : Spek({
 
     context(": add new user") {
         beforeGroup {
-            presenter = UserEditPresenter(usersManager, usersPresenter)
+            presenter = UserEditPresenter(usersManager, usersPresenter, homePresenter)
             presenter.setViewState(viewState)
             doAnswer { invocation ->
                 val onSuccess: (Unit) -> Unit = invocation.getArgument(1)
@@ -136,8 +137,9 @@ class UserEditPresenterSpec : Spek({
             }.`when`(usersManager).createUser(any(), any(), any())
         }
 
-        it("shouldn't do anything on first view creation") {
+        it("should set empty data on first view creation") {
             presenter.onCreteViewCreated()
+            verify(viewState).setData(eq(""), eq(""), eq(""), eq(""))
         }
 
         on("view created again but fields already changed") {

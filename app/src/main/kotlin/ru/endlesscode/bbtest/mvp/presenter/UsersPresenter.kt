@@ -31,6 +31,7 @@ import com.arellomobile.mvp.MvpPresenter
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.run
 import retrofit2.HttpException
+import ru.endlesscode.bbtest.di.UsersScope
 import ru.endlesscode.bbtest.mvp.common.AsyncContexts
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersDiffCallback
@@ -39,9 +40,13 @@ import ru.endlesscode.bbtest.mvp.view.UserItemView
 import ru.endlesscode.bbtest.mvp.view.UsersView
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import javax.inject.Inject
 
 @InjectViewState
-class UsersPresenter(private val usersManager: UsersManager, private val asyncContexts: AsyncContexts) : MvpPresenter<UsersView>() {
+@UsersScope
+class UsersPresenter @Inject constructor(
+        private val usersManager: UsersManager,
+        private val asyncContexts: AsyncContexts) : MvpPresenter<UsersView>() {
 
     private var isInLoading = false
     private val users: MutableList<UserItem> = mutableListOf()

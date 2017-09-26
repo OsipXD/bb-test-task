@@ -34,16 +34,14 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
-import ru.endlesscode.bbtest.di.modules.UsersModule
 import ru.endlesscode.bbtest.test.FileHelper
-import ru.endlesscode.bbtest.test.di.DaggerTestAppComponent
 import ru.endlesscode.bbtest.test.di.TestAppComponent
 import kotlin.test.assertEquals
 
 @RunWith(JUnitPlatform::class)
 class UserSerializationSpec : Spek({
     val apiComponent: TestAppComponent = DaggerTestAppComponent.builder().contextModule(mock()).build()
-    val gson: Gson = apiComponent.usersComponentBuilder().usersModule(UsersModule()).build().gson()
+    val gson: Gson = apiComponent.usersComponentBuilder().build().gson()
 
     given("a json with users list") {
         val jsonText = FileHelper.readJson("GetUsers")

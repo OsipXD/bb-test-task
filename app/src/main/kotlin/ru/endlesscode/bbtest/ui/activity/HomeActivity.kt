@@ -32,21 +32,29 @@ import android.view.Menu
 import android.view.MenuItem
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.PresenterType
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.endlesscode.bbtest.R
+import ru.endlesscode.bbtest.TestApp
 import ru.endlesscode.bbtest.mvp.presenter.HomePresenter
 import ru.endlesscode.bbtest.mvp.view.HomeView
 import ru.endlesscode.bbtest.ui.fragment.UsersFragment
+import javax.inject.Inject
 
 class HomeActivity : MvpAppCompatActivity(), HomeView {
 
-    @InjectPresenter(type = PresenterType.GLOBAL, tag = HomePresenter.TAG)
-    lateinit var homePresenter: HomePresenter
+    @Inject
+    @InjectPresenter
+    lateinit var presenter: HomePresenter
 
     private val toolbar by lazy { main_toolbar }
 
+    @ProvidePresenter
+    fun providePresenter() = presenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        TestApp.appComponent.inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
@@ -85,5 +93,9 @@ class HomeActivity : MvpAppCompatActivity(), HomeView {
         if (title.isNotBlank()) {
             toolbar.title = title
         }
+    }
+
+    override fun back() {
+        this.onBackPressed()
     }
 }

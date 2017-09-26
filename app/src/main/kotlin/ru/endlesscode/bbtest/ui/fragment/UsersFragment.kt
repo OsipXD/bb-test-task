@@ -34,7 +34,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
-import com.arellomobile.mvp.MvpFacade
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
@@ -47,7 +46,6 @@ import ru.endlesscode.bbtest.mvp.presenter.HomePresenter
 import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
 import ru.endlesscode.bbtest.mvp.view.UsersView
 import ru.endlesscode.bbtest.ui.adapter.UsersAdapter
-import ru.endlesscode.bbtest.ui.getPresenter
 import javax.inject.Inject
 
 /**
@@ -63,9 +61,10 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     lateinit var adapter: Lazy<UsersAdapter>
     @Inject
     lateinit var avatarsPreloader: Lazy<RecyclerViewPreloader<UserItem>>
+    @Inject
+    lateinit var homePresenter: Lazy<HomePresenter>
 
     private lateinit var usersList: RecyclerView
-    private val homePresenter by lazy { MvpFacade.getInstance().getPresenter<HomePresenter>(HomePresenter.TAG) }
     private val usersRefresh by lazy { users_refresh }
     private val buttonAdd by lazy { fab }
 
@@ -89,7 +88,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        buttonAdd.setOnClickListener { homePresenter.showUserCreatingView() }
+        buttonAdd.setOnClickListener { homePresenter.get().showUserCreatingView() }
         usersRefresh.setOnRefreshListener { presenter.refreshUsers() }
     }
 
@@ -134,7 +133,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     }
 
     override fun showUserEditView(position: Int, user: UserItem) {
-        homePresenter.showUserEditView(position, user)
+        homePresenter.get().showUserEditView(position, user)
     }
 
     override fun updateUser(position: Int) {
@@ -143,5 +142,6 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
 
     override fun addUserAtStart() {
         adapter.get().notifyItemInserted(0)
+        usersList.scrollToPosition(0)
     }
 }

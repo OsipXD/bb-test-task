@@ -32,13 +32,12 @@ import com.arellomobile.mvp.MvpPresenter
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.view.HomeView
 import ru.endlesscode.bbtest.ui.fragment.UserEditFragment
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @InjectViewState
-class HomePresenter : MvpPresenter<HomeView>() {
-
-    companion object {
-        const val TAG = "HP"
-    }
+@Singleton
+class HomePresenter @Inject constructor() : MvpPresenter<HomeView>() {
 
     fun showUserCreatingView() {
         this.showFragment(UserEditFragment())
@@ -53,5 +52,9 @@ class HomePresenter : MvpPresenter<HomeView>() {
 
     private fun showFragment(fragment: Fragment) {
         viewState.showFragment(fragment)
+    }
+
+    fun back() {
+        viewState.back()
     }
 }

@@ -30,7 +30,7 @@ import ru.endlesscode.bbtest.di.modules.ApiModule
 import ru.endlesscode.bbtest.di.modules.AwsSignatureModule
 import ru.endlesscode.bbtest.di.modules.ContextModule
 import ru.endlesscode.bbtest.di.modules.RetrofitModule
-import ru.endlesscode.bbtest.ui.adapter.UsersAdapter
+import ru.endlesscode.bbtest.ui.activity.HomeActivity
 import javax.inject.Singleton
 
 @Singleton
@@ -39,5 +39,6 @@ interface AppComponent {
 
     fun usersComponentBuilder(): UsersComponent.Builder
 
-    fun inject(adapter: UsersAdapter)
+
+    fun inject(activity: HomeActivity)
 }

@@ -37,7 +37,8 @@ import javax.inject.Inject
 @UsersScope
 class UserEditPresenter @Inject constructor(
         private val usersManager: UsersManager,
-        private val usersPresenter: UsersPresenter) : MvpPresenter<UserEditView>() {
+        private val usersPresenter: UsersPresenter,
+        private val homePresenter: HomePresenter) : MvpPresenter<UserEditView>() {
 
     private var user = UserItem.EMPTY
     private var newUser = user.copy()
@@ -106,6 +107,7 @@ class UserEditPresenter @Inject constructor(
 
     private fun onUserCreated() {
         isUpdating = true
+        homePresenter.back()
         usersPresenter.addUser(newUser)
         onOperationSuccessful("User successfully created!")
     }
