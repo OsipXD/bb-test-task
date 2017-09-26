@@ -156,7 +156,7 @@ class UserEditPresenterSpec : Spek({
         it("should show errors") {
             isError = true
             presenter.onApplyClicked()
-            verify(homePresenter, times(1)).showError(any())
+            verify(homePresenter, times(2)).showError(any())
         }
 
         on("apply button clicked") {
@@ -169,7 +169,7 @@ class UserEditPresenterSpec : Spek({
             }
 
             it("should notify about result") {
-                verify(homePresenter, times(1)).showMessage(any())
+                verify(homePresenter, times(2)).showMessage(any())
             }
         }
     }

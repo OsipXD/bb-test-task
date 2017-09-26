@@ -71,7 +71,6 @@ class HomePresenter @Inject constructor() : MvpPresenter<HomeView>() {
             }
         }
 
-        println(error.toString())
         viewState.showError(message)
     }
 

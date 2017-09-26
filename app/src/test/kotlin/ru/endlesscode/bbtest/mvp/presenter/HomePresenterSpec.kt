@@ -57,6 +57,7 @@ class HomePresenterSpec : Spek({
         var error = Exception()
 
         beforeEachTest {
+            clearInvocations(viewState)
             error = Exception()
         }
 
@@ -93,7 +94,7 @@ class HomePresenterSpec : Spek({
 
         afterEachTest {
             presenter.showError(error)
-            verify(viewState, times(1)).showError(message)
+            verify(viewState, times(1)).showError(eq(message))
         }
     }
 

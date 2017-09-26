@@ -124,7 +124,7 @@ class UsersPresenterSpec : Spek({
             presenter.refreshUsers()
 
             it("should show error") {
-                verify(homePresenter, times(1)).showError(any())
+                verify(homePresenter, times(2)).showError(any())
             }
         }
 
