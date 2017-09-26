@@ -168,4 +168,9 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
         Snackbar.make(avatar, message, Snackbar.LENGTH_SHORT)
                 .setAction("OK", { }).show()
     }
+
+    override fun showError(message: String) {
+        Snackbar.make(avatar, message, Snackbar.LENGTH_LONG)
+                .setAction("OK", { }).show()
+    }
 }

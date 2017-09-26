@@ -39,7 +39,7 @@ class UserEditPresenter @Inject constructor(
         private val usersManager: UsersManager,
         private val usersPresenter: UsersPresenter) : MvpPresenter<UserEditView>() {
 
-    private var user = UserItem.empty()
+    private var user = UserItem.EMPTY
     private var newUser = user.copy()
 
     lateinit var newName: String
@@ -71,12 +71,10 @@ class UserEditPresenter @Inject constructor(
             return
         }
 
-        if (newName.isNotEmpty() && newSurname.isNotEmpty() && newEmail.isNotEmpty()) {
-            usersManager.updateUser(newUser,
-                    onSuccess = { onSuccess() },
-                    onError = { onError(it) }
-            )
-        }
+        usersManager.updateUser(newUser,
+                onSuccess = { onSuccess() },
+                onError = { onError(it) }
+        )
     }
 
     private fun onSuccess() {
@@ -86,6 +84,6 @@ class UserEditPresenter @Inject constructor(
     }
 
     private fun onError(exception: Throwable) {
-        TODO("not implemented yet")
+        viewState.showError(exception.message.orEmpty())
     }
 }

@@ -71,6 +71,6 @@ data class UserItem(
             return arrayOfNulls(size)
         }
 
-        fun empty() = UserItem(-1, "", "", "", "")
+        val EMPTY by lazy { UserItem(-1, "", "", "", "") }
     }
 }

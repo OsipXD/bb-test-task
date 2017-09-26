@@ -45,8 +45,7 @@ class UserEditPresenterSpec : Spek({
     val presenter = UserEditPresenter(usersManager, usersPresenter)
     val viewState: ViewState = mock()
 
-    val error: Throwable = Exception()
-    val isError = false
+    var isError = false
 
     beforeGroup {
         presenter.setViewState(viewState)
@@ -55,17 +54,18 @@ class UserEditPresenterSpec : Spek({
             val onError: (Throwable) -> Unit = invocation.getArgument(2)
 
             when {
-                isError -> onError(error)
+                isError -> onError(Exception())
                 else -> onSuccess(Unit)
             }
         }.`when`(usersManager).updateUser(any(), any(), any())
     }
 
     beforeEachTest {
+        isError = false
         clearInvocations(viewState)
     }
 
-    context("edit existence user") {
+    context(": edit existing user") {
         val user = UserItem(id = 2, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = "")
         val position = 1
 
@@ -83,16 +83,26 @@ class UserEditPresenterSpec : Spek({
             }
         }
 
-        on("view created again") {
-            it("should set right values if there are changed") {
-                presenter.newName = "newName"
-                presenter.newSurname = "newSurname"
-                presenter.newEmail = "new@Email"
+        it("should apply shake apply button if fields not changed") {
+            presenter.onApplyClicked()
+            verify(viewState, times(1)).shakeApplyButton()
+        }
 
-                presenter.onViewCreated(position, user)
+        on("view created again with same user but fields already changed") {
+            presenter.newName = "newName"
+            presenter.newSurname = "newSurname"
+            presenter.newEmail = "new@Email"
 
+            presenter.onViewCreated(position, user)
+            it("should set right values") {
                 verify(viewState, times(1)).setData(eq("newName"), eq("newSurname"), eq("new@Email"), eq(""))
             }
+        }
+
+        it("should show errors") {
+            isError = true
+            presenter.onApplyClicked()
+            verify(viewState, times(1)).showError(any())
         }
 
         on("apply button clicked when all fields are valid") {
