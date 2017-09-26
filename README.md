@@ -1,5 +1,5 @@
-# bb-test-task
-Test task for BinaryBlitz
+[![Logo](demo/logo.png)](#)
+----------------------------------------------
 
 ### Used technologies and libs
 **Kotlin** - main programming language\
