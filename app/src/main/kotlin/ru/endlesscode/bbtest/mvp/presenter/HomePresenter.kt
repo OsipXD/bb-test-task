@@ -61,7 +61,10 @@ class HomePresenter @Inject constructor() : MvpPresenter<HomeView>() {
         val message = when (error) {
             is UnknownHostException -> "Are you connected to the Internet?"
             is SocketTimeoutException -> "Can't connect to server"
-            is HttpException -> "Something wrong with server (${error.code()})"
+            is HttpException -> when (error.code()) {
+                422 -> "Invalid email, please check it and retry"
+                else -> "Something wrong with server (${error.code()})"
+            }
             else -> {
                 val errorMessage = if (error.message.isNullOrBlank()) "" else ": ${error.message}"
                 "Error$errorMessage"
