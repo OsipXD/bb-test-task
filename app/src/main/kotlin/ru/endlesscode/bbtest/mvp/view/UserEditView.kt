@@ -39,4 +39,7 @@ interface UserEditView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showMessage(message: String)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun shakeApplyButton()
 }

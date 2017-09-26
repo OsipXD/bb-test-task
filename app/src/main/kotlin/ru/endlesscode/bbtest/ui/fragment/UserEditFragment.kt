@@ -25,11 +25,16 @@
 
 package ru.endlesscode.bbtest.ui.fragment
 
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.support.design.widget.Snackbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -88,13 +93,32 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
             if (validateFields()) {
                 presenter.onApplyClicked()
             } else {
-
+                shakeApplyButton()
             }
         }
 
         nameField.setOnFocusLostListener { validateNameField() }
         surnameField.setOnFocusLostListener { validateSurnameField() }
         emailField.setOnFocusLostListener { validateEmailField() }
+    }
+
+    override fun shakeApplyButton() {
+        val shake = AnimationUtils.loadAnimation(this.context, R.anim.shake)
+        btnApply.startAnimation(shake)
+        this.vibrate(duration = 15, delay = 10, times = 20)
+    }
+
+    private fun vibrate(duration: Long, delay: Long, times: Int) {
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (vibrator.hasVibrator()) {
+            var pattern = longArrayOf(0)
+            repeat(times) { pattern += duration + delay }
+            if (Build.VERSION.SDK_INT >= 26) {
+                vibrator.vibrate(VibrationEffect.createWaveform(pattern, 0))
+            } else {
+                vibrator.vibrate(pattern, -1)
+            }
+        }
     }
 
     private fun validateFields(): Boolean {

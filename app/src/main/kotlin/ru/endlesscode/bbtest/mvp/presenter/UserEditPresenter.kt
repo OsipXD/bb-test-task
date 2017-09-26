@@ -67,6 +67,7 @@ class UserEditPresenter @Inject constructor(
     fun onApplyClicked() {
         newUser = user.copy(firstName = newName, lastName = newSurname, email = newEmail)
         if (newUser == user) {
+            viewState.shakeApplyButton()
             return
         }
 
@@ -79,6 +80,7 @@ class UserEditPresenter @Inject constructor(
     }
 
     private fun onSuccess() {
+        user = newUser
         usersPresenter.updateUser(position, newUser)
         viewState.showMessage("User successfully updated!")
     }
