@@ -27,4 +27,4 @@ package ru.endlesscode.bbtest.mvp.common
 
 import kotlin.coroutines.experimental.CoroutineContext
 
-class AsyncContexts(val work: CoroutineContext, val ui: CoroutineContext)
+data class AsyncContexts(val work: CoroutineContext, val ui: CoroutineContext)

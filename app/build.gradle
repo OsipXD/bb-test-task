@@ -96,7 +96,9 @@ ext {
     daggerVersion = '2.11'
 
     // Testing
-    spekVersion = '1.1.4'
+    spekVersion = '1.1.5'
+    hamcrestVersion = '2.0.0.0'
+    mockitoVersion = '2.10.+'
     mockitoKotlinVersion = '1.5.+'
 }
 
@@ -139,11 +141,12 @@ dependencies {
     // Testing
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
-    testCompile "org.hamcrest:hamcrest-junit:2.0.0.0"
+    testCompile "org.hamcrest:hamcrest-junit:$hamcrestVersion"
     testCompile "org.jetbrains.spek:spek-api:$spekVersion"
     testCompile "org.jetbrains.spek:spek-junit-platform-engine:$spekVersion"
-    testCompile "org.junit.platform:junit-platform-runner:1.0.0-RC2"
-    testCompile "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
+    testCompile "org.junit.platform:junit-platform-runner:1.0.0"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion"
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
         exclude group: 'com.google.code.findbugs'
         exclude group: 'com.android.support', module: 'support-annotations'
