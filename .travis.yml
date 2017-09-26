@@ -51,7 +51,7 @@ script:
 - "./gradlew clean build jacocoUnitTestReport --stacktrace"
 
 after_success:
-- java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r app/build/reports/jacoco/jacocoUnitTestReport/jacocoTestReport.xml
+- java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r app/build/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml
 
 before_deploy:
 - cp $TRAVIS_BUILD_DIR/keystore.jks $HOME
