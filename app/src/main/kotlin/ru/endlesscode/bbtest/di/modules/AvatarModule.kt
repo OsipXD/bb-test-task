@@ -67,4 +67,3 @@ class AvatarModule {
     @Named("avatarSize")
     fun provideAvatarSize(context: Context): Int = context.resources.getDimensionPixelSize(R.dimen.avatar_size)
 }
-

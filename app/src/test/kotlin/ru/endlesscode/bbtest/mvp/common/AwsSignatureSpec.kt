@@ -39,7 +39,7 @@ import kotlin.test.assertEquals
 import kotlin.test.fail
 
 @RunWith(JUnitPlatform::class)
-class AwsSignatureV4Spec : Spek({
+class AwsSignatureSpec : Spek({
 
     given("a Builder") {
         it("should throw IllegalStateException if access key not assigned") {
