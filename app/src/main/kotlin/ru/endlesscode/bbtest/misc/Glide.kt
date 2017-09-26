@@ -43,5 +43,5 @@ class GlideProvider @Inject constructor(context: Context) {
             .asDrawable()
             .centerCrop()
             .placeholder(R.color.colorLightPrimary)
-            .error(R.drawable.avatar_placeholder_40dp)
+            .error(R.drawable.ic_avatar_placeholder_40dp)
 }
