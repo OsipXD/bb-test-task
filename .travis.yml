@@ -1,14 +1,16 @@
 language: android
 sudo: required
-jdk: oraclejdk7
+
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
 cache:
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
   - "$HOME/.android/build-cache"
+
 env:
   global:
   - TARGET_API_LEVEL=26
@@ -16,6 +18,7 @@ env:
   - BUILD_TOOLS_VERSION=26.0.1
   - secure: kbtmOUF0y22U7SQz2DN8WcYzBhHl1yxCu3RWN/TbE8hUq4QgikJxYDGlRSP6rW+nMlcE99vsGcfJslU48443KCri0HYxpjqWl+WfdC5+JbSpJnaVkTnZDL8lqnWkAEiX86cjski+wWG4hnr8rv9IO7lPPzBppWOHxraY9fBkpJuorbYotB+bVrRZBJz+Jldyz5WQ9a3xxo/JBGtKY+xPZKRUeTVyh89J3FjIKHLvjbbj46Q8o/mUqc1YVPscQZSNUKWE4i2zxlfgS3oGMw2eNRPJXI6AX9u/RzkZiJ2RHo5KOrQ4Tu1lfAg+DLhwkRY4cmtDBbDKxKeqViE08ZREMeVddw8CoQ/AfcJgNiTzZiuOW6DOpnmwNZ6gANpr0PWD+ULKulAyzJ3F+XUeKknDnUgonpvkzWbTmlFu2KDc6jpdxAm2L7ohqfSPVKKf7iAgRm4awQHi0Y71gliVgOQ9ChsEaceQSW5ETz65mUM2nI1hUtG9pyBuzdIUoNTO+jBy0UAwYHjQiD0uUk+7cKp8d0tTfqNkx9QI3iuk/JsoIM8yqzWRchnSpQb9/Aw3tuw4LEg3UY2R0af3dmSarE0FOIW1gB1xlRZeScbtkZN0cFWf8ZLtgJUdJw2cM+Jx1fz4Stpxj2O9im4AdK3VwTZ+QOvUHl/2axgRA5eiS3BSzSc=
   - secure: EUGnpOzHHJXEfBHoVDsq+Sua1bYd71SlKWSA1S8J+TSBZfLy1/6UddPZrnUC03Tcb9uqlE5hyCYkapP2qpT/BRJawithJuJGyKbW3lz6n6DWar0xFE4MEEPEgpOU8LNFm5Xw+3r90LW+AdfSknioNP9QAif8/YDxcGse3o7Y6EkObVWNbLRwOeoDVGQAapx0DcS2Z/Wmim3Q6XEy52B7FQS7JcXHwts6NiONkIiyGsKIXkipiq7alL6+I1d44Mn9nBtFayvMVETZeau0zy5LdwUCy01Lafkh1ddwAS6Gr/cEB9J8lHfyUf7GORZtLHNzX1tQjNSqOmCKoHX8+cNXxChSs4mJUfbBYlXy/zQvR02+MX6CuH5gqAeJ02/zubsqDP3+3ILZrdXm4a+J7G9ywCWBoAXuATCKMT9xC8p0ZAgfDoiPlQAAI8aUBy7JbtyiQxhMeLmyjRr6+bZSPW5v0o+GSVN4FzYRVNMzQioG5s3LW1MzFjEUpwqCl0rxWIdibzGGSxQ3sJBUfronDXjcJxkNBbMmhoWqZiJ/WsI9KXqESUen3T6HxswVQ7SmUGeiz242VMo3gs8OjoGxO1+IyKj8ld97bhw8jtNaDogxDIjD1Xuto08rd/2Lmigg0Oo6HAXBgfLUmtf55y5+n+Hvk0PlhkF615WszG0rJd56yYQ=
+
 android:
   components:
   - tools
@@ -30,6 +33,7 @@ android:
   - android-sdk-preview-license-.+
   - android-sdk-license-.+
   - google-gdk-license-.+
+
 before_install:
 - openssl aes-256-cbc -K $encrypted_fd6de4f6b834_key -iv $encrypted_fd6de4f6b834_iv
   -in keystore.jks.enc -out keystore.jks -d
@@ -38,14 +42,17 @@ before_install:
 - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 - chmod +x gradlew
 - "./gradlew dependencies || true"
+
 script:
 - "./gradlew clean build --stacktrace"
+
 before_deploy:
 - cp $TRAVIS_BUILD_DIR/keystore.jks $HOME
 - cd app/build/outputs/apk/
 - jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/keystore.jks -storepass $storepass -keypass $keypass app-release-unsigned.apk TestAppKey
 - jarsigner -verify app-release-unsigned.apk
 - "${ANDROID_HOME}/build-tools/${BUILD_TOOLS_VERSION}/zipalign -v 4 app-release-unsigned.apk BBTestTask.apk"
+
 deploy:
   provider: releases
   api_key:
@@ -54,7 +61,7 @@ deploy:
   on:
     repo: OsipXD/bb-test-task
     tags: true
-    jdk: oraclejdk7
+
 notifications:
   email:
     on_success: never
