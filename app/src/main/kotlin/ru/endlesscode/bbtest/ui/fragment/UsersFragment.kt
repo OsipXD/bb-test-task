@@ -26,7 +26,6 @@
 package ru.endlesscode.bbtest.ui.fragment
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -90,11 +89,6 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
 
         buttonAdd.setOnClickListener { homePresenter.get().showUserCreatingView() }
         usersRefresh.setOnRefreshListener { presenter.refreshUsers() }
-    }
-
-    override fun showError(message: String) {
-        Snackbar.make(usersList, message, Snackbar.LENGTH_LONG)
-                .setAction("Retry", { presenter.refreshUsers() }).show()
     }
 
     override fun showRefreshing() {

@@ -29,9 +29,12 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import retrofit2.HttpException
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.view.HomeView
 import ru.endlesscode.bbtest.ui.fragment.UserEditFragment
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -52,6 +55,25 @@ class HomePresenter @Inject constructor() : MvpPresenter<HomeView>() {
 
     private fun showFragment(fragment: Fragment) {
         viewState.showFragment(fragment)
+    }
+
+    fun showError(error: Throwable) {
+        val message = when (error) {
+            is UnknownHostException -> "Are you connected to the Internet?"
+            is SocketTimeoutException -> "Can't connect to server"
+            is HttpException -> "Something wrong with server (${error.code()})"
+            else -> {
+                val errorMessage = if (error.message.isNullOrBlank()) "" else ": ${error.message}"
+                "Error$errorMessage"
+            }
+        }
+
+        println(error.toString())
+        viewState.showError(message)
+    }
+
+    fun showMessage(message: String) {
+        viewState.showMessage(message)
     }
 
     fun back() {

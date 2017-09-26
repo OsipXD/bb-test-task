@@ -114,10 +114,10 @@ class UserEditPresenter @Inject constructor(
 
     private fun onOperationSuccessful(message: String) {
         user = newUser
-        viewState.showMessage(message)
+        homePresenter.showMessage(message)
     }
 
     private fun onError(exception: Throwable) {
-        viewState.showError(exception.message.orEmpty())
+        homePresenter.showError(exception)
     }
 }

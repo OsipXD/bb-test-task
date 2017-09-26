@@ -27,9 +27,14 @@ package ru.endlesscode.bbtest.mvp.presenter
 
 import com.nhaarman.mockito_kotlin.*
 import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
+import retrofit2.HttpException
+import ru.gildor.coroutines.retrofit.util.errorResponse
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import ru.endlesscode.bbtest.mvp.view.`HomeView$$State` as ViewState
 
 @RunWith(JUnitPlatform::class)
@@ -45,6 +50,51 @@ class HomePresenterSpec : Spek({
     it("should open add user view") {
         presenter.showUserCreatingView()
         verify(viewState, times(1)).showFragment(any(), eq(""), eq(true))
+    }
+
+    context(": throwing error") {
+        var message = ""
+        var error = Exception()
+
+        beforeEachTest {
+            error = Exception()
+        }
+
+        it("should return right message on UnknownHostException") {
+            message = "Are you connected to the Internet?"
+            error = UnknownHostException()
+        }
+
+        it("should return right message on SocketTimeoutException") {
+            message = "Can't connect to server"
+            error = SocketTimeoutException()
+        }
+
+        it("should return right message on HttpException") {
+            val errorCode = 500
+            message = "Something wrong with server ($errorCode)"
+            error = HttpException(errorResponse<String>(errorCode))
+        }
+
+        it("should return default message on exception with null") {
+            message = "Error"
+        }
+
+        it("should return default message on exception with empty message") {
+            message = "Error"
+            error = Exception("")
+        }
+
+        it("should return default message on exception with message") {
+            val errorMessage = "message here"
+            message = "Error: $errorMessage"
+            error = Exception(errorMessage)
+        }
+
+        afterEachTest {
+            presenter.showError(error)
+            verify(viewState, times(1)).showError(message)
+        }
     }
 
     afterEachTest {

@@ -36,4 +36,8 @@ interface HomeView : MvpView {
     fun showFragment(fragment: Fragment, title: String = "", addToBackStack: Boolean = true)
 
     fun back()
+
+    fun showError(message: String)
+
+    fun showMessage(message: String)
 }

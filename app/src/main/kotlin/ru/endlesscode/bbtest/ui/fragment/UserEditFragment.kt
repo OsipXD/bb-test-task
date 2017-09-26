@@ -170,12 +170,12 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
         emailField.setText("")
     }
 
-    override fun showMessage(message: String) {
+    fun showMessage(message: String) {
         Snackbar.make(avatar, message, Snackbar.LENGTH_SHORT)
                 .setAction("OK", { }).show()
     }
 
-    override fun showError(message: String) {
+    fun showError(message: String) {
         Snackbar.make(avatar, message, Snackbar.LENGTH_LONG)
                 .setAction("Got it", { }).show()
     }

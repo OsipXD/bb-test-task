@@ -33,15 +33,11 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
-import retrofit2.HttpException
 import ru.endlesscode.bbtest.api.UserData
 import ru.endlesscode.bbtest.mvp.common.AsyncContexts
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.mvp.view.UserItemView
-import ru.gildor.coroutines.retrofit.util.errorResponse
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import kotlin.test.assertEquals
 import ru.endlesscode.bbtest.mvp.view.`UsersView$$State` as ViewState
 
@@ -49,7 +45,8 @@ import ru.endlesscode.bbtest.mvp.view.`UsersView$$State` as ViewState
 class UsersPresenterSpec : Spek({
 
     val usersManager: UsersManager = mock()
-    var presenter = UsersPresenter(usersManager, AsyncContexts(Unconfined, Unconfined))
+    val homePresenter: HomePresenter = mock()
+    var presenter = UsersPresenter(usersManager, AsyncContexts(Unconfined, Unconfined), homePresenter)
     val viewState: ViewState = mock()
 
     val users: List<UserData> = listOf(
@@ -72,7 +69,7 @@ class UsersPresenterSpec : Spek({
     }
 
     beforeEachTest {
-        presenter = UsersPresenter(usersManager, AsyncContexts(Unconfined, Unconfined))
+        presenter = UsersPresenter(usersManager, AsyncContexts(Unconfined, Unconfined), homePresenter)
         presenter.setViewState(viewState)
         clearInvocations(viewState)
 
@@ -115,7 +112,7 @@ class UsersPresenterSpec : Spek({
             }
 
             it("should show error") {
-                verify(viewState, times(1)).showError(any())
+                verify(homePresenter, times(1)).showError(any())
             }
         }
 
@@ -127,7 +124,7 @@ class UsersPresenterSpec : Spek({
             presenter.refreshUsers()
 
             it("should show error") {
-                verify(viewState, times(1)).showError(any())
+                verify(homePresenter, times(1)).showError(any())
             }
         }
 
@@ -166,51 +163,6 @@ class UsersPresenterSpec : Spek({
             verify(viewState, times(1)).showRefreshing()
             verify(viewState, times(1)).hideRefreshing()
             verifyNoMoreInteractions(viewState)
-        }
-    }
-
-    context(": throwing error") {
-        var message = ""
-
-        beforeEachTest {
-            error = Exception()
-            isError = true
-        }
-
-        it("should return right message on UnknownHostException") {
-            message = "Are you connected to the Internet?"
-            error = UnknownHostException()
-        }
-
-        it("should return right message on SocketTimeoutException") {
-            message = "Can't connect to server"
-            error = SocketTimeoutException()
-        }
-
-        it("should return right message on HttpException") {
-            val errorCode = 500
-            message = "Something wrong with server ($errorCode)"
-            error = HttpException(errorResponse<String>(errorCode))
-        }
-
-        it("should return default message on exception with null") {
-            message = "Error"
-        }
-
-        it("should return default message on exception with empty message") {
-            message = "Error"
-            error = Exception("")
-        }
-
-        it("should return default message on exception with message") {
-            val errorMessage = "message here"
-            message = "Error: $errorMessage"
-            error = Exception(errorMessage)
-        }
-
-        afterEachTest {
-            presenter.initUsers()
-            verify(viewState, times(1)).showError(message)
         }
     }
 

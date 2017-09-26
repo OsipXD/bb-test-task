@@ -26,6 +26,7 @@
 package ru.endlesscode.bbtest.ui.activity
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.view.Menu
@@ -48,6 +49,7 @@ class HomeActivity : MvpAppCompatActivity(), HomeView {
     lateinit var presenter: HomePresenter
 
     private val toolbar by lazy { main_toolbar }
+    private val mainLayout by lazy { main_layout }
 
     @ProvidePresenter
     fun providePresenter() = presenter
@@ -97,5 +99,15 @@ class HomeActivity : MvpAppCompatActivity(), HomeView {
 
     override fun back() {
         this.onBackPressed()
+    }
+
+    override fun showError(message: String) {
+        Snackbar.make(mainLayout, message, Snackbar.LENGTH_LONG)
+                .setAction("Got it", { }).show()
+    }
+
+    override fun showMessage(message: String) {
+        Snackbar.make(mainLayout, message, Snackbar.LENGTH_SHORT)
+                .setAction("OK", { }).show()
     }
 }
