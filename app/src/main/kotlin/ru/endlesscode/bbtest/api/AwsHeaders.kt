@@ -25,7 +25,7 @@
 
 package ru.endlesscode.bbtest.api
 
-class AwsHeaders(vararg headers: Pair<String, String>) {
+class AwsHeaders(headers: Array<out Pair<String, String>>) {
 
     companion object {
         const val HOST = "Host"
@@ -35,7 +35,7 @@ class AwsHeaders(vararg headers: Pair<String, String>) {
         const val AUTHORIZATION = "Authorization"
     }
 
-    private val headers = mutableMapOf(*headers)
+    private val headers = headers.toMap().toMutableMap()
 
     val canonical
         get() = preparedHeaders.joinToString(separator = "\n", postfix = "\n") { "${it.first}:${it.second}" }

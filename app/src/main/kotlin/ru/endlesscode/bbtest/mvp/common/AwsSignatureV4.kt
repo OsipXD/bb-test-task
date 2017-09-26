@@ -55,7 +55,7 @@ class AwsSignatureV4 private constructor(
     ): AwsHeaders {
 
         this.saveTime()
-        this.initHeaders(*headers)
+        this.initHeaders(headers)
         this.setPayload(payload)
 
         val canonicalRequest = buildCanonicalRequest(uri, query)
@@ -84,8 +84,8 @@ class AwsSignatureV4 private constructor(
     }
 
     @VisibleForTesting
-    fun initHeaders(vararg headers: Pair<String, String>) {
-        this.headers = AwsHeaders(*headers)
+    fun initHeaders(headers: Array<out Pair<String, String>>) {
+        this.headers = AwsHeaders(headers)
         this.headers.add(
                 AwsHeaders.HOST to host,
                 AwsHeaders.AMZ_DATE to timeStamp
