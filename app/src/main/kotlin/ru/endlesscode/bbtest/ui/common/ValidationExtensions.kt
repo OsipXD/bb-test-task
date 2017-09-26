@@ -42,8 +42,13 @@ fun TextView.validateNotBlank(layout: TextInputLayout) =
  * Why you not use strong regex to restrict email format?
  * Because it is useless: <https://hackernoon.com/the-100-correct-way-to-validate-email-addresses-7c4818f24643>
  */
-fun TextView.validateIsEmail(layout: TextInputLayout) =
-        validate(layout, this.text matches Regex(".+@.+"), "Please, enter correct email ")
+fun TextView.validateIsEmail(layout: TextInputLayout): Boolean {
+    text = text.trim()
+    val isValid = " " in text
+            || text.count { it == '@' } > 1
+            || text matches Regex(".+@.+\\.[a-zA-Z]{2,}")
+    return validate(layout, isValid, "Please, enter correct email ")
+}
 
 private fun TextView.validate(layout: TextInputLayout, valid: Boolean, errorMessage: String): Boolean {
     text = text.trim()

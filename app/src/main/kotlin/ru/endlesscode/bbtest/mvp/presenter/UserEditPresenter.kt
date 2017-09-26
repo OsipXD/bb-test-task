@@ -42,12 +42,27 @@ class UserEditPresenter @Inject constructor(
     private var user = UserItem.EMPTY
     private var newUser = user.copy()
 
-    lateinit var newName: String
-    lateinit var newSurname: String
-    lateinit var newEmail: String
-    private var position: Int = -1
+    var newName: String = ""
+    var newSurname: String = ""
+    var newEmail: String = ""
 
-    fun onViewCreated(position: Int, user: UserItem) {
+    private var position: Int = -1
+    private var isUpdating = true
+
+    fun onCreteViewCreated() {
+        if (isUpdating) {
+            user = UserItem.EMPTY
+            newName = ""
+            newSurname = ""
+            newEmail = ""
+        }
+
+        isUpdating = false
+        viewState.setData(newName, newSurname, newEmail, user.avatarUrl)
+    }
+
+    fun onUpdateViewCreated(position: Int, user: UserItem) {
+        isUpdating = true
         if (this.user != user) {
             this.user = user
             this.position = position
@@ -71,16 +86,33 @@ class UserEditPresenter @Inject constructor(
             return
         }
 
-        usersManager.updateUser(newUser,
-                onSuccess = { onSuccess() },
-                onError = { onError(it) }
-        )
+        if (isUpdating) {
+            usersManager.updateUser(newUser,
+                    onSuccess = { onUserUpdated() },
+                    onError = { onError(it) }
+            )
+        } else {
+            usersManager.createUser(newUser,
+                    onSuccess = { onUserCreated() },
+                    onError = { onError(it) }
+            )
+        }
     }
 
-    private fun onSuccess() {
-        user = newUser
+    private fun onUserUpdated() {
         usersPresenter.updateUser(position, newUser)
-        viewState.showMessage("User successfully updated!")
+        onOperationSuccessful("User successfully updated!")
+    }
+
+    private fun onUserCreated() {
+        isUpdating = true
+        usersPresenter.addUser(newUser)
+        onOperationSuccessful("User successfully created!")
+    }
+
+    private fun onOperationSuccessful(message: String) {
+        user = newUser
+        viewState.showMessage(message)
     }
 
     private fun onError(exception: Throwable) {

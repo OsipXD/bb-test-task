@@ -141,4 +141,9 @@ class UsersPresenter(private val usersManager: UsersManager, private val asyncCo
         users[position] = user
         viewState.updateUser(position)
     }
+
+    fun addUser(user: UserItem) {
+        users.add(0, user)
+        viewState.addUserAtStart()
+    }
 }

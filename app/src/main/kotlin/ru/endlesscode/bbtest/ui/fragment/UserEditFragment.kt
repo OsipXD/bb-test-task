@@ -84,9 +84,13 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val user: UserItem = this.arguments.getParcelable("user")
-        val position: Int = this.arguments.getInt("position")
-        presenter.onViewCreated(position, user)
+        if (arguments == null) {
+            presenter.onCreteViewCreated()
+        } else {
+            val position: Int = arguments.getInt("position")
+            val user: UserItem = arguments.getParcelable("user")
+            presenter.onUpdateViewCreated(position, user)
+        }
 
         btnClear.setOnClickListener { presenter.onClearClicked() }
         btnApply.setOnClickListener {

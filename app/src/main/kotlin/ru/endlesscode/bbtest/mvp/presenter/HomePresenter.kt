@@ -31,7 +31,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.view.HomeView
-import ru.endlesscode.bbtest.ui.fragment.UserCreatingFragment
 import ru.endlesscode.bbtest.ui.fragment.UserEditFragment
 
 @InjectViewState
@@ -42,7 +41,7 @@ class HomePresenter : MvpPresenter<HomeView>() {
     }
 
     fun showUserCreatingView() {
-        this.showFragment(UserCreatingFragment())
+        this.showFragment(UserEditFragment())
     }
 
     fun showUserEditView(position: Int, user: UserItem) {

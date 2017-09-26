@@ -42,23 +42,10 @@ class UserEditPresenterSpec : Spek({
 
     val usersManager: UsersManager = mock()
     val usersPresenter: UsersPresenter = mock()
-    val presenter = UserEditPresenter(usersManager, usersPresenter)
+    var presenter = UserEditPresenter(usersManager, usersPresenter)
     val viewState: ViewState = mock()
 
     var isError = false
-
-    beforeGroup {
-        presenter.setViewState(viewState)
-        doAnswer { invocation ->
-            val onSuccess: (Unit) -> Unit = invocation.getArgument(1)
-            val onError: (Throwable) -> Unit = invocation.getArgument(2)
-
-            when {
-                isError -> onError(Exception())
-                else -> onSuccess(Unit)
-            }
-        }.`when`(usersManager).updateUser(any(), any(), any())
-    }
 
     beforeEachTest {
         isError = false
@@ -69,8 +56,22 @@ class UserEditPresenterSpec : Spek({
         val user = UserItem(id = 2, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = "")
         val position = 1
 
+        beforeGroup {
+            presenter = UserEditPresenter(usersManager, usersPresenter)
+            presenter.setViewState(viewState)
+            doAnswer { invocation ->
+                val onSuccess: (Unit) -> Unit = invocation.getArgument(1)
+                val onError: (Throwable) -> Unit = invocation.getArgument(2)
+
+                when {
+                    isError -> onError(Exception())
+                    else -> onSuccess(Unit)
+                }
+            }.`when`(usersManager).updateUser(any(), any(), any())
+        }
+
         on("view created") {
-            presenter.onViewCreated(position, user)
+            presenter.onUpdateViewCreated(position, user)
 
             it("should set values to view") {
                 verify(viewState, times(1)).setData(eq("Foo"), eq("Bar"), eq("foo@bar.com"), eq(""))
@@ -93,7 +94,7 @@ class UserEditPresenterSpec : Spek({
             presenter.newSurname = "newSurname"
             presenter.newEmail = "new@Email"
 
-            presenter.onViewCreated(position, user)
+            presenter.onUpdateViewCreated(position, user)
             it("should set right values") {
                 verify(viewState, times(1)).setData(eq("newName"), eq("newSurname"), eq("new@Email"), eq(""))
             }
@@ -105,7 +106,7 @@ class UserEditPresenterSpec : Spek({
             verify(viewState, times(1)).showError(any())
         }
 
-        on("apply button clicked when all fields are valid") {
+        on("apply button clicked") {
             presenter.onApplyClicked()
 
             it("should pass updated item to users presenter") {
@@ -118,10 +119,66 @@ class UserEditPresenterSpec : Spek({
                 verify(viewState, times(1)).showMessage(any())
             }
         }
+    }
 
-        afterEachTest {
-            verifyNoMoreInteractions(viewState)
-            verifyNoMoreInteractions(usersPresenter)
+    context(": add new user") {
+        beforeGroup {
+            presenter = UserEditPresenter(usersManager, usersPresenter)
+            presenter.setViewState(viewState)
+            doAnswer { invocation ->
+                val onSuccess: (Unit) -> Unit = invocation.getArgument(1)
+                val onError: (Throwable) -> Unit = invocation.getArgument(2)
+
+                when {
+                    isError -> onError(Exception())
+                    else -> onSuccess(Unit)
+                }
+            }.`when`(usersManager).createUser(any(), any(), any())
         }
+
+        it("shouldn't do anything on first view creation") {
+            presenter.onCreteViewCreated()
+        }
+
+        on("view created again but fields already changed") {
+            presenter.newName = "newName"
+            presenter.newSurname = "newSurname"
+            presenter.newEmail = "new@Email"
+
+            presenter.onCreteViewCreated()
+            it("should set right values") {
+                verify(viewState, times(1)).setData(eq("newName"), eq("newSurname"), eq("new@Email"), eq(""))
+            }
+        }
+
+        it("should show errors") {
+            isError = true
+            presenter.onApplyClicked()
+            verify(viewState, times(1)).showError(any())
+        }
+
+        on("apply button clicked") {
+            presenter.onApplyClicked()
+
+            it("should pass created item to users presenter") {
+                verify(usersPresenter, times(1)).addUser(
+                        eq(UserItem(id = -1, firstName = "newName", lastName = "newSurname", email = "new@Email", avatarUrl = ""))
+                )
+            }
+
+            it("should notify about result") {
+                verify(viewState, times(1)).showMessage(any())
+            }
+        }
+    }
+
+    it("should clear fields on clear button clicked") {
+        presenter.onClearClicked()
+        verify(viewState, times(1)).clearFields()
+    }
+
+    afterEachTest {
+        verifyNoMoreInteractions(viewState)
+        verifyNoMoreInteractions(usersPresenter)
     }
 })

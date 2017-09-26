@@ -140,4 +140,8 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
     override fun updateUser(position: Int) {
         adapter.get().notifyItemChanged(position)
     }
+
+    override fun addUserAtStart() {
+        adapter.get().notifyItemInserted(0)
+    }
 }

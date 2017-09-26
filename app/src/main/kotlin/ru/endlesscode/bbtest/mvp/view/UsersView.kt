@@ -54,4 +54,6 @@ interface UsersView : MvpView {
     fun showUserEditView(position: Int, user: UserItem)
 
     fun updateUser(position: Int)
+
+    fun addUserAtStart()
 }

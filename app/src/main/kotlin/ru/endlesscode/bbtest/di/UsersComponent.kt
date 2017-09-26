@@ -29,7 +29,6 @@ import dagger.Subcomponent
 import ru.endlesscode.bbtest.di.modules.AvatarModule
 import ru.endlesscode.bbtest.di.modules.UsersModule
 import ru.endlesscode.bbtest.mvp.model.UsersManager
-import ru.endlesscode.bbtest.ui.fragment.UserCreatingFragment
 import ru.endlesscode.bbtest.ui.fragment.UserEditFragment
 import ru.endlesscode.bbtest.ui.fragment.UsersFragment
 
@@ -47,5 +46,4 @@ interface UsersComponent {
     fun usersManager(): UsersManager
     fun inject(fragment: UsersFragment)
     fun inject(fragment: UserEditFragment)
-    fun inject(fragment: UserCreatingFragment)
 }
