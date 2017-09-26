@@ -120,6 +120,7 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
             if (Build.VERSION.SDK_INT >= 26) {
                 vibrator.vibrate(VibrationEffect.createWaveform(pattern, 0))
             } else {
+                @Suppress("DEPRECATION")
                 vibrator.vibrate(pattern, -1)
             }
         }
