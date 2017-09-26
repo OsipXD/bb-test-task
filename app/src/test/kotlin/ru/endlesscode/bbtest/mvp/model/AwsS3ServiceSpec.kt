@@ -31,6 +31,7 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
+import ru.endlesscode.bbtest.di.modules.ContextModule
 import ru.endlesscode.bbtest.test.FileHelper
 import ru.endlesscode.bbtest.test.di.DaggerTestAppComponent
 import kotlin.test.assertTrue
@@ -38,7 +39,8 @@ import kotlin.test.assertTrue
 @RunWith(JUnitPlatform::class)
 class AwsS3ServiceSpec : Spek({
 
-    val service = DaggerTestAppComponent.builder().contextModule(mock()).build().awsS3Service()
+    val service = DaggerTestAppComponent.builder()
+            .contextModule(ContextModule(mock())).build().awsS3Service()
 
     it("should successfully upload file") {
         runBlocking {
