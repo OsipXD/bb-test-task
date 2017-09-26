@@ -157,6 +157,8 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
 
         glideProvider.request.clone().apply {
             load(avatarUrl)
+            placeholder(R.drawable.avatar_black_24px)
+            error(R.drawable.avatar_black_24px)
             override(avatar.width, avatar.height)
             into(avatar)
         }
