@@ -44,9 +44,14 @@ before_install:
 - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 - chmod +x gradlew
 - "./gradlew dependencies || true"
+- sudo apt-get install jq
+- wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
 
 script:
-- "./gradlew clean build --stacktrace"
+- "./gradlew clean build jacocoUnitTestReport --stacktrace"
+
+after_success:
+- java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r app/build/reports/jacoco/jacocoUnitTestReport/jacocoTestReport.xml
 
 before_deploy:
 - cp $TRAVIS_BUILD_DIR/keystore.jks $HOME
