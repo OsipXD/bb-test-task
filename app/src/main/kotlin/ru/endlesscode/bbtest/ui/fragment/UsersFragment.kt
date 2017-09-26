@@ -134,8 +134,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView {
         adapter.get().notifyItemChanged(position)
     }
 
-    override fun addUserAtStart() {
-        adapter.get().notifyItemInserted(0)
-        usersList.scrollToPosition(0)
+    override fun scrollTo(position: Int) {
+        usersList.scrollToPosition(position)
     }
 }

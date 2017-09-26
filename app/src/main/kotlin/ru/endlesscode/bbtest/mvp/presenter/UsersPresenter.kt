@@ -26,6 +26,7 @@
 package ru.endlesscode.bbtest.mvp.presenter
 
 import android.support.v7.util.DiffUtil
+import android.support.v7.util.ListUpdateCallback
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import kotlinx.coroutines.experimental.launch
@@ -65,7 +66,7 @@ class UsersPresenter @Inject constructor(
         loadUsers()
     }
 
-    private fun loadUsers() {
+    private fun loadUsers(onDiff: UsersPresenter.(DiffUtil.DiffResult) -> Unit = { }) {
         if (isInLoading) {
             return
         }
@@ -75,7 +76,7 @@ class UsersPresenter @Inject constructor(
                 onSuccess = { usersData ->
                     val usersItems = usersData.map { UserItem(it) }.sortedBy { it.fullName.toLowerCase() }
                     when {
-                        users.isNotEmpty() -> updateUsers(usersItems)
+                        users.isNotEmpty() -> updateUsers(usersItems, onDiff)
                         else -> initUsers(usersItems)
                     }
                 },
@@ -95,7 +96,7 @@ class UsersPresenter @Inject constructor(
         onFinishLoading()
     }
 
-    private fun updateUsers(usersItems: List<UserItem>) = launch(asyncContexts.work) {
+    private fun updateUsers(usersItems: List<UserItem>, onDiff: UsersPresenter.(DiffUtil.DiffResult) -> Unit) = launch(asyncContexts.work) {
         val usersDiff = UsersDiffCallback(users, usersItems)
         val diffResult = DiffUtil.calculateDiff(usersDiff)
 
@@ -103,6 +104,7 @@ class UsersPresenter @Inject constructor(
         users.addAll(usersItems)
         run(asyncContexts.ui) {
             viewState.updateUsers(diffResult)
+            onDiff(diffResult)
             onFinishLoading()
         }
     }
@@ -135,8 +137,26 @@ class UsersPresenter @Inject constructor(
         viewState.updateUser(position)
     }
 
-    fun addUser(user: UserItem) {
-        users.add(0, user)
-        viewState.addUserAtStart()
+    fun addUser(user: UserItem) = loadUsers {
+        val insertedPositions = mutableListOf<Int>()
+        it.dispatchUpdatesTo(object : ListUpdateCallback {
+            override fun onChanged(p0: Int, p1: Int, p2: Any?) {}
+
+            override fun onMoved(p0: Int, p1: Int) {}
+
+            override fun onInserted(position: Int, count: Int) {
+                insertedPositions.addAll(position until position + count)
+            }
+
+            override fun onRemoved(p0: Int, p1: Int) {}
+        })
+
+        insertedPositions.forEach { postition ->
+            val userFromList = users[postition]
+            if (userFromList == user.copy(id = userFromList.id)) {
+                viewState.scrollTo(postition)
+                return@loadUsers
+            }
+        }
     }
 }

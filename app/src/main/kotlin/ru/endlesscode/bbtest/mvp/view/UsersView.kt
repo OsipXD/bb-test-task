@@ -52,5 +52,5 @@ interface UsersView : MvpView {
 
     fun updateUser(position: Int)
 
-    fun addUserAtStart()
+    fun scrollTo(position: Int)
 }
