@@ -45,9 +45,9 @@ import ru.endlesscode.bbtest.misc.GlideProvider
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.presenter.UserEditPresenter
 import ru.endlesscode.bbtest.mvp.view.UserEditView
-import ru.endlesscode.bbtest.ui.common.setOnFocusLostListener
-import ru.endlesscode.bbtest.ui.common.validateIsEmail
-import ru.endlesscode.bbtest.ui.common.validateNotBlank
+import ru.endlesscode.bbtest.ui.extension.setOnFocusLostListener
+import ru.endlesscode.bbtest.ui.extension.validateIsEmail
+import ru.endlesscode.bbtest.ui.extension.validateNotBlank
 import javax.inject.Inject
 
 class UserEditFragment : MvpAppCompatFragment(), UserEditView {
@@ -117,7 +117,7 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
         if (vibrator.hasVibrator()) {
             var pattern = longArrayOf(0)
             repeat(times) { pattern += duration + delay }
-            if (Build.VERSION.SDK_INT >= 26) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(VibrationEffect.createWaveform(pattern, 0))
             } else {
                 @Suppress("DEPRECATION")

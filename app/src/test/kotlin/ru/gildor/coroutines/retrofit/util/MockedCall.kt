@@ -10,7 +10,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 class MockedCall<T>(
-        var ok: T? = null,
+        var result: T? = null,
         var error: HttpException? = null,
         var exception: Throwable? = null,
         private val autoStart: Boolean = true,
@@ -34,11 +34,11 @@ class MockedCall<T>(
     private fun start() {
         markAsExecuted()
 
-        val ok = this.ok
+        val result = this.result
         val error = this.error
         val exception = this.exception
         when {
-            ok != null -> callback.onResponse(this, Response.success(ok))
+            result != null -> callback.onResponse(this, Response.success(result))
             error != null -> callback.onResponse(this, errorResponse(error.code()))
             exception != null -> callback.onFailure(this, exception)
         }
@@ -65,7 +65,7 @@ class MockedCall<T>(
     }
 
     fun refresh() {
-        ok = null
+        result = null
         error = null
         exception = null
         executed = false

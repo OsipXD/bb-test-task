@@ -38,7 +38,7 @@ import ru.endlesscode.bbtest.misc.GlideProvider
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.presenter.UsersPresenter
 import ru.endlesscode.bbtest.mvp.view.UserItemView
-import ru.endlesscode.bbtest.ui.inflate
+import ru.endlesscode.bbtest.ui.extension.inflate
 import javax.inject.Inject
 
 @UsersScope

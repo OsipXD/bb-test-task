@@ -27,14 +27,6 @@ package ru.endlesscode.bbtest.api
 
 class AwsHeaders(headers: Array<out Pair<String, String>>) {
 
-    companion object {
-        const val HOST = "Host"
-        const val AMZ_CONTENT_HASH = "X-Amz-Content-sha256"
-        const val AMZ_DATE = "X-Amz-Date"
-        const val CONTENT_TYPE = "Content-Type"
-        const val AUTHORIZATION = "Authorization"
-    }
-
     private val headers = headers.toMap().toMutableMap()
 
     val canonical

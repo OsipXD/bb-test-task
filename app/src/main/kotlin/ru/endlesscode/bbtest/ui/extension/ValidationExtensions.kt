@@ -23,26 +23,40 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.api
+package ru.endlesscode.bbtest.ui.extension
 
-import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Header
-import retrofit2.http.PUT
-import retrofit2.http.Path
+import android.support.design.widget.TextInputLayout
+import android.view.View
+import android.widget.TextView
 
-interface AwsS3Api {
+fun TextView.setOnFocusLostListener(listener: (View) -> Unit) {
+    this.setOnFocusChangeListener { view, inFocus ->
+        if (!inFocus) listener(view)
+    }
+}
 
-    @PUT("/{fileName}")
-    fun upload(@Path("fileName") fileName: String,
-               @Header(HttpHeaders.CONTENT_LENGTH) length: Long,
-               @Header(HttpHeaders.HOST) host: String,
-               @Header(HttpHeaders.DATE) date: String,
-               @Header(HttpHeaders.CONTENT_TYPE) contentType: String,
-               @Header(HttpHeaders.AUTHORIZATION) authorization: String,
-               @Header(HttpHeaders.AMZ_CONTENT_HASH) amzContentHash: String,
-               @Header(HttpHeaders.AMZ_DATE) amzDate: String,
-               @Header(HttpHeaders.EXPECT) expect: String = "100-continue",
-               @Body body: RequestBody): Call<String>
+fun TextView.validateNotBlank(layout: TextInputLayout) =
+        validate(layout, this.text.isNotBlank(), "This field can not be blank")
+
+/**
+ * Why you not use strong regex to restrict email format?
+ * Because it is useless: <https://hackernoon.com/the-100-correct-way-to-validate-email-addresses-7c4818f24643>
+ */
+fun TextView.validateIsEmail(layout: TextInputLayout): Boolean {
+    text = text.trim()
+    val isValid = " " in text
+            || text.count { it == '@' } > 1
+            || text matches Regex(".+@.+\\.[a-zA-Z]{2,}")
+    return validate(layout, isValid, "Please, enter correct email ")
+}
+
+private fun TextView.validate(layout: TextInputLayout, valid: Boolean, errorMessage: String): Boolean {
+    text = text.trim()
+    return if (!valid) {
+        layout.error = errorMessage
+        false
+    } else {
+        layout.error = null
+        true
+    }
 }

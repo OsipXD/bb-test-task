@@ -28,9 +28,9 @@ package ru.endlesscode.bbtest.mvp.model
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import retrofit2.Call
-import ru.endlesscode.bbtest.api.AwsHeaders
 import ru.endlesscode.bbtest.api.AwsS3Api
-import ru.endlesscode.bbtest.mvp.common.AwsSignatureV4
+import ru.endlesscode.bbtest.api.HttpHeaders
+import ru.endlesscode.bbtest.mvp.common.AwsSignature
 import ru.endlesscode.bbtest.mvp.common.DateTimeProvider
 import java.io.File
 import javax.inject.Inject
@@ -39,7 +39,7 @@ import javax.inject.Singleton
 @Singleton
 class AwsS3Service @Inject constructor(
         private val api: AwsS3Api,
-        private val awsSignature: AwsSignatureV4,
+        private val awsSignature: AwsSignature,
         private val dateTime: DateTimeProvider) {
 
     fun upload(fileName: String, file: File): Call<String> {
@@ -48,17 +48,17 @@ class AwsS3Service @Inject constructor(
         val payload = file.readBytes()
 
         val headers = awsSignature.buildRequestHeaders(
-                uri = "/$fileName", headers = "Content-Type" to contentType, payload = payload)
+                uri = "/$fileName", headers = HttpHeaders.CONTENT_TYPE to contentType, payload = payload)
 
         return api.upload(
                 fileName = fileName,
                 length = body.contentLength(),
-                host = headers[AwsHeaders.HOST],
+                host = headers[HttpHeaders.HOST],
                 date = dateTime.rfc1123(),
-                contentType = headers[AwsHeaders.CONTENT_TYPE],
-                authorization = headers[AwsHeaders.AUTHORIZATION],
-                amzContentHash = headers[AwsHeaders.AMZ_CONTENT_HASH],
-                amzDate = headers[AwsHeaders.AMZ_DATE],
+                contentType = headers[HttpHeaders.CONTENT_TYPE],
+                authorization = headers[HttpHeaders.AUTHORIZATION],
+                amzContentHash = headers[HttpHeaders.AMZ_CONTENT_HASH],
+                amzDate = headers[HttpHeaders.AMZ_DATE],
                 body = body
         )
     }

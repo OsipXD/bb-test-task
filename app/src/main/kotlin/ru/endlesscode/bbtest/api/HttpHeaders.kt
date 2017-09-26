@@ -23,18 +23,15 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.ui
+package ru.endlesscode.bbtest.api
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.arellomobile.mvp.MvpFacade
-import com.arellomobile.mvp.MvpPresenter
-import com.arellomobile.mvp.MvpView
-
-@Suppress("UNCHECKED_CAST")
-fun <T : MvpPresenter<out MvpView>> MvpFacade.getPresenter(tag: String) = this.presenterStore[tag] as T
-
-@Suppress("UNCHECKED_CAST")
-fun <T : View> ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false)
-        = LayoutInflater.from(this.context).inflate(layoutId, this, attachToRoot) as T
+object HttpHeaders {
+    const val AMZ_CONTENT_HASH = "X-Amz-Content-sha256"
+    const val AMZ_DATE = "X-Amz-Date"
+    const val AUTHORIZATION = "Authorization"
+    const val CONTENT_LENGTH = "Content-Length"
+    const val CONTENT_TYPE = "Content-Type"
+    const val DATE = "Date"
+    const val EXPECT = "Expect"
+    const val HOST = "Host"
+}

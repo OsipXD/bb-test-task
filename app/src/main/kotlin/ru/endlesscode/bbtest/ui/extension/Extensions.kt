@@ -23,40 +23,18 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.ui.common
+package ru.endlesscode.bbtest.ui.extension
 
-import android.support.design.widget.TextInputLayout
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
+import android.view.ViewGroup
+import com.arellomobile.mvp.MvpFacade
+import com.arellomobile.mvp.MvpPresenter
+import com.arellomobile.mvp.MvpView
 
-fun TextView.setOnFocusLostListener(listener: (View) -> Unit) {
-    this.setOnFocusChangeListener { view, inFocus ->
-        if (!inFocus) listener(view)
-    }
-}
+@Suppress("UNCHECKED_CAST")
+fun <T : MvpPresenter<out MvpView>> MvpFacade.getPresenter(tag: String) = this.presenterStore[tag] as T
 
-fun TextView.validateNotBlank(layout: TextInputLayout) =
-        validate(layout, this.text.isNotBlank(), "This field can not be blank")
-
-/**
- * Why you not use strong regex to restrict email format?
- * Because it is useless: <https://hackernoon.com/the-100-correct-way-to-validate-email-addresses-7c4818f24643>
- */
-fun TextView.validateIsEmail(layout: TextInputLayout): Boolean {
-    text = text.trim()
-    val isValid = " " in text
-            || text.count { it == '@' } > 1
-            || text matches Regex(".+@.+\\.[a-zA-Z]{2,}")
-    return validate(layout, isValid, "Please, enter correct email ")
-}
-
-private fun TextView.validate(layout: TextInputLayout, valid: Boolean, errorMessage: String): Boolean {
-    text = text.trim()
-    return if (!valid) {
-        layout.error = errorMessage
-        false
-    } else {
-        layout.error = null
-        true
-    }
-}
+@Suppress("UNCHECKED_CAST")
+fun <T : View> ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false)
+        = LayoutInflater.from(this.context).inflate(layoutId, this, attachToRoot) as T

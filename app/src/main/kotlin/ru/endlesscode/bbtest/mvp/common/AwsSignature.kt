@@ -27,8 +27,9 @@ package ru.endlesscode.bbtest.mvp.common
 
 import android.support.annotation.VisibleForTesting
 import ru.endlesscode.bbtest.api.AwsHeaders
+import ru.endlesscode.bbtest.api.HttpHeaders
 
-class AwsSignatureV4 private constructor(
+class AwsSignature private constructor(
         private val host: String,
         private val method: String,
         private val service: String,
@@ -38,7 +39,7 @@ class AwsSignatureV4 private constructor(
         private val dateTime: DateTimeProvider) {
 
     companion object {
-        private const val AWS4_REQUEST = "aws4_request"
+        private const val SIGNING = "aws4_request"
         private const val ALGORITHM = "AWS4-HMAC-SHA256"
     }
 
@@ -63,7 +64,7 @@ class AwsSignatureV4 private constructor(
         val stringToSign = buildStringToSign(credentialScope, canonicalRequest)
         val signature = getSignature(stringToSign)
 
-        this.headers.add(AwsHeaders.AUTHORIZATION to buildAuthorizationHeader(credentialScope, signature))
+        this.headers.add(HttpHeaders.AUTHORIZATION to buildAuthorizationHeader(credentialScope, signature))
 
         return this.headers
     }
@@ -73,7 +74,7 @@ class AwsSignatureV4 private constructor(
         this.payloadHash = Hash.sha256(payload)
 
         if (payload.isNotEmpty()) {
-            this.headers.add(AwsHeaders.AMZ_CONTENT_HASH to payloadHash)
+            this.headers.add(HttpHeaders.AMZ_CONTENT_HASH to payloadHash)
         }
     }
 
@@ -84,11 +85,11 @@ class AwsSignatureV4 private constructor(
     }
 
     @VisibleForTesting
-    fun initHeaders(headers: Array<out Pair<String, String>>) {
+    fun initHeaders(headers: Array<out Pair<String, String>> = emptyArray()) {
         this.headers = AwsHeaders(headers)
         this.headers.add(
-                AwsHeaders.HOST to host,
-                AwsHeaders.AMZ_DATE to timeStamp
+                HttpHeaders.HOST to host,
+                HttpHeaders.AMZ_DATE to timeStamp
         )
     }
 
@@ -101,7 +102,7 @@ class AwsSignatureV4 private constructor(
     }
 
     @VisibleForTesting
-    fun buildCredentialScope() = "$date/$region/$service/$AWS4_REQUEST"
+    fun buildCredentialScope() = "$date/$region/$service/$SIGNING"
 
     @VisibleForTesting
     fun buildStringToSign(credentialScope: String, canonicalRequest: String): String {
@@ -113,7 +114,7 @@ class AwsSignatureV4 private constructor(
         val keyDate = Hash.hmacSha256("AWS4$secretKey", date)
         val keyRegion = Hash.hmacSha256(keyDate, region)
         val keyService = Hash.hmacSha256(keyRegion, service)
-        val keySigning = Hash.hmacSha256(keyService, AWS4_REQUEST)
+        val keySigning = Hash.hmacSha256(keyService, SIGNING)
 
         return Hash.encodeHex(Hash.hmacSha256(keySigning, stringToSign))
     }
@@ -136,7 +137,7 @@ class AwsSignatureV4 private constructor(
         var secretKey: String? = null
         var dateTime: DateTimeProvider? = null
 
-        fun build() = AwsSignatureV4(
+        fun build() = AwsSignature(
                 host = host,
                 method = method,
                 service = service,

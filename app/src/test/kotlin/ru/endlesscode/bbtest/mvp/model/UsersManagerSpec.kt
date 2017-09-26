@@ -71,7 +71,7 @@ class UsersManagerSpec : Spek({
                     UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""),
                     UserData(id = 2, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200")
             )
-            call.ok = users
+            call.result = users
             usersManager.testLoadUsersList(call, onSuccess = { assertEquals(users, it) })
         }
 

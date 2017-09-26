@@ -34,7 +34,7 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
-import ru.endlesscode.bbtest.api.AwsHeaders
+import ru.endlesscode.bbtest.api.HttpHeaders
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
@@ -44,7 +44,7 @@ class AwsSignatureV4Spec : Spek({
     given("a Builder") {
         it("should throw IllegalStateException if access key not assigned") {
             try {
-                AwsSignatureV4.Builder().build()
+                AwsSignature.Builder().build()
                 fail()
             } catch (ignored: IllegalStateException) {
             }
@@ -52,7 +52,7 @@ class AwsSignatureV4Spec : Spek({
 
         it("should throw IllegalStateException if secret key not assigned") {
             try {
-                AwsSignatureV4.Builder {
+                AwsSignature.Builder {
                     accessKey = ""
                 }.build()
                 fail()
@@ -61,9 +61,9 @@ class AwsSignatureV4Spec : Spek({
         }
     }
 
-    given("a AwsSignatureV4") {
+    given("a AwsSignature") {
         val dateTimeProvider: DateTimeProvider = mock()
-        val awsSignature = AwsSignatureV4.Builder {
+        val awsSignature = AwsSignature.Builder {
             host = "example.amazonaws.com"
             method = "GET"
             service = "service"
@@ -133,14 +133,14 @@ class AwsSignatureV4Spec : Spek({
             it("should contains right Host header") {
                 assertEquals(
                         expected = "example.amazonaws.com",
-                        actual = headers[AwsHeaders.HOST]
+                        actual = headers[HttpHeaders.HOST]
                 )
             }
 
             it("should contains right X-Amz-Date header") {
                 assertEquals(
                         expected = "20150830T123600Z",
-                        actual = headers[AwsHeaders.AMZ_DATE]
+                        actual = headers[HttpHeaders.AMZ_DATE]
                 )
             }
         }
