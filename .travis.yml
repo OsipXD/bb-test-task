@@ -1,0 +1,48 @@
+language: android
+sudo: required
+jdk: oraclejdk7
+
+before_cache:
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  - $HOME/.android/build-cache
+
+env:
+ global:
+ - TARGET_API_LEVEL=26
+ - MIN_API_LEVEL=21
+ - ANDROID_BUILD_TOOLS=26.0.1
+ - ADB_INSTALL_TIMEOUT=5
+
+android:
+  components:
+  - tools
+  - platform-tools
+  - tools
+  - build-tools-$ANDROID_BUILD_TOOLS
+  - android-$TARGET_API_LEVEL
+  - android-$MIN_API_LEVEL
+  - extra-google-m2repository
+  - extra-android-m2repository
+
+  licenses:
+  - android-sdk-preview-license-.+
+  - android-sdk-license-.+
+  - google-gdk-license-.+
+
+before_install:
+- mkdir "$ANDROID_HOME/licenses" || true
+- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+- chmod +x gradlew
+- ./gradlew dependencies || true
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
