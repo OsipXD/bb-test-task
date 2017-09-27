@@ -34,7 +34,8 @@ data class UserItem(
         override val firstName: String,
         override val lastName: String,
         override val email: String,
-        override val avatarUrl: String
+        override val avatarUrl: String,
+        override val updatedAt: String = ""
 ) : User, Parcelable {
 
     val fullName
@@ -45,10 +46,12 @@ data class UserItem(
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
+            parcel.readString(),
             parcel.readString())
 
     @Suppress("UselessCallOnNotNull")
-    constructor(data: UserData) : this(data.id, data.firstName, data.lastName, data.email, data.avatarUrl.orEmpty())
+    constructor(data: UserData) :
+            this(data.id, data.firstName, data.lastName, data.email, data.avatarUrl.orEmpty(), data.updatedAt)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
@@ -56,6 +59,7 @@ data class UserItem(
         parcel.writeString(lastName)
         parcel.writeString(email)
         parcel.writeString(avatarUrl)
+        parcel.writeString(updatedAt)
     }
 
     override fun describeContents(): Int {
@@ -71,6 +75,6 @@ data class UserItem(
             return arrayOfNulls(size)
         }
 
-        val EMPTY by lazy { UserItem(-1, "", "", "", "") }
+        val EMPTY by lazy { UserItem(-1, "", "", "", "", "") }
     }
 }

@@ -68,8 +68,8 @@ class UsersManagerSpec : Spek({
 
         it("should receive right data") {
             val users = listOf(
-                    UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""),
-                    UserData(id = 2, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200")
+                    UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = "", updatedAt = ""),
+                    UserData(id = 2, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200", updatedAt = "")
             )
             call.result = users
             usersManager.testLoadUsersList(call, onSuccess = { assertEquals(users, it) })

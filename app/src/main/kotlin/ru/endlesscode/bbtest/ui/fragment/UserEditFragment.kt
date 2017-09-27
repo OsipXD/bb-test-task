@@ -41,6 +41,7 @@ import android.view.animation.AnimationUtils
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.bumptech.glide.signature.ObjectKey
 import gun0912.tedbottompicker.TedBottomPicker
 import kotlinx.android.synthetic.main.fragment_edit_user.*
 import permissions.dispatcher.NeedsPermission
@@ -162,19 +163,20 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
         return isValid
     }
 
-    override fun setData(name: String, surname: String, email: String, avatarUrl: String) {
+    override fun setData(name: String, surname: String, email: String, avatarUrl: String, signature: String) {
         nameField.setText(name)
         surnameField.setText(surname)
         emailField.setText(email)
-        setAvatar(avatarUrl)
+        setAvatar(avatarUrl, signature)
     }
 
-    override fun setAvatar(path: String) {
+    override fun setAvatar(path: String, signature: String) {
         glideProvider.request.clone().apply {
             load(path)
             placeholder(R.color.transparent)
             error(R.drawable.ic_avatar_placeholder_24px)
             override(avatar.width, avatar.height)
+            signature(ObjectKey(signature))
             into(avatar)
         }
     }

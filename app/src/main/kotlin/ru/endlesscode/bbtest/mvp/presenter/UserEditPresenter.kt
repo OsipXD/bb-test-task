@@ -84,7 +84,7 @@ class UserEditPresenter @Inject constructor(
     }
 
     private fun updateViewData() {
-        viewState.setData(newName, newSurname, newEmail, newAvatar)
+        viewState.setData(newName, newSurname, newEmail, newAvatar, user.updatedAt)
     }
 
     fun onClearClicked() {
@@ -107,7 +107,7 @@ class UserEditPresenter @Inject constructor(
 
     @VisibleForTesting
     fun onAvatarUploadStarted(path: String) {
-        viewState.setAvatar(path)
+        viewState.setAvatar(path, user.updatedAt)
         viewState.showAvatarUpdatingIndicator()
     }
 

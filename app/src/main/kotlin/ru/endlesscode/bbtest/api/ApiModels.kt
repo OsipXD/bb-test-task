@@ -29,7 +29,7 @@ import com.google.gson.annotations.Expose
 import ru.endlesscode.bbtest.mvp.model.User
 
 class UserUpdateBody(@Expose val user: UserData) {
-    constructor(user: User) : this(UserData(user.id, user.firstName, user.lastName, user.email, user.avatarUrl))
+    constructor(user: User) : this(UserData(user.id, user.firstName, user.lastName, user.email, user.avatarUrl, user.updatedAt))
 }
 
 data class UserData(
@@ -38,5 +38,7 @@ data class UserData(
         @Expose override val firstName: String,
         @Expose override val lastName: String,
         @Expose override val email: String,
-        @Expose override val avatarUrl: String
+        @Expose override val avatarUrl: String,
+        @Expose(serialize = false)
+        override val updatedAt: String
 ) : User

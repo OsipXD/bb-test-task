@@ -88,7 +88,7 @@ class UserEditPresenterSpec : Spek({
             presenter.onUpdateViewCreated(position, user)
 
             it("should set values to view") {
-                verify(viewState, times(1)).setData(eq("Foo"), eq("Bar"), eq("foo@bar.com"), eq(""))
+                verify(viewState, times(1)).setData(eq("Foo"), eq("Bar"), eq("foo@bar.com"), eq(""), eq(""))
             }
 
             it("should init 'new' values") {
@@ -110,7 +110,7 @@ class UserEditPresenterSpec : Spek({
 
             presenter.onUpdateViewCreated(position, user)
             it("should set right values") {
-                verify(viewState, times(1)).setData(eq("newName"), eq("newSurname"), eq("new@Email"), eq(""))
+                verify(viewState, times(1)).setData(eq("newName"), eq("newSurname"), eq("new@Email"), eq(""), eq(""))
             }
         }
 
@@ -143,7 +143,7 @@ class UserEditPresenterSpec : Spek({
             }
 
             it("should set new avatar") {
-                verify(viewState, times(1)).setAvatar(eq(avatarPath))
+                verify(viewState, times(1)).setAvatar(eq(avatarPath), eq(""))
             }
 
             it("should update user avatar on server") {
@@ -174,7 +174,7 @@ class UserEditPresenterSpec : Spek({
 
         it("should set empty data on first view creation") {
             presenter.onCreteViewCreated()
-            verify(viewState).setData(eq(""), eq(""), eq(""), eq(""))
+            verify(viewState).setData(eq(""), eq(""), eq(""), eq(""), eq(""))
         }
 
         on("view created again but fields already changed") {
@@ -184,7 +184,7 @@ class UserEditPresenterSpec : Spek({
 
             presenter.onCreteViewCreated()
             it("should set right values") {
-                verify(viewState, times(1)).setData(eq("newName"), eq("newSurname"), eq("new@Email"), eq(""))
+                verify(viewState, times(1)).setData(eq("newName"), eq("newSurname"), eq("new@Email"), eq(""), eq(""))
             }
         }
 

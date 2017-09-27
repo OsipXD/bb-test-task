@@ -50,10 +50,10 @@ class UsersPresenterSpec : Spek({
     val viewState: ViewState = mock()
 
     val users: List<UserData> = listOf(
-            UserData(id = 1, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200"),
-            UserData(id = 2, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = "")
+            UserData(id = 1, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200", updatedAt = ""),
+            UserData(id = 2, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = "", updatedAt = "")
     )
-    var error: Throwable = Exception()
+    val error: Throwable = Exception()
     var isError = false
 
     beforeGroup {

@@ -36,7 +36,6 @@ import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import ru.endlesscode.bbtest.di.modules.ContextModule
 import ru.endlesscode.bbtest.test.FileHelper
-import ru.endlesscode.bbtest.test.di.DaggerTestAppComponent
 import ru.endlesscode.bbtest.test.di.TestAppComponent
 import kotlin.test.assertEquals
 
@@ -58,8 +57,8 @@ class UserSerializationSpec : Spek({
 
             it("should contains right elements") {
                 val expected = listOf(
-                        UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = ""),
-                        UserData(id = 2, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200")
+                        UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = "", updatedAt = "2016-09-20T14:44:33.573Z"),
+                        UserData(id = 2, firstName = "Baz", lastName = "Qux", email = "baz@qux.com", avatarUrl = "http://www.fillmurray.com/200/200", updatedAt = "2016-09-20T15:33:25.536Z")
                 )
                 assertEquals(expected, users)
             }
@@ -67,7 +66,7 @@ class UserSerializationSpec : Spek({
     }
 
     given("a user data") {
-        val user = UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = "")
+        val user = UserData(id = 1, firstName = "Foo", lastName = "Bar", email = "foo@bar.com", avatarUrl = "", updatedAt = "2016-09-20T14:44:33.573Z")
 
         it("should be serialized right to update body") {
             val expected = FileHelper.readJson("UpdateUser")

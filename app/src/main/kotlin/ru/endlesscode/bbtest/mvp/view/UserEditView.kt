@@ -34,7 +34,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface UserEditView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setData(name: String, surname: String, email: String, avatarUrl: String)
+    fun setData(name: String, surname: String, email: String, avatarUrl: String, signature: String)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun clearFields()
@@ -42,7 +42,7 @@ interface UserEditView : MvpView {
     fun shakeApplyButton()
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setAvatar(path: String)
+    fun setAvatar(path: String, signature: String)
 
     fun showAvatarUpdatingIndicator()
 

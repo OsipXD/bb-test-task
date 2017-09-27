@@ -31,6 +31,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.ListPreloader
 import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.signature.ObjectKey
 import kotlinx.android.synthetic.main.item_user.view.*
 import ru.endlesscode.bbtest.R
 import ru.endlesscode.bbtest.di.UsersScope
@@ -56,7 +57,8 @@ class UsersAdapter @Inject constructor(
 
     override fun getItemCount() = usersPresenter.count
 
-    override fun getPreloadRequestBuilder(user: UserItem): RequestBuilder<*> = glideProvider.request.load(user.avatarUrl)
+    override fun getPreloadRequestBuilder(user: UserItem): RequestBuilder<*> =
+            glideProvider.request.clone().signature(ObjectKey(user.updatedAt)).load(user.avatarUrl)
 
     override fun getPreloadItems(position: Int): MutableList<UserItem>
             = usersPresenter.getUsersAt(position, 2)
@@ -73,8 +75,9 @@ class UsersAdapter @Inject constructor(
             fullName.text = user.fullName
             email.text = user.email
 
-            glideProvider.request
+            glideProvider.request.clone()
                     .load(user.avatarUrl)
+                    .signature(ObjectKey(user.updatedAt))
                     .into(avatar)
 
             itemView.setOnClickListener { usersPresenter.onUserItemClicked(position, user) }
