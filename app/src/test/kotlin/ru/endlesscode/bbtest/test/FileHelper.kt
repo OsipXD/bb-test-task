@@ -32,9 +32,11 @@ object FileHelper {
 
     fun readJson(name: String) = read("json/$name.json").readText()
 
-    fun loadImage(imageName: String) = loadFile("image/$imageName")
+    fun loadImage(imageName: String) = loadFile("image/$imageName").readBytes()
 
     private fun loadFile(path: String) = File(read(path).file)
+
+    fun path(path: String): String = read(path).path
 
     private fun read(path: String): URL {
         val classLoader = javaClass.classLoader

@@ -28,8 +28,8 @@ package ru.endlesscode.bbtest.di.modules
 import dagger.Module
 import dagger.Provides
 import ru.endlesscode.bbtest.BuildConfig
-import ru.endlesscode.bbtest.mvp.common.AwsSignature
-import ru.endlesscode.bbtest.mvp.common.DateTimeProvider
+import ru.endlesscode.bbtest.mvp.misc.AwsSignature
+import ru.endlesscode.bbtest.mvp.misc.DateTimeProvider
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -39,17 +39,22 @@ class AwsSignatureModule {
     @Provides
     @Singleton
     fun provideAwsSignature(
-            @Named("bucketName") bucket: String,
+            @Named("host") host: String,
             @Named("accessKey") accessKey: String,
             @Named("secretKey") secretKey: String,
             dateTime: DateTimeProvider): AwsSignature {
         return AwsSignature.Builder {
-            this.host = "$bucket.s3.amazonaws.com"
+            this.host = host
             this.accessKey = accessKey
             this.secretKey = secretKey
             this.dateTime = dateTime
         }.build()
     }
+
+    @Provides
+    @Singleton
+    @Named("host")
+    fun provideHost(@Named("bucketName") bucket: String) = "$bucket.s3.amazonaws.com"
 
     @Provides
     @Singleton

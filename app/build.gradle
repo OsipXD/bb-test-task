@@ -86,14 +86,18 @@ kapt {
 ext {
     supportVersion = '26.1.+'
 
+    imagePickerVersion = '2.0.+'
     circleImageViewVersion = '2.1.+'
+    permissionsDispatcherVersion = '3.0.+'
+
     moxyVersion = '1.5.+'
     retrofitVersion = '2.3.+'
     gsonVersion = '2.8.+'
-    coroutinesVersion = '0.18'
-    retrofitCoroutinesVersion = '0.7.+'
     glideVersion = '4.1.+'
     daggerVersion = '2.11'
+
+    coroutinesVersion = '0.18'
+    retrofitCoroutinesVersion = '0.7.+'
 
     // Testing
     spekVersion = '1.1.5'
@@ -105,10 +109,15 @@ ext {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
     compile "com.android.support:appcompat-v7:$supportVersion"
+
+    // UI
     compile "com.android.support:recyclerview-v7:$supportVersion"
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support.constraint:constraint-layout:1.1.0-beta1"
     compile "de.hdodenhof:circleimageview:$circleImageViewVersion"
+    compile "com.github.theGnartist:TedBottomPicker:$imagePickerVersion"
+    compile "com.github.hotchemi:permissionsdispatcher:$permissionsDispatcherVersion"
+    kapt "com.github.hotchemi:permissionsdispatcher-processor:$permissionsDispatcherVersion"
 
     // HTTP (and related to) libs
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
@@ -156,4 +165,5 @@ dependencies {
 repositories {
     mavenCentral()
     maven { url 'https://maven.google.com' }
+    maven { url 'https://jitpack.io' }
 }

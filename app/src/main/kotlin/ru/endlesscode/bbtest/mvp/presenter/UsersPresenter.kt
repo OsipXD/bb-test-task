@@ -32,7 +32,7 @@ import com.arellomobile.mvp.MvpPresenter
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.run
 import ru.endlesscode.bbtest.di.UsersScope
-import ru.endlesscode.bbtest.mvp.common.AsyncContexts
+import ru.endlesscode.bbtest.mvp.misc.AsyncContexts
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersDiffCallback
 import ru.endlesscode.bbtest.mvp.model.UsersManager

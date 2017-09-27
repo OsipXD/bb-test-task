@@ -70,6 +70,7 @@ class HomePresenter @Inject constructor() : MvpPresenter<HomeView>() {
                 "Error$errorMessage"
             }
         }
+        error.printStackTrace()
 
         viewState.showError(message)
     }

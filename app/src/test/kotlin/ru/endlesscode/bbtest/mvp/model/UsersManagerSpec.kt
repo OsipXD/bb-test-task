@@ -40,7 +40,7 @@ import retrofit2.Call
 import retrofit2.HttpException
 import ru.endlesscode.bbtest.api.UserData
 import ru.endlesscode.bbtest.api.UsersApi
-import ru.endlesscode.bbtest.mvp.common.AsyncContexts
+import ru.endlesscode.bbtest.mvp.misc.AsyncContexts
 import ru.gildor.coroutines.retrofit.util.MockedCall
 import ru.gildor.coroutines.retrofit.util.errorResponse
 import java.io.IOException

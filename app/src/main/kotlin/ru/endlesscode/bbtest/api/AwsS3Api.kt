@@ -26,6 +26,7 @@
 package ru.endlesscode.bbtest.api
 
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -44,5 +45,5 @@ interface AwsS3Api {
                @Header(HttpHeaders.AMZ_CONTENT_HASH) amzContentHash: String,
                @Header(HttpHeaders.AMZ_DATE) amzDate: String,
                @Header(HttpHeaders.EXPECT) expect: String = "100-continue",
-               @Body body: RequestBody): Call<String>
+               @Body body: RequestBody): Call<ResponseBody>
 }

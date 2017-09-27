@@ -30,7 +30,7 @@ import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
-import ru.endlesscode.bbtest.mvp.common.AsyncContexts
+import ru.endlesscode.bbtest.mvp.misc.AsyncContexts
 import javax.inject.Singleton
 
 @Module

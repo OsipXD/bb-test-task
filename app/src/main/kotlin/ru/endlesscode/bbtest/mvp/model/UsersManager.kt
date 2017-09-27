@@ -25,19 +25,22 @@
 
 package ru.endlesscode.bbtest.mvp.model
 
+import android.graphics.Bitmap
 import android.support.annotation.VisibleForTesting
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.run
+import okhttp3.ResponseBody
 import retrofit2.Call
 import ru.endlesscode.bbtest.api.UserData
 import ru.endlesscode.bbtest.api.UserUpdateBody
 import ru.endlesscode.bbtest.api.UsersApi
-import ru.endlesscode.bbtest.mvp.common.AsyncContexts
+import ru.endlesscode.bbtest.mvp.misc.AsyncContexts
 import ru.gildor.coroutines.retrofit.Result
 import ru.gildor.coroutines.retrofit.awaitResult
-import java.io.File
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 import javax.inject.Singleton
+
 
 @Singleton
 class UsersManager @Inject constructor(
@@ -57,10 +60,12 @@ class UsersManager @Inject constructor(
         doRequest(api.updateUser(user.id, UserUpdateBody(user)), onSuccess, onError)
     }
 
-    fun uploadAvatar(user: User, avatar: File, onSuccess: (String) -> Unit, onError: (Throwable) -> Unit) {
+    fun uploadAvatar(user: User, avatar: Bitmap, onSuccess: (ResponseBody) -> Unit, onError: (Throwable) -> Unit) {
+        val stream = ByteArrayOutputStream()
+        avatar.compress(Bitmap.CompressFormat.JPEG, 100, stream)
         doRequest(s3.upload(
                 fileName = "${user.id}.jpg",
-                file = avatar
+                payload = stream.toByteArray()
         ), onSuccess, onError)
     }
 

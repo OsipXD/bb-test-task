@@ -23,38 +23,42 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.mvp.common
+package ru.endlesscode.bbtest.mvp.misc
 
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.text.MatchesPattern.matchesPattern
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
+import kotlin.test.assertEquals
 
 @RunWith(JUnitPlatform::class)
-class DateTimeProviderSpec : Spek({
+class HashSpec : Spek({
 
-    val dateTimeProvider = DateTimeProvider()
-
-    it("should provide time stamp according to ISO-8601") {
-        val timeStamp = dateTimeProvider.iso8601()
-
-        //language=RegExp
-        assertThat(timeStamp, matchesPattern("\\d{8}T\\d{6}(Z|\\+\\d{2})"))
+    it("should convert string to hex right") {
+        assertEquals(
+                expected = "54727920746f20636f6e7665727420697421",
+                actual = Hash.encodeHex("Try to convert it!".toByteArray())
+        )
     }
 
-    it("should provide right date") {
-        val date = dateTimeProvider.date()
-
-        //language=RegExp
-        assertThat(date, matchesPattern("\\d{8}"))
+    it("should convert string to hex right in upper case") {
+        assertEquals(
+                expected = "54727920746F20636F6E7665727420697421",
+                actual = Hash.encodeHex("Try to convert it!".toByteArray(), toLowerCase = false)
+        )
     }
 
-    it("should provide time stamp according to RFC 1123") {
-        val timeStamp = dateTimeProvider.rfc1123()
+    it("should encode string to SHA-256") {
+        assertEquals(
+                expected = "d0e8b8f11c98f369016eb2ed3c541e1f01382f9d5b3104c9ffd06b6175a46271",
+                actual = Hash.sha256("Hello, SHA-256!")
+        )
+    }
 
-        //language=RegExp
-        assertThat(timeStamp, matchesPattern("\\w{3}, \\d{2} \\w{3} \\d{4} \\d{2}:\\d{2}:\\d{2} \\w{3}"))
+    it("should encode string to HMAC-SHA256") {
+        assertEquals(
+                expected = "65746f8b39deaf007787ee7c278e6b95821a6796b04fe75dc5b38edace320f34",
+                actual = Hash.encodeHex(Hash.hmacSha256("AWS4wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY", "Now, try to do it with HMAC!"))
+        )
     }
 })

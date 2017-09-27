@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.mvp.common
+package ru.endlesscode.bbtest.mvp.misc
 
 import android.support.annotation.VisibleForTesting
 import ru.endlesscode.bbtest.api.AwsHeaders

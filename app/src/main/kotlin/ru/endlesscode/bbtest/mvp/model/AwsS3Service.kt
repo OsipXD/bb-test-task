@@ -27,12 +27,12 @@ package ru.endlesscode.bbtest.mvp.model
 
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import ru.endlesscode.bbtest.api.AwsS3Api
 import ru.endlesscode.bbtest.api.HttpHeaders
-import ru.endlesscode.bbtest.mvp.common.AwsSignature
-import ru.endlesscode.bbtest.mvp.common.DateTimeProvider
-import java.io.File
+import ru.endlesscode.bbtest.mvp.misc.AwsSignature
+import ru.endlesscode.bbtest.mvp.misc.DateTimeProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -42,10 +42,9 @@ class AwsS3Service @Inject constructor(
         private val awsSignature: AwsSignature,
         private val dateTime: DateTimeProvider) {
 
-    fun upload(fileName: String, file: File): Call<String> {
+    fun upload(fileName: String, payload: ByteArray): Call<ResponseBody> {
         val contentType = "image/jpg"
-        val body = RequestBody.create(MediaType.parse(contentType), file)
-        val payload = file.readBytes()
+        val body = RequestBody.create(MediaType.parse(contentType), payload)
 
         val headers = awsSignature.buildRequestHeaders(
                 uri = "/$fileName", headers = HttpHeaders.CONTENT_TYPE to contentType, payload = payload)

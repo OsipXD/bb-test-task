@@ -34,7 +34,7 @@ import org.jetbrains.spek.api.dsl.on
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import ru.endlesscode.bbtest.api.UserData
-import ru.endlesscode.bbtest.mvp.common.AsyncContexts
+import ru.endlesscode.bbtest.mvp.misc.AsyncContexts
 import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.mvp.view.UserItemView

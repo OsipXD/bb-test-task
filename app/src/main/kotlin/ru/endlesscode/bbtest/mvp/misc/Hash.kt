@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.mvp.common
+package ru.endlesscode.bbtest.mvp.misc
 
 import java.security.MessageDigest
 import javax.crypto.Mac

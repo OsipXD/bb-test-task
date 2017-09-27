@@ -25,12 +25,13 @@
 
 package ru.endlesscode.bbtest.ui.fragment
 
+import android.Manifest
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.support.design.widget.Snackbar
+import android.support.v4.app.FragmentActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +39,10 @@ import android.view.animation.AnimationUtils
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import gun0912.tedbottompicker.TedBottomPicker
 import kotlinx.android.synthetic.main.fragment_edit_user.*
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.RuntimePermissions
 import ru.endlesscode.bbtest.R
 import ru.endlesscode.bbtest.TestApp
 import ru.endlesscode.bbtest.misc.GlideProvider
@@ -50,6 +54,7 @@ import ru.endlesscode.bbtest.ui.extension.validateIsEmail
 import ru.endlesscode.bbtest.ui.extension.validateNotBlank
 import javax.inject.Inject
 
+@RuntimePermissions
 class UserEditFragment : MvpAppCompatFragment(), UserEditView {
 
     @Inject
@@ -68,6 +73,7 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
     private val avatar by lazy { avatar_view }
     private val btnApply by lazy { button_apply }
     private val btnClear by lazy { button_clear }
+    private val changeAvatar by lazy { change_avatar }
 
     @ProvidePresenter
     fun providePresenter(): UserEditPresenter = presenter
@@ -93,17 +99,19 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
         }
 
         btnClear.setOnClickListener { presenter.onClearClicked() }
-        btnApply.setOnClickListener {
-            if (validateFields()) {
-                presenter.onApplyClicked()
-            } else {
-                shakeApplyButton()
-            }
-        }
+        btnApply.setOnClickListener { if (validateFields()) presenter.onApplyClicked() else shakeApplyButton() }
+        changeAvatar.setOnClickListener { openImageSectorWithPermissionCheck() }
 
         nameField.setOnFocusLostListener { validateNameField() }
         surnameField.setOnFocusLostListener { validateSurnameField() }
         emailField.setOnFocusLostListener { validateEmailField() }
+    }
+
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    fun openImageSector() {
+        TedBottomPicker.Builder(context).setOnImageSelectedListener {
+            presenter.updateAvatar(it.path)
+        }.create().show((context as FragmentActivity).supportFragmentManager)
     }
 
     override fun shakeApplyButton() {
@@ -155,9 +163,12 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
         nameField.setText(name)
         surnameField.setText(surname)
         emailField.setText(email)
+        setAvatar(avatarUrl)
+    }
 
+    override fun setAvatar(path: String) {
         glideProvider.request.clone().apply {
-            load(avatarUrl)
+            load(path)
             placeholder(R.drawable.ic_avatar_placeholder_24px)
             error(R.drawable.ic_avatar_placeholder_24px)
             override(avatar.width, avatar.height)
@@ -165,19 +176,17 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
         }
     }
 
+    override fun showAvatarUpdatingIndicator() {
+
+    }
+
+    override fun hideAvatarUpdateIndicator() {
+
+    }
+
     override fun clearFields() {
         nameField.setText("")
         surnameField.setText("")
         emailField.setText("")
-    }
-
-    fun showMessage(message: String) {
-        Snackbar.make(avatar, message, Snackbar.LENGTH_SHORT)
-                .setAction("OK", { }).show()
-    }
-
-    fun showError(message: String) {
-        Snackbar.make(avatar, message, Snackbar.LENGTH_LONG)
-                .setAction("Got it", { }).show()
     }
 }

@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.mvp.common
+package ru.endlesscode.bbtest.mvp.misc
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock

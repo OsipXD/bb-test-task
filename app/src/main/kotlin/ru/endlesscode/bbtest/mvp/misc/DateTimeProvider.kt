@@ -23,8 +23,38 @@
  * SOFTWARE.
  */
 
-package ru.endlesscode.bbtest.mvp.common
+package ru.endlesscode.bbtest.mvp.misc
 
-import kotlin.coroutines.experimental.CoroutineContext
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-data class AsyncContexts(val work: CoroutineContext, val ui: CoroutineContext)
+@Singleton
+class DateTimeProvider @Inject constructor() {
+
+    companion object {
+        private val GTM = TimeZone.getTimeZone("GMT")
+    }
+
+    private val formatRfc1123: DateFormat
+        get() = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).apply { timeZone = GTM }
+
+    private val formatIso8601: DateFormat
+        get() = SimpleDateFormat("yyyyMMdd'T'HHmmssX", Locale.US).apply { timeZone = GTM }
+
+    private val formatDate: DateFormat
+        get() = SimpleDateFormat("yyyyMMdd", Locale.US).apply { timeZone = GTM }
+
+    fun rfc1123(): String = formatted(formatRfc1123)
+
+    fun iso8601(): String = formatted(formatIso8601)
+
+    fun date(): String = formatted(formatDate)
+
+    private fun formatted(format: DateFormat): String {
+        val cal = Calendar.getInstance(format.timeZone)
+        return format.format(cal.time)
+    }
+}

@@ -25,6 +25,9 @@
 
 package ru.endlesscode.bbtest.mvp.presenter
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.support.annotation.VisibleForTesting
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.endlesscode.bbtest.di.UsersScope
@@ -32,20 +35,22 @@ import ru.endlesscode.bbtest.mvp.model.UserItem
 import ru.endlesscode.bbtest.mvp.model.UsersManager
 import ru.endlesscode.bbtest.mvp.view.UserEditView
 import javax.inject.Inject
+import javax.inject.Named
 
 @InjectViewState
 @UsersScope
 class UserEditPresenter @Inject constructor(
         private val usersManager: UsersManager,
         private val usersPresenter: UsersPresenter,
-        private val homePresenter: HomePresenter) : MvpPresenter<UserEditView>() {
+        private val homePresenter: HomePresenter,
+        private @Named("host") val host: String) : MvpPresenter<UserEditView>() {
 
     private var user = UserItem.EMPTY
-    private var newUser = user.copy()
 
     var newName: String = ""
     var newSurname: String = ""
     var newEmail: String = ""
+    var newAvatar: String = ""
 
     private var position: Int = -1
     private var isUpdating = true
@@ -56,10 +61,11 @@ class UserEditPresenter @Inject constructor(
             newName = ""
             newSurname = ""
             newEmail = ""
+            newAvatar = ""
         }
 
         isUpdating = false
-        viewState.setData(newName, newSurname, newEmail, user.avatarUrl)
+        updateViewData()
     }
 
     fun onUpdateViewCreated(position: Int, user: UserItem) {
@@ -68,51 +74,88 @@ class UserEditPresenter @Inject constructor(
             this.user = user
             this.position = position
 
-            newName = this.user.firstName
-            newSurname = this.user.lastName
-            newEmail = this.user.email
+            newName = user.firstName
+            newSurname = user.lastName
+            newEmail = user.email
+            newAvatar = user.avatarUrl
         }
 
-        viewState.setData(newName, newSurname, newEmail, user.avatarUrl)
+        updateViewData()
+    }
+
+    private fun updateViewData() {
+        viewState.setData(newName, newSurname, newEmail, newAvatar)
     }
 
     fun onClearClicked() {
         viewState.clearFields()
     }
 
+
+    fun updateAvatar(path: String) {
+        onAvatarUploadStarted(path)
+        updateAvatarBitmap(BitmapFactory.decodeFile(path))
+    }
+
+    @VisibleForTesting
+    fun updateAvatarBitmap(bitmap: Bitmap) {
+        usersManager.uploadAvatar(user, bitmap,
+                onSuccess = { onAvatarUploaded(user.avatarS3Url) },
+                onError = { onError(it) }
+        )
+    }
+
+    @VisibleForTesting
+    fun onAvatarUploadStarted(path: String) {
+        viewState.setAvatar(path)
+        viewState.showAvatarUpdatingIndicator()
+    }
+
+    private fun onAvatarUploaded(url: String) {
+        newAvatar = url
+        if (isUpdating) {
+            sendUserUpdate(user.copy(avatarUrl = url))
+            viewState.hideAvatarUpdateIndicator()
+        }
+    }
+
     fun onApplyClicked() {
-        newUser = user.copy(firstName = newName, lastName = newSurname, email = newEmail)
+        val newUser = user.copy(firstName = newName, lastName = newSurname, email = newEmail, avatarUrl = newAvatar)
         if (newUser == user) {
             viewState.shakeApplyButton()
             return
         }
 
-        if (isUpdating) {
-            usersManager.updateUser(newUser,
-                    onSuccess = { onUserUpdated() },
-                    onError = { onError(it) }
-            )
-        } else {
-            usersManager.createUser(newUser,
-                    onSuccess = { onUserCreated() },
-                    onError = { onError(it) }
-            )
-        }
+        if (isUpdating) sendUserUpdate(newUser) else sendUserCreate(newUser)
     }
 
-    private fun onUserUpdated() {
+    private fun sendUserUpdate(newUser: UserItem) {
+        usersManager.updateUser(newUser,
+                onSuccess = { onUserUpdated(newUser) },
+                onError = { onError(it) }
+        )
+    }
+
+    private fun sendUserCreate(newUser: UserItem) {
+        usersManager.createUser(newUser,
+                onSuccess = { onUserCreated(newUser) },
+                onError = { onError(it) }
+        )
+    }
+
+    private fun onUserUpdated(newUser: UserItem) {
         usersPresenter.updateUser(position, newUser)
-        onOperationSuccessful("User successfully updated!")
+        onOperationSuccessful(newUser, "User successfully updated!")
     }
 
-    private fun onUserCreated() {
+    private fun onUserCreated(newUser: UserItem) {
         isUpdating = true
         homePresenter.back()
         usersPresenter.addUser(newUser)
-        onOperationSuccessful("User successfully created!")
+        onOperationSuccessful(newUser, "User successfully created!")
     }
 
-    private fun onOperationSuccessful(message: String) {
+    private fun onOperationSuccessful(newUser: UserItem, message: String) {
         user = newUser
         homePresenter.showMessage(message)
     }
@@ -120,4 +163,7 @@ class UserEditPresenter @Inject constructor(
     private fun onError(exception: Throwable) {
         homePresenter.showError(exception)
     }
+
+    private val UserItem.avatarS3Url: String
+        get() = "https://$host/$id.jpg"
 }

@@ -30,13 +30,21 @@ import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
-@StateStrategyType(AddToEndSingleStrategy::class)
+@StateStrategyType(SkipStrategy::class)
 interface UserEditView : MvpView {
 
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun setData(name: String, surname: String, email: String, avatarUrl: String)
 
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun clearFields()
 
-    @StateStrategyType(SkipStrategy::class)
     fun shakeApplyButton()
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun setAvatar(path: String)
+
+    fun showAvatarUpdatingIndicator()
+
+    fun hideAvatarUpdateIndicator()
 }
