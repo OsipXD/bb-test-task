@@ -43,18 +43,18 @@ import javax.inject.Singleton
 class HomePresenter @Inject constructor() : MvpPresenter<HomeView>() {
 
     fun showUserCreatingView() {
-        this.showFragment(UserEditFragment())
+        this.showFragment(UserEditFragment(), "Create")
     }
 
     fun showUserEditView(position: Int, user: UserItem) {
         val bundle = Bundle()
         bundle.putParcelable("user", user)
         bundle.putInt("position", position)
-        this.showFragment(UserEditFragment().apply { arguments = bundle })
+        this.showFragment(UserEditFragment().apply { arguments = bundle }, "Edit")
     }
 
-    private fun showFragment(fragment: Fragment) {
-        viewState.showFragment(fragment)
+    private fun showFragment(fragment: Fragment, title: String) {
+        viewState.showFragment(fragment, title)
     }
 
     fun showError(error: Throwable) {
@@ -70,7 +70,6 @@ class HomePresenter @Inject constructor() : MvpPresenter<HomeView>() {
                 "Error$errorMessage"
             }
         }
-        error.printStackTrace()
 
         viewState.showError(message)
     }

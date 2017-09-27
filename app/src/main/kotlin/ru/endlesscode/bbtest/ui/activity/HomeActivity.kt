@@ -32,8 +32,6 @@ import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -70,18 +68,6 @@ class HomeActivity : MvpAppCompatActivity(), HomeView {
         }
 
         this.showFragment(UsersFragment(), addToBackStack = false)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-
-        return if (id == R.id.action_settings) true else super.onOptionsItemSelected(item)
     }
 
     override fun showFragment(fragment: Fragment, title: String, addToBackStack: Boolean) {
@@ -128,5 +114,13 @@ class HomeActivity : MvpAppCompatActivity(), HomeView {
         }
 
         startActivity(intent)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+        if (supportFragmentManager.backStackEntryCount == 0) {
+            toolbar.title = "Users"
+        }
     }
 }

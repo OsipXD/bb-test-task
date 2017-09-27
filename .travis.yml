@@ -46,7 +46,7 @@ before_install:
 - "./gradlew dependencies || true"
 
 script:
-- "./gradlew clean build jacocoUnitTestReport --stacktrace"
+- "./gradlew clean build jacocoUnitTestReport -x lint --stacktrace"
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)

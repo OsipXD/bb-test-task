@@ -49,7 +49,7 @@ class HomePresenterSpec : Spek({
 
     it("should open add user view") {
         presenter.showUserCreatingView()
-        verify(viewState, times(1)).showFragment(any(), eq(""), eq(true))
+        verify(viewState, times(1)).showFragment(any(), eq("Create"), eq(true))
     }
 
     context(": throwing error") {
