@@ -25,12 +25,16 @@
 
 package ru.endlesscode.bbtest.ui.activity
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -109,5 +113,20 @@ class HomeActivity : MvpAppCompatActivity(), HomeView {
     override fun showMessage(message: String) {
         Snackbar.make(mainLayout, message, Snackbar.LENGTH_SHORT)
                 .setAction("OK", { }).show()
+    }
+
+    override fun showPermissionWarning(message: String) {
+        Snackbar.make(mainLayout, "Without this permission you will not able to change avatar", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Settings", openSettings()).show()
+    }
+
+    private fun openSettings() = View.OnClickListener {
+        val uri = Uri.fromParts("package", "ru.endlesscode.bbtest", null)
+        val intent = Intent().apply {
+            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+            data = uri
+        }
+
+        startActivity(intent)
     }
 }

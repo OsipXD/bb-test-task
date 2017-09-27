@@ -40,4 +40,6 @@ interface HomeView : MvpView {
     fun showError(message: String)
 
     fun showMessage(message: String)
+
+    fun showPermissionWarning(message: String)
 }

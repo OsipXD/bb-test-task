@@ -36,6 +36,7 @@ import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import ru.endlesscode.bbtest.di.modules.ContextModule
 import ru.endlesscode.bbtest.test.FileHelper
+import ru.endlesscode.bbtest.test.di.DaggerTestAppComponent
 import ru.endlesscode.bbtest.test.di.TestAppComponent
 import kotlin.test.assertEquals
 

@@ -82,4 +82,8 @@ class HomePresenter @Inject constructor() : MvpPresenter<HomeView>() {
     fun back() {
         viewState.back()
     }
+
+    fun onPermissionDenied() {
+        viewState.showPermissionWarning("Without this permission you will not able to change avatar")
+    }
 }

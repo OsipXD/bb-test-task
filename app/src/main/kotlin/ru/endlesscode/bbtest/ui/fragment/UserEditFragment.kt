@@ -45,6 +45,7 @@ import com.bumptech.glide.signature.ObjectKey
 import gun0912.tedbottompicker.TedBottomPicker
 import kotlinx.android.synthetic.main.fragment_edit_user.*
 import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.OnPermissionDenied
 import permissions.dispatcher.RuntimePermissions
 import ru.endlesscode.bbtest.R
 import ru.endlesscode.bbtest.TestApp
@@ -116,6 +117,14 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
         TedBottomPicker.Builder(context).setOnImageSelectedListener {
             presenter.updateAvatar(it.path)
         }.create().show((context as FragmentActivity).supportFragmentManager)
+    }
+
+    @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    fun onPermissionDenied() = presenter.onPermissionDenied()
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        onRequestPermissionsResult(requestCode, grantResults)
     }
 
     override fun shakeApplyButton() {

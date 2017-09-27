@@ -169,4 +169,8 @@ class UserEditPresenter @Inject constructor(
 
     private val UserItem.avatarS3Url: String
         get() = "https://$host/$id.jpg"
+
+    fun onPermissionDenied() {
+        homePresenter.onPermissionDenied()
+    }
 }
