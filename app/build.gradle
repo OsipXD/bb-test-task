@@ -20,7 +20,7 @@ android {
         // Load security keys
         def localProps = new Properties()
         def localPropsFile = rootProject.file("local.properties")
-        if (localPropsFile .exists()) {
+        if (localPropsFile.exists()) {
             localProps.load(new FileInputStream(localPropsFile))
         }
         def accessKey = System.getenv('S3_KEY_ACCESS') ?: localProps['s3.key.access']
@@ -43,8 +43,7 @@ It also can be stored in your local.properties file like so:
         }
 
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
