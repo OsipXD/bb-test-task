@@ -24,12 +24,7 @@
   ~ SOFTWARE.
   -->
 
-<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
-                android:oneshot="true">
-    <item
-            android:drawable="@android:color/transparent"
-            android:duration="300"/>
-    <item
-            android:drawable="@drawable/ic_check_circle_24dp"
-            android:duration="200"/>
-</animation-list>
+<transition xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@android:color/transparent"/>
+    <item android:drawable="@drawable/ic_check_circle_24dp"/>
+</transition>

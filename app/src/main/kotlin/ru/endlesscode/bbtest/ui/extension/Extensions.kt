@@ -25,6 +25,8 @@
 
 package ru.endlesscode.bbtest.ui.extension
 
+import android.graphics.drawable.TransitionDrawable
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,3 +34,8 @@ import android.view.ViewGroup
 @Suppress("UNCHECKED_CAST")
 fun <T : View> ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false)
         = LayoutInflater.from(this.context).inflate(layoutId, this, attachToRoot) as T
+
+fun TransitionDrawable.startAndThen(duration: Int, onFinish: () -> Unit) {
+    this.startTransition(duration)
+    Handler().postDelayed({ onFinish() }, duration.toLong())
+}
