@@ -11,4 +11,6 @@
 
     <color name="colorError">#F44336</color>
     <color name="colorSuccess">#4CAF50</color>
+    <color name="semiTransparent">#3c000000</color>
+    <color name="transparent">#00000000</color>
 </resources>

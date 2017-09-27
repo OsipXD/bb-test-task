@@ -204,7 +204,7 @@ class UserEditPresenterSpec : Spek({
             }
 
             it("should notify about result") {
-                verify(homePresenter, times(3)).showMessage(any())
+                verify(homePresenter, times(2)).showMessage(any())
             }
         }
     }

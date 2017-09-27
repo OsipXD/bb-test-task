@@ -27,6 +27,8 @@ package ru.endlesscode.bbtest.ui.fragment
 
 import android.Manifest
 import android.content.Context
+import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.TransitionDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
@@ -74,6 +76,7 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
     private val btnApply by lazy { button_apply }
     private val btnClear by lazy { button_clear }
     private val changeAvatar by lazy { change_avatar }
+    private val avatarUpdateIndicator by lazy { avatar_update_indicator }
 
     @ProvidePresenter
     fun providePresenter(): UserEditPresenter = presenter
@@ -169,7 +172,7 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
     override fun setAvatar(path: String) {
         glideProvider.request.clone().apply {
             load(path)
-            placeholder(R.drawable.ic_avatar_placeholder_24px)
+            placeholder(R.color.transparent)
             error(R.drawable.ic_avatar_placeholder_24px)
             override(avatar.width, avatar.height)
             into(avatar)
@@ -177,11 +180,23 @@ class UserEditFragment : MvpAppCompatFragment(), UserEditView {
     }
 
     override fun showAvatarUpdatingIndicator() {
+        val overlayBg = changeAvatar.background as TransitionDrawable
+        val indicatorBg = avatarUpdateIndicator.background as AnimationDrawable
 
+        avatarUpdateIndicator.visibility = View.VISIBLE
+
+        overlayBg.startTransition(300)
+        indicatorBg.start()
     }
 
     override fun hideAvatarUpdateIndicator() {
+        val overlayBg = changeAvatar.background as TransitionDrawable
+        val indicatorBg = avatarUpdateIndicator.background as AnimationDrawable
 
+        overlayBg.reverseTransition(50)
+        indicatorBg.start()
+
+        avatarUpdateIndicator.visibility = View.INVISIBLE
     }
 
     override fun clearFields() {

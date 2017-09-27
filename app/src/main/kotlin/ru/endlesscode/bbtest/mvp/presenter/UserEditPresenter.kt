@@ -114,7 +114,7 @@ class UserEditPresenter @Inject constructor(
     private fun onAvatarUploaded(url: String) {
         newAvatar = url
         if (isUpdating) {
-            sendUserUpdate(user.copy(avatarUrl = url))
+            sendUserUpdate(user.copy(avatarUrl = url), notify = false)
             viewState.hideAvatarUpdateIndicator()
         }
     }
@@ -129,9 +129,9 @@ class UserEditPresenter @Inject constructor(
         if (isUpdating) sendUserUpdate(newUser) else sendUserCreate(newUser)
     }
 
-    private fun sendUserUpdate(newUser: UserItem) {
+    private fun sendUserUpdate(newUser: UserItem, notify: Boolean = true) {
         usersManager.updateUser(newUser,
-                onSuccess = { onUserUpdated(newUser) },
+                onSuccess = { onUserUpdated(newUser, notify) },
                 onError = { onError(it) }
         )
     }
@@ -143,21 +143,24 @@ class UserEditPresenter @Inject constructor(
         )
     }
 
-    private fun onUserUpdated(newUser: UserItem) {
+    private fun onUserUpdated(newUser: UserItem, notify: Boolean) {
         usersPresenter.updateUser(position, newUser)
-        onOperationSuccessful(newUser, "User successfully updated!")
+        if (notify) {
+            homePresenter.showMessage("User successfully updated!")
+        }
+        onOperationSuccessful(newUser)
     }
 
     private fun onUserCreated(newUser: UserItem) {
         isUpdating = true
-        homePresenter.back()
         usersPresenter.addUser(newUser)
-        onOperationSuccessful(newUser, "User successfully created!")
+        homePresenter.back()
+        homePresenter.showMessage("User successfully created!")
+        onOperationSuccessful(newUser)
     }
 
-    private fun onOperationSuccessful(newUser: UserItem, message: String) {
+    private fun onOperationSuccessful(newUser: UserItem) {
         user = newUser
-        homePresenter.showMessage(message)
     }
 
     private fun onError(exception: Throwable) {

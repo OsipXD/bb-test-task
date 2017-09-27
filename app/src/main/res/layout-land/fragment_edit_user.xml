@@ -54,13 +54,26 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:clickable="true"
-            android:background="?selectableItemBackground"
+            android:background="@drawable/change_avatar_overlay"
             android:elevation="1dp"
             app:layout_constraintTop_toTopOf="@id/avatar_view"
             app:layout_constraintBottom_toBottomOf="@id/avatar_view"
             app:layout_constraintRight_toRightOf="@id/avatar_view"
             app:layout_constraintLeft_toLeftOf="@id/avatar_view"
             />
+
+    <ProgressBar
+            android:id="@+id/avatar_update_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:background="@drawable/avatar_update_indicator"
+            android:visibility="invisible"
+            android:elevation="4dp"
+            app:layout_constraintRight_toRightOf="@+id/change_avatar"
+            app:layout_constraintLeft_toLeftOf="@+id/change_avatar"
+            app:layout_constraintTop_toTopOf="@+id/change_avatar"
+            app:layout_constraintBottom_toBottomOf="@+id/change_avatar"/>
 
     <android.support.design.widget.TextInputLayout
             android:id="@+id/name_input_layout"
